@@ -1,0 +1,55 @@
+﻿/* Dropdown hover container */
+.dropdown-hover:hover .dropdown-menu-custom {
+    display: block;
+}
+
+/* Menu dropdown ẩn mặc định */
+.dropdown-menu-custom {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 180px;
+    background-color: #000;
+    border: 1px solid #444;
+    z-index: 999;
+    padding: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.5s ease;
+}
+
+/* Item trong dropdown */
+.dropdown-item-custom {
+    display: block;
+    padding: 10px 15px;
+    color: #fff;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+/* Hover từng item */
+.dropdown-item-custom:hover {
+    background-color: #222;
+}
+
+/* Khi hover thì hiện dropdown */
+.dropdown-hover:hover .dropdown-menu-custom {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.cursor-pointer{
+    cursor: pointer;
+}
+
+
+.user-dropdown:hover .user-dropdown-menu {
+    display: block;
+}
+
+.user-dropdown-menu {
+    min-width: 150px;
+    z-index: 1050;
+}
