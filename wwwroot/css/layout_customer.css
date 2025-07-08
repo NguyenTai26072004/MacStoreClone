@@ -1,4 +1,10 @@
-﻿/* Dropdown hover container */
+﻿body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Dropdown hover container */
 .dropdown-hover:hover .dropdown-menu-custom {
     display: block;
 }
@@ -45,11 +51,109 @@
 }
 
 
-.user-dropdown:hover .user-dropdown-menu {
-    display: block;
-}
+
 
 .user-dropdown-menu {
     min-width: 150px;
     z-index: 1050;
+    display: none;
+    min-width: 160px;
 }
+
+
+.user-dropdown:hover .user-dropdown-menu
+{
+    display: block;
+}
+
+.user-icon {
+    cursor: pointer;
+}
+
+
+.user-dropdown-bridge {
+    position: absolute;
+    top: 32px;
+    right: 0;
+    width: 100%;
+    height: 15px;
+    z-index: 1049;
+    background: transparent;
+    pointer-events: auto;
+}
+
+
+.user-dropdown-menu a:hover {
+        background: #000;
+        text-decoration: none;
+        color: #fff !important;
+}
+
+
+
+/*CSS FOOTER*/
+.title_footer {
+    color: #fff;
+    margin-bottom: 20px;
+    font-size: 22px;
+    font-weight: 400;
+}
+
+.list_infor_footer li {
+    border-bottom: 1px solid #393c3d;
+    padding: 7px 0;
+}
+
+.list_atag_infor_footer {
+    color: #959595 !important;
+    margin: 7px 0;
+}
+
+.list_infor_footer li:hover .list_atag_infor_footer{
+    color: #0088cc !important;
+}
+
+.footer-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+}
+
+    .footer-table td {
+        border: 2px solid #fff;
+        padding: 8px;
+        background: #111;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .footer-table img {
+        max-width: 90px;
+        max-height: 38px;
+        object-fit: contain;
+    }
+
+@media (max-width: 576px) {
+    .footer-table img {
+        max-width: 60px;
+        max-height: 28px;
+    }
+}
+
+.title_bottom_footer{
+    color: #666;
+    font-size:16px;
+}
+
+
+.address_footer {
+    padding: 7px 0;
+    border-bottom: 1px solid #393c3d;
+    color: #959595;
+}
+
+
+.email_bottom:hover {
+    color:  #0088cc;
+}
+

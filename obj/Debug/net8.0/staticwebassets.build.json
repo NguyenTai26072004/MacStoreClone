@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "wzObi+PiHueZU8ogyd6gnPb/5JR1IT/7Eepf/QDw+4M=",
+  "Hash": "Rd/Cr7/x491nFGkGeygjCHhlWAckLq6AAl/LloZcJCY=",
   "Source": "Ecommerce_WebApp",
   "BasePath": "_content/Ecommerce_WebApp",
   "Mode": "Default",
@@ -73,8 +73,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "3r8b2a0bt1",
-      "Integrity": "8ZRc1sGeVrPBx4lD717BgRaQekyh78QKV9SKsdt638U=",
+      "Fingerprint": "2dl14xbghl",
+      "Integrity": "moXaRsBlOY6i5ofapdctv6xPB/ukRcV9ZJoOo3sSzdE=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\layout_customer.css"
@@ -122,6 +122,69 @@
       "OriginalItemSpec": "wwwroot\\favicon.ico"
     },
     {
+      "Identity": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\giaohangnhanh (1).png",
+      "SourceId": "Ecommerce_WebApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\",
+      "BasePath": "_content/Ecommerce_WebApp",
+      "RelativePath": "img/giaohangnhanh (1)#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "h7lgdgcy52",
+      "Integrity": "XXzZ5hQltnQPBU1ub33GMnNYkGi1kCyin3E9SmV0950=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\giaohangnhanh (1).png"
+    },
+    {
+      "Identity": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\giaohangnhanh.png",
+      "SourceId": "Ecommerce_WebApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\",
+      "BasePath": "_content/Ecommerce_WebApp",
+      "RelativePath": "img/giaohangnhanh#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "h7lgdgcy52",
+      "Integrity": "XXzZ5hQltnQPBU1ub33GMnNYkGi1kCyin3E9SmV0950=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\giaohangnhanh.png"
+    },
+    {
+      "Identity": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\giaohangtietkiem.jpg",
+      "SourceId": "Ecommerce_WebApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\",
+      "BasePath": "_content/Ecommerce_WebApp",
+      "RelativePath": "img/giaohangtietkiem#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "bl1liv0efz",
+      "Integrity": "T6mIIhkiTMsLFFjE5k+2EooJfZSTdMaThATR+b5f/bk=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\giaohangtietkiem.jpg"
+    },
+    {
       "Identity": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\logo.png",
       "SourceId": "Ecommerce_WebApp",
       "SourceType": "Discovered",
@@ -143,6 +206,216 @@
       "OriginalItemSpec": "wwwroot\\img\\logo.png"
     },
     {
+      "Identity": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\logo-atm.png",
+      "SourceId": "Ecommerce_WebApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\",
+      "BasePath": "_content/Ecommerce_WebApp",
+      "RelativePath": "img/logo-atm#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "39fmarhpbj",
+      "Integrity": "SSPF43+VQZXCs8HAVWnkpAPIJHZQ4ZbbafgGXbK3tXA=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\logo-atm.png"
+    },
+    {
+      "Identity": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\logo-jcb.png",
+      "SourceId": "Ecommerce_WebApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\",
+      "BasePath": "_content/Ecommerce_WebApp",
+      "RelativePath": "img/logo-jcb#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "hscmpr72s0",
+      "Integrity": "vyB+9WT71nHd/mVDtAmoMvelkL1TBE/TS3OVXeMUBL8=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\logo-jcb.png"
+    },
+    {
+      "Identity": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\logo-master.png",
+      "SourceId": "Ecommerce_WebApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\",
+      "BasePath": "_content/Ecommerce_WebApp",
+      "RelativePath": "img/logo-master#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "tx8b4j28zf",
+      "Integrity": "/y2YycwaBdmLNiI6sqb+3E/ZVrr4mICKGpVrNPP9mds=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\logo-master.png"
+    },
+    {
+      "Identity": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\logo-samsungpay.png",
+      "SourceId": "Ecommerce_WebApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\",
+      "BasePath": "_content/Ecommerce_WebApp",
+      "RelativePath": "img/logo-samsungpay#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "diagvoy269",
+      "Integrity": "y+dji//JtMrjJMckgr4cQds/PRFG3QADp9XN6KGhA0U=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\logo-samsungpay.png"
+    },
+    {
+      "Identity": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\logo-visa.png",
+      "SourceId": "Ecommerce_WebApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\",
+      "BasePath": "_content/Ecommerce_WebApp",
+      "RelativePath": "img/logo-visa#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "bvt9q4msv1",
+      "Integrity": "d0kptNu5QVl7Y5g87rgheIwRVP5LEN2Gp4mBrzHqZZw=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\logo-visa.png"
+    },
+    {
+      "Identity": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\logo-vnpay.png",
+      "SourceId": "Ecommerce_WebApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\",
+      "BasePath": "_content/Ecommerce_WebApp",
+      "RelativePath": "img/logo-vnpay#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "fv2d3r70y0",
+      "Integrity": "y+6AEfnNF9gsSHDTH7GwF4RnFwNatSmIFslGS6fijek=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\logo-vnpay.png"
+    },
+    {
+      "Identity": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\lt-express.png",
+      "SourceId": "Ecommerce_WebApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\",
+      "BasePath": "_content/Ecommerce_WebApp",
+      "RelativePath": "img/lt-express#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "b5il0hxk9u",
+      "Integrity": "4byMa7hkJgfVGJZCtu6aG8VbN7ye0qecapFHO1VNKwE=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\lt-express.png"
+    },
+    {
+      "Identity": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\nhattin.jpg",
+      "SourceId": "Ecommerce_WebApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\",
+      "BasePath": "_content/Ecommerce_WebApp",
+      "RelativePath": "img/nhattin#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "mv7fnn7hj7",
+      "Integrity": "XkfI2fIMGqGo6vMdY9gpBTYfS7s5K3alwKnYPWbQwuQ=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\nhattin.jpg"
+    },
+    {
+      "Identity": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\viettelpost.png",
+      "SourceId": "Ecommerce_WebApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\",
+      "BasePath": "_content/Ecommerce_WebApp",
+      "RelativePath": "img/viettelpost#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "3kmnit18eu",
+      "Integrity": "88cZmMeBXHhr85j14Ew2hGh9PoILurwQk9abrPDSvDY=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\viettelpost.png"
+    },
+    {
+      "Identity": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\vnpost.jpg",
+      "SourceId": "Ecommerce_WebApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\",
+      "BasePath": "_content/Ecommerce_WebApp",
+      "RelativePath": "img/vnpost#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "karoygfl6s",
+      "Integrity": "1I3pBav/8Hmm+G6C4e/1SiDRXKHLFrkzYzufw4+PWAE=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\vnpost.jpg"
+    },
+    {
       "Identity": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\js\\layout_user.js",
       "SourceId": "Ecommerce_WebApp",
       "SourceType": "Discovered",
@@ -157,8 +430,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "3jmsey2aef",
-      "Integrity": "8WgE5qxyCUmABkxlfhFgdbsHewGmZEhbi3c4yur29tM=",
+      "Fingerprint": "bj8zk0raop",
+      "Integrity": "99la+7w7X41ti4G3Un1JyXgtyDtiQ5VMmH5pmCLrEyA=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\layout_user.js"
@@ -1384,7 +1657,7 @@
   ],
   "Endpoints": [
     {
-      "Route": "css/layout_customer.3r8b2a0bt1.css",
+      "Route": "css/layout_customer.2dl14xbghl.css",
       "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\css\\layout_customer.css",
       "Selectors": [],
       "ResponseHeaders": [
@@ -1394,7 +1667,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "3"
+          "Value": "2496"
         },
         {
           "Name": "Content-Type",
@@ -1402,11 +1675,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"8ZRc1sGeVrPBx4lD717BgRaQekyh78QKV9SKsdt638U=\""
+          "Value": "\"moXaRsBlOY6i5ofapdctv6xPB/ukRcV9ZJoOo3sSzdE=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Mon, 07 Jul 2025 13:09:58 GMT"
+          "Value": "Tue, 08 Jul 2025 15:09:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1416,7 +1689,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "3r8b2a0bt1"
+          "Value": "2dl14xbghl"
         },
         {
           "Name": "label",
@@ -1424,7 +1697,7 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-8ZRc1sGeVrPBx4lD717BgRaQekyh78QKV9SKsdt638U="
+          "Value": "sha256-moXaRsBlOY6i5ofapdctv6xPB/ukRcV9ZJoOo3sSzdE="
         }
       ]
     },
@@ -1439,7 +1712,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "3"
+          "Value": "2496"
         },
         {
           "Name": "Content-Type",
@@ -1447,11 +1720,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"8ZRc1sGeVrPBx4lD717BgRaQekyh78QKV9SKsdt638U=\""
+          "Value": "\"moXaRsBlOY6i5ofapdctv6xPB/ukRcV9ZJoOo3sSzdE=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Mon, 07 Jul 2025 13:09:58 GMT"
+          "Value": "Tue, 08 Jul 2025 15:09:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1461,7 +1734,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-8ZRc1sGeVrPBx4lD717BgRaQekyh78QKV9SKsdt638U="
+          "Value": "sha256-moXaRsBlOY6i5ofapdctv6xPB/ukRcV9ZJoOo3sSzdE="
         }
       ]
     },
@@ -1794,6 +2067,252 @@
       ]
     },
     {
+      "Route": "img/giaohangnhanh (1).h7lgdgcy52.png",
+      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\giaohangnhanh (1).png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "16937"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"XXzZ5hQltnQPBU1ub33GMnNYkGi1kCyin3E9SmV0950=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 08 Jul 2025 14:30:41 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "h7lgdgcy52"
+        },
+        {
+          "Name": "label",
+          "Value": "img/giaohangnhanh (1).png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-XXzZ5hQltnQPBU1ub33GMnNYkGi1kCyin3E9SmV0950="
+        }
+      ]
+    },
+    {
+      "Route": "img/giaohangnhanh (1).png",
+      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\giaohangnhanh (1).png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "16937"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"XXzZ5hQltnQPBU1ub33GMnNYkGi1kCyin3E9SmV0950=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 08 Jul 2025 14:30:41 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-XXzZ5hQltnQPBU1ub33GMnNYkGi1kCyin3E9SmV0950="
+        }
+      ]
+    },
+    {
+      "Route": "img/giaohangnhanh.h7lgdgcy52.png",
+      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\giaohangnhanh.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "16937"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"XXzZ5hQltnQPBU1ub33GMnNYkGi1kCyin3E9SmV0950=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 08 Jul 2025 14:30:36 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "h7lgdgcy52"
+        },
+        {
+          "Name": "label",
+          "Value": "img/giaohangnhanh.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-XXzZ5hQltnQPBU1ub33GMnNYkGi1kCyin3E9SmV0950="
+        }
+      ]
+    },
+    {
+      "Route": "img/giaohangnhanh.png",
+      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\giaohangnhanh.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "16937"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"XXzZ5hQltnQPBU1ub33GMnNYkGi1kCyin3E9SmV0950=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 08 Jul 2025 14:30:36 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-XXzZ5hQltnQPBU1ub33GMnNYkGi1kCyin3E9SmV0950="
+        }
+      ]
+    },
+    {
+      "Route": "img/giaohangtietkiem.bl1liv0efz.jpg",
+      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\giaohangtietkiem.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2197"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"T6mIIhkiTMsLFFjE5k+2EooJfZSTdMaThATR+b5f/bk=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 08 Jul 2025 14:36:29 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "bl1liv0efz"
+        },
+        {
+          "Name": "label",
+          "Value": "img/giaohangtietkiem.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-T6mIIhkiTMsLFFjE5k+2EooJfZSTdMaThATR+b5f/bk="
+        }
+      ]
+    },
+    {
+      "Route": "img/giaohangtietkiem.jpg",
+      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\giaohangtietkiem.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2197"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"T6mIIhkiTMsLFFjE5k+2EooJfZSTdMaThATR+b5f/bk=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 08 Jul 2025 14:36:29 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-T6mIIhkiTMsLFFjE5k+2EooJfZSTdMaThATR+b5f/bk="
+        }
+      ]
+    },
+    {
       "Route": "img/logo.1mkcdpatz4.png",
       "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\logo.png",
       "Selectors": [],
@@ -1876,8 +2395,8 @@
       ]
     },
     {
-      "Route": "js/layout_user.3jmsey2aef.js",
-      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\js\\layout_user.js",
+      "Route": "img/logo-atm.39fmarhpbj.png",
+      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\logo-atm.png",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -1886,19 +2405,19 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "126"
+          "Value": "319"
         },
         {
           "Name": "Content-Type",
-          "Value": "text/javascript"
+          "Value": "image/png"
         },
         {
           "Name": "ETag",
-          "Value": "\"8WgE5qxyCUmABkxlfhFgdbsHewGmZEhbi3c4yur29tM=\""
+          "Value": "\"SSPF43+VQZXCs8HAVWnkpAPIJHZQ4ZbbafgGXbK3tXA=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Mon, 07 Jul 2025 13:13:29 GMT"
+          "Value": "Tue, 08 Jul 2025 14:30:01 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1908,7 +2427,827 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "3jmsey2aef"
+          "Value": "39fmarhpbj"
+        },
+        {
+          "Name": "label",
+          "Value": "img/logo-atm.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-SSPF43+VQZXCs8HAVWnkpAPIJHZQ4ZbbafgGXbK3tXA="
+        }
+      ]
+    },
+    {
+      "Route": "img/logo-atm.png",
+      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\logo-atm.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "319"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"SSPF43+VQZXCs8HAVWnkpAPIJHZQ4ZbbafgGXbK3tXA=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 08 Jul 2025 14:30:01 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-SSPF43+VQZXCs8HAVWnkpAPIJHZQ4ZbbafgGXbK3tXA="
+        }
+      ]
+    },
+    {
+      "Route": "img/logo-jcb.hscmpr72s0.png",
+      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\logo-jcb.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "617"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"vyB+9WT71nHd/mVDtAmoMvelkL1TBE/TS3OVXeMUBL8=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 08 Jul 2025 14:30:08 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "hscmpr72s0"
+        },
+        {
+          "Name": "label",
+          "Value": "img/logo-jcb.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-vyB+9WT71nHd/mVDtAmoMvelkL1TBE/TS3OVXeMUBL8="
+        }
+      ]
+    },
+    {
+      "Route": "img/logo-jcb.png",
+      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\logo-jcb.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "617"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"vyB+9WT71nHd/mVDtAmoMvelkL1TBE/TS3OVXeMUBL8=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 08 Jul 2025 14:30:08 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-vyB+9WT71nHd/mVDtAmoMvelkL1TBE/TS3OVXeMUBL8="
+        }
+      ]
+    },
+    {
+      "Route": "img/logo-master.png",
+      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\logo-master.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "641"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"/y2YycwaBdmLNiI6sqb+3E/ZVrr4mICKGpVrNPP9mds=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 08 Jul 2025 14:30:07 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-/y2YycwaBdmLNiI6sqb+3E/ZVrr4mICKGpVrNPP9mds="
+        }
+      ]
+    },
+    {
+      "Route": "img/logo-master.tx8b4j28zf.png",
+      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\logo-master.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "641"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"/y2YycwaBdmLNiI6sqb+3E/ZVrr4mICKGpVrNPP9mds=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 08 Jul 2025 14:30:07 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "tx8b4j28zf"
+        },
+        {
+          "Name": "label",
+          "Value": "img/logo-master.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-/y2YycwaBdmLNiI6sqb+3E/ZVrr4mICKGpVrNPP9mds="
+        }
+      ]
+    },
+    {
+      "Route": "img/logo-samsungpay.diagvoy269.png",
+      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\logo-samsungpay.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "565"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"y+dji//JtMrjJMckgr4cQds/PRFG3QADp9XN6KGhA0U=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 08 Jul 2025 14:30:07 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "diagvoy269"
+        },
+        {
+          "Name": "label",
+          "Value": "img/logo-samsungpay.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-y+dji//JtMrjJMckgr4cQds/PRFG3QADp9XN6KGhA0U="
+        }
+      ]
+    },
+    {
+      "Route": "img/logo-samsungpay.png",
+      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\logo-samsungpay.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "565"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"y+dji//JtMrjJMckgr4cQds/PRFG3QADp9XN6KGhA0U=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 08 Jul 2025 14:30:07 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-y+dji//JtMrjJMckgr4cQds/PRFG3QADp9XN6KGhA0U="
+        }
+      ]
+    },
+    {
+      "Route": "img/logo-visa.bvt9q4msv1.png",
+      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\logo-visa.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "697"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"d0kptNu5QVl7Y5g87rgheIwRVP5LEN2Gp4mBrzHqZZw=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 08 Jul 2025 14:30:10 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "bvt9q4msv1"
+        },
+        {
+          "Name": "label",
+          "Value": "img/logo-visa.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-d0kptNu5QVl7Y5g87rgheIwRVP5LEN2Gp4mBrzHqZZw="
+        }
+      ]
+    },
+    {
+      "Route": "img/logo-visa.png",
+      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\logo-visa.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "697"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"d0kptNu5QVl7Y5g87rgheIwRVP5LEN2Gp4mBrzHqZZw=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 08 Jul 2025 14:30:10 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-d0kptNu5QVl7Y5g87rgheIwRVP5LEN2Gp4mBrzHqZZw="
+        }
+      ]
+    },
+    {
+      "Route": "img/logo-vnpay.fv2d3r70y0.png",
+      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\logo-vnpay.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "771"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"y+6AEfnNF9gsSHDTH7GwF4RnFwNatSmIFslGS6fijek=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 08 Jul 2025 14:29:57 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "fv2d3r70y0"
+        },
+        {
+          "Name": "label",
+          "Value": "img/logo-vnpay.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-y+6AEfnNF9gsSHDTH7GwF4RnFwNatSmIFslGS6fijek="
+        }
+      ]
+    },
+    {
+      "Route": "img/logo-vnpay.png",
+      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\logo-vnpay.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "771"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"y+6AEfnNF9gsSHDTH7GwF4RnFwNatSmIFslGS6fijek=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 08 Jul 2025 14:29:57 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-y+6AEfnNF9gsSHDTH7GwF4RnFwNatSmIFslGS6fijek="
+        }
+      ]
+    },
+    {
+      "Route": "img/lt-express.b5il0hxk9u.png",
+      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\lt-express.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "15808"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"4byMa7hkJgfVGJZCtu6aG8VbN7ye0qecapFHO1VNKwE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 08 Jul 2025 14:30:46 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "b5il0hxk9u"
+        },
+        {
+          "Name": "label",
+          "Value": "img/lt-express.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-4byMa7hkJgfVGJZCtu6aG8VbN7ye0qecapFHO1VNKwE="
+        }
+      ]
+    },
+    {
+      "Route": "img/lt-express.png",
+      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\lt-express.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "15808"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"4byMa7hkJgfVGJZCtu6aG8VbN7ye0qecapFHO1VNKwE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 08 Jul 2025 14:30:46 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-4byMa7hkJgfVGJZCtu6aG8VbN7ye0qecapFHO1VNKwE="
+        }
+      ]
+    },
+    {
+      "Route": "img/nhattin.jpg",
+      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\nhattin.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2609"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"XkfI2fIMGqGo6vMdY9gpBTYfS7s5K3alwKnYPWbQwuQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 08 Jul 2025 14:30:14 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-XkfI2fIMGqGo6vMdY9gpBTYfS7s5K3alwKnYPWbQwuQ="
+        }
+      ]
+    },
+    {
+      "Route": "img/nhattin.mv7fnn7hj7.jpg",
+      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\nhattin.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2609"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"XkfI2fIMGqGo6vMdY9gpBTYfS7s5K3alwKnYPWbQwuQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 08 Jul 2025 14:30:14 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "mv7fnn7hj7"
+        },
+        {
+          "Name": "label",
+          "Value": "img/nhattin.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-XkfI2fIMGqGo6vMdY9gpBTYfS7s5K3alwKnYPWbQwuQ="
+        }
+      ]
+    },
+    {
+      "Route": "img/viettelpost.3kmnit18eu.png",
+      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\viettelpost.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "17501"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"88cZmMeBXHhr85j14Ew2hGh9PoILurwQk9abrPDSvDY=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 08 Jul 2025 14:30:22 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "3kmnit18eu"
+        },
+        {
+          "Name": "label",
+          "Value": "img/viettelpost.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-88cZmMeBXHhr85j14Ew2hGh9PoILurwQk9abrPDSvDY="
+        }
+      ]
+    },
+    {
+      "Route": "img/viettelpost.png",
+      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\viettelpost.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "17501"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"88cZmMeBXHhr85j14Ew2hGh9PoILurwQk9abrPDSvDY=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 08 Jul 2025 14:30:22 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-88cZmMeBXHhr85j14Ew2hGh9PoILurwQk9abrPDSvDY="
+        }
+      ]
+    },
+    {
+      "Route": "img/vnpost.jpg",
+      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\vnpost.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2530"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"1I3pBav/8Hmm+G6C4e/1SiDRXKHLFrkzYzufw4+PWAE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 08 Jul 2025 14:30:19 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-1I3pBav/8Hmm+G6C4e/1SiDRXKHLFrkzYzufw4+PWAE="
+        }
+      ]
+    },
+    {
+      "Route": "img/vnpost.karoygfl6s.jpg",
+      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\vnpost.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2530"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"1I3pBav/8Hmm+G6C4e/1SiDRXKHLFrkzYzufw4+PWAE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 08 Jul 2025 14:30:19 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "karoygfl6s"
+        },
+        {
+          "Name": "label",
+          "Value": "img/vnpost.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-1I3pBav/8Hmm+G6C4e/1SiDRXKHLFrkzYzufw4+PWAE="
+        }
+      ]
+    },
+    {
+      "Route": "js/layout_user.bj8zk0raop.js",
+      "AssetFile": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\js\\layout_user.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "890"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"99la+7w7X41ti4G3Un1JyXgtyDtiQ5VMmH5pmCLrEyA=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 08 Jul 2025 13:46:04 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "bj8zk0raop"
         },
         {
           "Name": "label",
@@ -1916,7 +3255,7 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-8WgE5qxyCUmABkxlfhFgdbsHewGmZEhbi3c4yur29tM="
+          "Value": "sha256-99la+7w7X41ti4G3Un1JyXgtyDtiQ5VMmH5pmCLrEyA="
         }
       ]
     },
@@ -1931,7 +3270,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "126"
+          "Value": "890"
         },
         {
           "Name": "Content-Type",
@@ -1939,11 +3278,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"8WgE5qxyCUmABkxlfhFgdbsHewGmZEhbi3c4yur29tM=\""
+          "Value": "\"99la+7w7X41ti4G3Un1JyXgtyDtiQ5VMmH5pmCLrEyA=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Mon, 07 Jul 2025 13:13:29 GMT"
+          "Value": "Tue, 08 Jul 2025 13:46:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1953,7 +3292,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-8WgE5qxyCUmABkxlfhFgdbsHewGmZEhbi3c4yur29tM="
+          "Value": "sha256-99la+7w7X41ti4G3Un1JyXgtyDtiQ5VMmH5pmCLrEyA="
         }
       ]
     },

@@ -17,8 +17,60 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\giaohangnhanh (1).png",
+      "PackagePath": "staticwebassets\\img\\giaohangnhanh (1).png"
+    },
+    {
+      "Id": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\giaohangnhanh.png",
+      "PackagePath": "staticwebassets\\img\\giaohangnhanh.png"
+    },
+    {
+      "Id": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\giaohangtietkiem.jpg",
+      "PackagePath": "staticwebassets\\img\\giaohangtietkiem.jpg"
+    },
+    {
+      "Id": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\logo-atm.png",
+      "PackagePath": "staticwebassets\\img\\logo-atm.png"
+    },
+    {
+      "Id": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\logo-jcb.png",
+      "PackagePath": "staticwebassets\\img\\logo-jcb.png"
+    },
+    {
+      "Id": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\logo-master.png",
+      "PackagePath": "staticwebassets\\img\\logo-master.png"
+    },
+    {
+      "Id": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\logo-samsungpay.png",
+      "PackagePath": "staticwebassets\\img\\logo-samsungpay.png"
+    },
+    {
+      "Id": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\logo-visa.png",
+      "PackagePath": "staticwebassets\\img\\logo-visa.png"
+    },
+    {
+      "Id": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\logo-vnpay.png",
+      "PackagePath": "staticwebassets\\img\\logo-vnpay.png"
+    },
+    {
       "Id": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\logo.png",
       "PackagePath": "staticwebassets\\img\\logo.png"
+    },
+    {
+      "Id": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\lt-express.png",
+      "PackagePath": "staticwebassets\\img\\lt-express.png"
+    },
+    {
+      "Id": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\nhattin.jpg",
+      "PackagePath": "staticwebassets\\img\\nhattin.jpg"
+    },
+    {
+      "Id": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\viettelpost.png",
+      "PackagePath": "staticwebassets\\img\\viettelpost.png"
+    },
+    {
+      "Id": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\vnpost.jpg",
+      "PackagePath": "staticwebassets\\img\\vnpost.jpg"
     },
     {
       "Id": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\js\\layout_user.js",

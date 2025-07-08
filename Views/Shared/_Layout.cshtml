@@ -30,11 +30,11 @@
                 <div class="d-flex align-items-center gap-3">
                     <!-- Mobile search icon -->
                     <i class="fa-solid fa-magnifying-glass text-white fs-5 cursor-pointer" onclick="toggleSearchOverlay()"></i>
-                    <a href="#"><i class="fa-regular fa-user fs-5 text-white"></i></a>
                     <a href="#" class="position-relative">
                         <i class="fa-solid fa-cart-shopping fs-5 text-white"></i>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">2</span>
                     </a>
+                    <a href="#"><i class="fa-regular fa-user fs-5 text-white"></i></a>                   
                 </div>
             </div>
 
@@ -52,7 +52,7 @@
                         <a href="#" class="text-white text-decoration-none">
                             MacBook <i class="fa-solid fa-caret-down ms-1"></i>
                         </a>
-                        <ul class="dropdown-menu-custom">
+                        <ul class="dropdown-menu-custom list-unstyled">
                             <li><a href="#" class="dropdown-item-custom text-white">MacBook M1</a></li>
                             <li><a href="#" class="dropdown-item-custom text-white">MacBook M2</a></li>
                             <li><a href="#" class="dropdown-item-custom text-white">MacBook M3</a></li>
@@ -67,7 +67,7 @@
                         <a href="#" class="text-white text-decoration-none">
                             iMac <i class="fa-solid fa-caret-down ms-1"></i>
                         </a>
-                        <ul class="dropdown-menu-custom">
+                        <ul class="dropdown-menu-custom list-unstyled">
                             <li><a href="#" class="dropdown-item-custom text-white">iMac M1</a></li>
                             <li><a href="#" class="dropdown-item-custom text-white">iMac M3</a></li>
                             <li><a href="#" class="dropdown-item-custom text-white">iMac M4</a></li>
@@ -84,7 +84,7 @@
                         <a href="#" class="text-white text-decoration-none">
                             Mac Studio <i class="fa-solid fa-caret-down ms-1"></i>
                         </a>
-                        <ul class="dropdown-menu-custom">
+                        <ul class="dropdown-menu-custom list-unstyled">
                             <li><a href="#" class="dropdown-item-custom text-white">Mac Studio M1</a></li>
                             <li><a href="#" class="dropdown-item-custom text-white">Mac Studio M2</a></li>
                             <li><a href="#" class="dropdown-item-custom text-white">Mac Studio M3</a></li>
@@ -100,7 +100,7 @@
                         <a href="#" class="text-white text-decoration-none">
                             Mac Mini <i class="fa-solid fa-caret-down ms-1"></i>
                         </a>
-                        <ul class="dropdown-menu-custom">
+                        <ul class="dropdown-menu-custom list-unstyled">
                             <li><a href="#" class="dropdown-item-custom text-white">Mac Mini M4</a></li>
                             <li><a href="#" class="dropdown-item-custom text-white">Mac Mini M2</a></li>
                             <li><a href="#" class="dropdown-item-custom text-white">Mac Mini M1</a></li>
@@ -115,7 +115,7 @@
                         <a href="#" class="text-white text-decoration-none">
                             Phụ kiện <i class="fa-solid fa-caret-down ms-1"></i>
                         </a>
-                        <ul class="dropdown-menu-custom">
+                        <ul class="dropdown-menu-custom list-unstyled">
                             <li><a href="#" class="dropdown-item-custom text-white">Phụ kiện Apple</a></li>
                             <li><a href="#" class="dropdown-item-custom text-white">Phụ kiện Window</a></li>
                             <li><a href="#" class="dropdown-item-custom text-white">Phụ kiện Surface</a></li>
@@ -129,24 +129,25 @@
                 <!-- Icon -->
                 <div class="d-flex align-items-center gap-4 pe-5">
                     <i class="fa-solid fa-magnifying-glass text-white fs-5 cursor-pointer" onclick="toggleSearchOverlay()"></i>
-                    <!-- User icon with dropdown -->
-                    <div class="position-relative user-dropdown">
-                        <div class="user-icon cursor-pointer">
-                            <i class="fa-regular fa-user fs-5 text-white"></i>
-                        </div>
-
-                        <!-- Dropdown content -->
-                        <div class="user-dropdown-menu bg-white text-dark rounded shadow p-3 position-absolute end-0 mt-2" style="display: none; z-index: 1050;">
-                            <a href="#" class="d-block mb-2 text-decoration-none text-dark">Đăng nhập</a>
-                            <a href="#" class="d-block text-decoration-none text-dark">Đăng ký</a>
-                        </div>
-                    </div>
-
+                     <!-- User icon with dropdown -->
+                    
 
                     <a href="#" class="position-relative">
                         <i class="fa-solid fa-cart-shopping fs-5 text-white"></i>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">2</span>
                     </a>
+
+
+                    <div class="position-relative user-dropdown">
+                        <div class="user-icon cursor-pointer">
+                            <i class="fa-regular fa-user fs-5 text-white p-2"></i>
+                        </div>
+                        <div class="user-dropdown-bridge"></div>
+                        <div class="user-dropdown-menu bg-white text-dark rounded shadow position-absolute end-0 mt-2">
+                            <a href="#" class="d-block mb-2 text-decoration-none text-dark p-3 fw-bold text-center">Đăng nhập</a>
+                            <a href="#" class="d-block text-decoration-none text-dark p-3 fw-bold text-center">Đăng ký</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -184,8 +185,104 @@
         </main>
     </div>
 
-    <!-- ===== FOOTER ===== -->
-    <footer class="border-top footer text-muted">
+    <!-- Footer Start -->
+    <footer class="bg-black text-light pt-5 pb-3 mt-5 h-100">
+        <div class="container">
+            <div class="row g-4">
+                <!-- Chính Sách Chung -->
+                <div class="col-12 col-md-3 mt-0">
+                    <h5 class="title_footer mb-3">Chính Sách Chung</h5>
+                    <ul class="list_infor_footer list-unstyled small">
+                        <li><a href="#" class="list_atag_infor_footer text-decoration-none ">Chính sách vận chuyển</a></li>
+                        <li><a href="#" class="list_atag_infor_footer text-decoration-none ">Chính sách đổi trả</a></li>
+                        <li><a href="#" class="list_atag_infor_footer text-decoration-none ">Chính sách bảo mật</a></li>
+                        <li><a href="#" class="list_atag_infor_footer text-decoration-none ">Chính sách bảo hành</a></li>
+                        <li><a href="#" class="list_atag_infor_footer text-decoration-none ">Chính sách mua hàng Online</a></li>
+                    </ul>
+                </div>
+                <!-- Tư Vấn Khách Hàng -->
+                <div class="col-12 col-md-3 mt-0">
+                    <h5 class="title_footer mb-3">Tư Vấn Khách Hàng</h5>
+                    <ul class="list_infor_footer list-unstyled small">
+                        <li><a href="#" class="list_atag_infor_footer text-decoration-none">Tư vấn mua hàng</a></li>
+                        <li><a href="#" class="list_atag_infor_footer text-decoration-none">Hỗ trợ kỹ thuật</a></li>
+                    </ul>
+                    <h6 class="title_footer mt-4 mb-2">Hình Thức Thanh Toán</h6>
+                    <table class="footer-table mb-3">
+                        <tr>
+                            <td><img src="~/img/logo-vnpay.png" alt="VNPay" width="60" height="32"></td>
+                            <td><img src="~/img/logo-atm.png" alt="ATM" width="60" height="32"></td>
+                            <td><img src="~/img/logo-master.png" alt="Mastercard" width="60" height="32"></td>
+                        </tr>
+                        <tr>
+                            <td><img src="~/img/logo-samsungpay.png" alt="SamsungPay" width="60" height="32"></td>
+                            <td><img src="~/img/logo-jcb.png" alt="JCB" width="60" height="32"></td>
+                            <td><img src="~/img/logo-visa.png" alt="Visa" width="60" height="32"></td>
+                        </tr>
+                    </table>
+                </div>
+                <!-- Thông Tin Hỗ Trợ -->
+                <div class="col-12 col-md-3 mt-0">
+                    <h5 class="title_footer mb-3">Thông Tin Hỗ Trợ</h5>
+                    <ul class="list_infor_footer list-unstyled small">
+                        <li><a href="#" class="list_atag_infor_footer text-decoration-none">Giới thiệu</a></li>
+                        <li><a href="#" class="list_atag_infor_footer text-decoration-none">Cài đặt phần mềm</a></li>
+                        <li><a href="#" class="list_atag_infor_footer text-decoration-none">Hướng dẫn mua hàng Online</a></li>
+                        <li><a href="#" class="list_atag_infor_footer text-decoration-none">Hướng dẫn thanh toán</a></li>
+                        <li><a href="#" class="list_atag_infor_footer text-decoration-none">Mua hàng trả góp</a></li>
+                        <li><a href="#" class="list_atag_infor_footer text-decoration-none">Liên Hệ</a></li>
+                    </ul>
+                </div>
+                <!-- Thông Tin Công Ty -->
+                <div class="col-12 col-md-3 mt-0">
+                    <h5 class="title_footer mb-3">Thông Tin Công Ty</h5>
+                    <p class="fw-bold mb-1">TRUNG TÂM MUA SẮM MACSTORE</p>
+                    <p class="small mb-2">Chuyên kinh doanh các sản phẩm công nghệ như: Mac (Macbook Pro, Macbook Air, iMac, Mac Mini, Mac Pro, Display), Laptop ...</p>
+                    <h6 class="title_footer mb-2">Hình Thức Vận Chuyển</h6>
+                    <table class="footer-table mb-2">
+                        <tr>
+                            <td><img src="~/img/nhattin.jpg" alt="Nhat Tin" width="auto" height="32"></td>
+                            <td><img src="~/img/viettelpost.png" alt="VNPost" width="48" height="32"></td>
+                            <td><img src="~/img/logo-jcb.png" alt="Express" width="48" height="32"></td>
+                        </tr>
+                        <tr>
+                            <td><img src="~/img/giaohangtietkiem.jpg" alt="Other" width="48" height="32"></td>
+                            <td><img src="~/img/giaohangnhanh.png" alt="GHN" width="48" height="32"></td>
+                            <td><img src="~/img/lt-express.png" alt="J&T" width="48" height="32"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <hr class="bg-secondary my-4">
+            <div class="row align-items-center">              
+                <div class="col-12 col-md-6 mb-3 mb-md-0">
+                    <div class="text-center">
+                    <img src="~/img/logo.png" alt="Alternate Text" />
+                    </div>                  
+                    <table class="tg col-12" style="border-collapse: collapse; border-spacing: 0;">
+                        <thead >
+                            <tr>
+                                <td style="font-family: Arial, sans-serif; font-size: 14px; overflow: hidden; padding: 10px 5px; text-align: left; vertical-align: top; word-break: normal; border: 1px solid black;"><a href="" rel="nofollow"><img loading="lazy" decoding="async" src="https://macstores.vn/wp-content/uploads/2022/09/facebook_1.png" width="32" height="32">Facebook</a></td>
+                                <td style="font-family: Arial, sans-serif; font-size: 14px; overflow: hidden; padding: 10px 5px; text-align: left; vertical-align: top; word-break: normal; border: 1px solid black;"><a href="" rel="nofollow"><img loading="lazy" decoding="async" src="https://macstores.vn/wp-content/uploads/2022/09/zalo-1.png" width="32" height="32">Zalo</a></td>
+                                <td style="font-family: Arial, sans-serif; font-size: 14px; overflow: hidden; padding: 10px 5px; text-align: left; vertical-align: top; word-break: normal; border: 1px solid black;"><a href="" rel="nofollow"><img loading="lazy" decoding="async" src="https://macstores.vn/wp-content/uploads/2022/09/pinterest.png" width="32" height="32">Pinterest</a></td>
+                                <td style="font-family: Arial, sans-serif; font-size: 14px; overflow: hidden; padding: 10px 5px; text-align: left; vertical-align: top; word-break: normal; border: 1px solid black;"><a href="" rel="nofollow"><img loading="lazy" decoding="async" src="https://macstores.vn/wp-content/uploads/2022/09/linkedin_1.png" width="32" height="32">Linkedin</a></td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="small">
+                        <div class="title_bottom_footer fw-bold">TRUNG TÂM MUA SẮM MACSTORE</div>
+                        <div class="address_footer">Địa chỉ: <em>132. Lê Lai, P. Bến Thành, Quận 1, Tp. HCM</em></div>
+                        <div class="address_footer">Email: <a class="email_bottom text-decoration-none" style="color: #959595;" href="anhtai26072004@gmail.com">anhtai26072004@gmail.com</a></div>
+                        <div class="address_footer">Bán hàng: <span class="fw-bold">0879723014</span> (24/7)</div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="ratio ratio-16x9">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.497282073019!2d106.6910403153347!3d10.77337469232447!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f3e1b1e1b1b%3A0x1e1b1e1b1e1b1e1b!2zMTMyIEzDqiBMYWcsIFAuIELhur8gVGjhuqduLCBRdeG6rW4gMSwgVGjDoG5oIHBo4buRIEjhu5MgQ2jDrSBNaW5o!5e0!3m2!1svi!2s!4v1625555555555!5m2!1svi!2s" width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
     </footer>
 
     <!-- ===== SCRIPT ===== -->
