@@ -13,6 +13,12 @@ wwwroot\img\logo-visa.png
 wwwroot\img\logo-vnpay.png
 wwwroot\img\lt-express.png
 wwwroot\img\nhattin.jpg
+wwwroot\img\slide1.jpg
+wwwroot\img\slide2.jpg
+wwwroot\img\slide3.jpg
+wwwroot\img\slide4.jpg
+wwwroot\img\slide5.jpg
+wwwroot\img\slide6.jpg
 wwwroot\img\viettelpost.png
 wwwroot\img\vnpost.jpg
 wwwroot\js\layout_user.js
