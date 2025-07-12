@@ -5,6 +5,12 @@
     color: #646464;
 }
 
+a {
+    color: #0088cc !important;
+    text-decoration: none;
+    cursor: pointer;
+}
+
 /* Dropdown hover container */
 .dropdown-hover:hover .dropdown-menu-custom {
     display: block;
@@ -158,3 +164,7 @@
     color:  #0088cc;
 }
 
+
+.btn:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem !important;
+}

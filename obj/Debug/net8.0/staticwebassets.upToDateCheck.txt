@@ -1,3 +1,4 @@
+wwwroot\css\category.css
 wwwroot\css\homepage.css
 wwwroot\css\layout_customer.css
 wwwroot\css\site.css
