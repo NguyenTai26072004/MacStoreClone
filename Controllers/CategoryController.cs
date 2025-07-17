@@ -2,7 +2,7 @@
 
 namespace Ecommerce_WebApp.Controllers
 {
-    public class Category : Controller
+    public class CategoryController : Controller
     {
         public IActionResult Index()
         {

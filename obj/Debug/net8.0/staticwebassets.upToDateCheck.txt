@@ -1,6 +1,8 @@
 wwwroot\css\category.css
 wwwroot\css\homepage.css
 wwwroot\css\layout_customer.css
+wwwroot\css\productdetail.css
+wwwroot\css\root.css
 wwwroot\css\site.css
 wwwroot\favicon.ico
 wwwroot\img\giaohangnhanh (1).png
@@ -36,6 +38,12 @@ wwwroot\img\slidefooter6.jpg
 wwwroot\img\slidefooter7.jpg
 wwwroot\img\slidefooter8.jpg
 wwwroot\img\slidefooter9.jpg
+wwwroot\img\sp1.jpg
+wwwroot\img\sp1_02.jpg
+wwwroot\img\sp1_03.jpg
+wwwroot\img\sp1_04.jpg
+wwwroot\img\sp1_05.jpg
+wwwroot\img\sp1_06.jpg
 wwwroot\img\viettelpost.png
 wwwroot\img\vnpost.jpg
 wwwroot\js\layout_user.js

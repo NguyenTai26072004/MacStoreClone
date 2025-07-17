@@ -17,6 +17,14 @@
       "PackagePath": "staticwebassets\\css\\layout_customer.css"
     },
     {
+      "Id": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\css\\productdetail.css",
+      "PackagePath": "staticwebassets\\css\\productdetail.css"
+    },
+    {
+      "Id": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\css\\root.css",
+      "PackagePath": "staticwebassets\\css\\root.css"
+    },
+    {
       "Id": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },
@@ -155,6 +163,30 @@
     {
       "Id": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\slidefooter9.jpg",
       "PackagePath": "staticwebassets\\img\\slidefooter9.jpg"
+    },
+    {
+      "Id": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\sp1.jpg",
+      "PackagePath": "staticwebassets\\img\\sp1.jpg"
+    },
+    {
+      "Id": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\sp1_02.jpg",
+      "PackagePath": "staticwebassets\\img\\sp1_02.jpg"
+    },
+    {
+      "Id": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\sp1_03.jpg",
+      "PackagePath": "staticwebassets\\img\\sp1_03.jpg"
+    },
+    {
+      "Id": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\sp1_04.jpg",
+      "PackagePath": "staticwebassets\\img\\sp1_04.jpg"
+    },
+    {
+      "Id": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\sp1_05.jpg",
+      "PackagePath": "staticwebassets\\img\\sp1_05.jpg"
+    },
+    {
+      "Id": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\sp1_06.jpg",
+      "PackagePath": "staticwebassets\\img\\sp1_06.jpg"
     },
     {
       "Id": "D:\\Du_An_Ca_Nhan\\Ecommerce_WebApp\\Ecommerce_WebApp\\wwwroot\\img\\viettelpost.png",
