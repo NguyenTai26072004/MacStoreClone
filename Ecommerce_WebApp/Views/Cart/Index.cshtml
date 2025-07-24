@@ -1,0 +1,98 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="container py-5">
+    <h2 class="mb-4">Giỏ hàng của bạn</h2>
+
+    <div class="row">
+        <!-- Giỏ hàng -->
+        <div class="col-lg-8">
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Đơn giá</th>
+                            <th>Số lượng</th>
+                            <th>Thành tiền</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- SẢN PHẨM -->
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="~/img/sp1.jpg" alt="Sản phẩm" class="img-thumbnail" style="width: 80px; height: auto;">
+                                    <div class="ms-3">
+                                        <h6 class="mb-1">MacBook Air 2025</h6>
+                                        <small>Apple M4, 24GB RAM, 512GB SSD</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>36.999.000₫</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <button class="btn btn-outline-secondary btn-sm" onclick="decreaseQty(this)">-</button>
+                                    <input type="text" class="form-control text-center mx-1" style="width: 50px;" value="1" readonly>
+                                    <button class="btn btn-outline-secondary btn-sm" onclick="increaseQty(this)">+</button>
+                                </div>
+                            </td>
+                            <td>36.999.000₫</td>
+                            <td>
+                                <button class="btn btn-sm btn-danger">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+
+                        <!-- Thêm sản phẩm khác ở đây -->
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tóm tắt đơn hàng -->
+        <div class="col-lg-4">
+            <div class="border rounded p-4 shadow-sm">
+                <h5 class="mb-3">Tóm tắt đơn hàng</h5>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Tạm tính</span>
+                    <span>36.999.000₫</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Phí giao hàng</span>
+                    <span>Miễn phí</span>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between fw-bold mb-3">
+                    <span>Tổng cộng</span>
+                    <span>36.999.000₫</span>
+                </div>
+                <button class="btn btn-primary w-100">Tiến hành thanh toán</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function increaseQty(btn) {
+        let input = btn.parentElement.querySelector('input');
+        input.value = parseInt(input.value) + 1;
+        // TODO: cập nhật lại giá trị đơn hàng
+    }
+
+    function decreaseQty(btn) {
+        let input = btn.parentElement.querySelector('input');
+        if (parseInt(input.value) > 1) {
+            input.value = parseInt(input.value) - 1;
+            // TODO: cập nhật lại giá trị đơn hàng
+        }
+    }
+</script>
+
+

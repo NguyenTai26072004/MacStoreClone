@@ -1,0 +1,96 @@
+﻿
+/*CSS SLIDE*/
+.prev_slide_button {
+    background-color: #666;
+    border-radius: 50%;
+    padding: 20px;
+    position: absolute;
+    left: 20px;
+}
+
+.next_slide_button {
+    background-color: #666;
+    border-radius: 50%;
+    padding: 20px;
+    position: absolute;
+    right: 20px;
+}
+
+
+.active {
+    background: #666666 !important; 
+}
+
+
+.carousel-indicators [data-bs-target] {
+    background: linear-gradient(to bottom, #999999 0%, #e1e1e1 100%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 3px solid #e5e5e5;
+}
+
+/*Product Card CSS*/
+.product_card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .product_card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    }
+
+.card_product_name {
+    font-size: 16px;
+    color:  #363636;
+    text-align: center;
+}
+
+.card-description{
+    color: #444444;
+    font-size:14px;
+    font-family: Roboto,sans-serif;
+}
+
+.card_price{
+    font-size:18px;
+    color: #3E3E3E;
+    font-weight:bold;
+    text-align:center;
+}
+
+.btn_addToCart {
+    font-size: 16px;
+    font-weight: 600;
+    font-family: Roboto,sans-serif;
+    background: linear-gradient(#42a1ec, #0070c9) !important;
+
+}
+
+    .btn_addToCart:hover {
+        border: 1px solid black;
+        background: rgba(0, 0, 0, 0) linear-gradient(#51a9ee, #147bcd) repeat scroll 0 0 !important;
+    }
+
+.card-footer{
+    background-color: #fff !important;
+}
+
+
+.carousel-fade .carousel-item {
+    opacity: 0;
+    transition: opacity 1.2s ease-in-out;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 0;
+}
+
+    .carousel-fade .carousel-item.active {
+        opacity: 1;
+        position: relative;
+        z-index: 1;
+    }
+
