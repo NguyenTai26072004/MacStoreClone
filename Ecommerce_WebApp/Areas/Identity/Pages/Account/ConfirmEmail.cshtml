@@ -1,8 +1,44 @@
 ﻿@page
 @model ConfirmEmailModel
 @{
-    ViewData["Title"] = "Confirm email";
+    ViewData["Title"] = "Xác thực Email";
 }
 
-<h1>@ViewData["Title"]</h1>
-<partial name="_StatusMessage" model="Model.StatusMessage" />
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6 col-xl-5">
+
+            <div class="card shadow-lg" style="border-radius: 1rem;">
+                <div class="card-body p-4 p-sm-5 text-center">
+
+                    @if (Model.StatusMessage != null && Model.StatusMessage.StartsWith("Cảm ơn"))
+                    {
+                    // Giao diện khi thành công
+                        <div class="mb-4">
+                            <i class="fa-solid fa-circle-check fa-3x text-success"></i>
+                        </div>
+                        <h3 class="fw-bold mb-3">Xác thực thành công!</h3>
+                    }
+                    else
+                    {
+                    // Giao diện khi thất bại
+                        <div class="mb-4">
+                            <i class="fa-solid fa-circle-xmark fa-3x text-danger"></i>
+                        </div>
+                        <h3 class="fw-bold mb-3">Xác thực thất bại!</h3>
+                    }
+
+                    @* Hiển thị thông báo trạng thái từ TempData *@
+                    <partial name="_StatusMessage" for="StatusMessage" />
+
+                    <hr class="my-4">
+
+                    <div class="d-grid">
+                        <a class="btn btn-primary" asp-page="./Login">Đi đến trang Đăng nhập</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

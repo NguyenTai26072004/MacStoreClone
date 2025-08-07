@@ -38,7 +38,7 @@
                         <i class="fa-solid fa-cart-shopping fs-5 text-white"></i>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">2</span>
                     </a>
-                    <a href="#"><i class="fa-regular fa-user fs-5 text-white"></i></a>                   
+                    <partial name="_LoginPartial" />
                 </div>
             </div>
 
@@ -140,18 +140,8 @@
                         <i class="fa-solid fa-cart-shopping fs-5 text-white"></i>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">2</span>
                     </a>
-
-
-                    <div class="position-relative user-dropdown">
-                        <div class="user-icon cursor-pointer">
-                            <i class="fa-regular fa-user fs-5 text-white p-2"></i>
-                        </div>
-                        <div class="user-dropdown-bridge"></div>
-                        <div class="user-dropdown-menu bg-white text-dark rounded shadow position-absolute end-0 mt-2">
-                            <a href="#" class="d-block mb-2 text-decoration-none text-dark p-3 fw-bold text-center">Đăng nhập</a>
-                            <a href="#" class="d-block text-decoration-none text-dark p-3 fw-bold text-center">Đăng ký</a>
-                        </div>
-                    </div>
+               
+                    <partial name="_LoginPartial" />
                 </div>
             </div>
         </div>

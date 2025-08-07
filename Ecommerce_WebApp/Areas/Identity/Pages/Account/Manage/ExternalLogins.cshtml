@@ -1,53 +1,78 @@
 ﻿@page
 @model ExternalLoginsModel
 @{
-    ViewData["Title"] = "Manage your external logins";
+    ViewData["Title"] = "Quản lý liên kết ngoài";
     ViewData["ActivePage"] = ManageNavPages.ExternalLogins;
 }
 
 <partial name="_StatusMessage" for="StatusMessage" />
+
+<h4 class="mb-3">@ViewData["Title"]</h4>
+
 @if (Model.CurrentLogins?.Count > 0)
 {
-    <h3>Registered Logins</h3>
-    <table class="table">
-        <tbody>
-            @foreach (var login in Model.CurrentLogins)
-            {
-                <tr>
-                    <td id="@($"login-provider-{login.LoginProvider}")">@login.ProviderDisplayName</td>
-                    <td>
-                        @if (Model.ShowRemoveButton)
-                        {
-                            <form id="@($"remove-login-{login.LoginProvider}")" asp-page-handler="RemoveLogin" method="post">
-                                <div>
-                                    <input asp-for="@login.LoginProvider" name="LoginProvider" type="hidden" />
-                                    <input asp-for="@login.ProviderKey" name="ProviderKey" type="hidden" />
-                                    <button type="submit" class="btn btn-primary" title="Remove this @login.ProviderDisplayName login from your account">Remove</button>
-                                </div>
-                            </form>
-                        }
-                        else
-                        {
-                            @: &nbsp;
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <p class="text-muted">Các tài khoản dưới đây đã được liên kết với tài khoản của bạn.</p>
+    <div class="list-group">
+        @foreach (var login in Model.CurrentLogins)
+        {
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div class="fw-bold">
+                    @* Thêm icon cho nhà cung cấp dịch vụ *@
+                    @if (login.ProviderDisplayName.ToLower().Contains("google"))
+                    {
+                        <i class="fa-brands fa-google text-danger me-2"></i>
+                    }
+                    else if (login.ProviderDisplayName.ToLower().Contains("facebook"))
+                    {
+                        <i class="fa-brands fa-facebook text-primary me-2"></i>
+                    }
+                    @login.ProviderDisplayName
+                </div>
+                <div>
+                    @if (Model.ShowRemoveButton)
+                    {
+                        <form id="@($"remove-login-{login.LoginProvider}")" asp-page-handler="RemoveLogin" method="post">
+                            <div>
+                                <input asp-for="@login.LoginProvider" name="LoginProvider" type="hidden" />
+                                <input asp-for="@login.ProviderKey" name="ProviderKey" type="hidden" />
+                                <button type="submit" class="btn btn-danger btn-sm" title="@($"Gỡ bỏ liên kết với tài khoản {login.ProviderDisplayName} này")">
+                                    <i class="fa-solid fa-trash-can me-1"></i> Gỡ bỏ
+                                </button>
+                            </div>
+                        </form>
+                    }
+                    else
+                    {
+                        @* Nếu không thể gỡ, hiển thị một huy hiệu thông báo *@
+                        <span class="badge bg-secondary" title="Đây là phương thức đăng nhập duy nhất của bạn, không thể gỡ bỏ.">Không thể gỡ bỏ</span>
+                    }
+                </div>
+            </div>
+        }
+    </div>
 }
+
 @if (Model.OtherLogins?.Count > 0)
 {
-    <h4>Add another service to log in.</h4>
+    <h5 class="mt-4">Thêm liên kết với dịch vụ khác</h5>
     <hr />
-    <form id="link-login-form" asp-page-handler="LinkLogin" method="post" class="form-horizontal">
-        <div id="socialLoginList">
-            <p>
-                @foreach (var provider in Model.OtherLogins)
-                {
-                    <button id="@($"link-login-button-{provider.Name}")" type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                }
-            </p>
+    <p class="text-muted">Bạn có thể liên kết tài khoản của mình với các dịch vụ dưới đây để đăng nhập.</p>
+    <form id="link-login-form" asp-page-handler="LinkLogin" method="post">
+        <div class="d-grid gap-2">
+            @foreach (var provider in Model.OtherLogins)
+            {
+                <button id="@($"link-login-button-{provider.Name}")" type="submit" class="btn btn-outline-primary" name="provider" value="@provider.Name" title="@($"Liên kết với tài khoản {provider.DisplayName} của bạn")">
+                    @if (provider.Name.ToLower().Contains("google"))
+                    {
+                        <i class="fa-brands fa-google me-2"></i>
+                    }
+                    else if (provider.Name.ToLower().Contains("facebook"))
+                    {
+                        <i class="fa-brands fa-facebook me-2"></i>
+                    }
+                    Liên kết với @provider.DisplayName
+                </button>
+            }
         </div>
     </form>
 }

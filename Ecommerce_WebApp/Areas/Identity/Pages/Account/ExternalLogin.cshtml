@@ -1,32 +1,60 @@
 ﻿@page
 @model ExternalLoginModel
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Hoàn tất Đăng ký";
 }
 
-<h1>@ViewData["Title"]</h1>
-<h2 id="external-login-title">Associate your @Model.ProviderDisplayName account.</h2>
-<hr />
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6 col-xl-5">
+            <div class="card shadow-lg" style="border-radius: 1rem;">
+                <div class="card-body p-4 p-sm-5">
 
-<p id="external-login-description" class="text-info">
-    You've successfully authenticated with <strong>@Model.ProviderDisplayName</strong>.
-    Please enter an email address for this site below and click the Register button to finish
-    logging in.
-</p>
+                    <div class="text-center mb-4">
+                        <img src="~/img/logo.png" alt="Logo" height="40" />
+                    </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-page-handler="Confirmation" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" autocomplete="email" placeholder="Please enter your email."/>
-                <label asp-for="Input.Email" class="form-label"></label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    <h3 class="fw-bold mb-3 text-center">@ViewData["Title"]</h3>
+
+                    <div class="alert alert-success text-start" role="alert">
+                        <h5 class="alert-heading">
+                            @* Thêm icon cho nhà cung cấp dịch vụ *@
+                            @if (Model.ProviderDisplayName.ToLower().Contains("google"))
+                            {
+                                <i class="fa-brands fa-google text-danger me-2"></i>
+                            }
+                            else if (Model.ProviderDisplayName.ToLower().Contains("facebook"))
+                            {
+                                <i class="fa-brands fa-facebook text-primary me-2"></i>
+                            }
+                            Xác thực thành công!
+                        </h5>
+                        <p class="mb-0 small">
+                            Bạn đã đăng nhập thành công bằng tài khoản <strong>@Model.ProviderDisplayName</strong>.
+                            Vui lòng xác nhận địa chỉ email dưới đây để hoàn tất việc tạo tài khoản trên trang của chúng tôi.
+                        </p>
+                    </div>
+
+                    <form asp-page-handler="Confirmation" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger text-start mb-3" role="alert"></div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Email" class="form-control" autocomplete="email" placeholder="Vui lòng nhập email." />
+                            <label asp-for="Input.Email" class="form-label">Email</label>
+                            <span asp-validation-for="Input.Email" class="text-danger d-block text-start"></span>
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg fw-bold">Hoàn tất Đăng ký</button>
+                        </div>
+                    </form>
+
+                </div>
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
-        </form>
+        </div>
     </div>
 </div>
+
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

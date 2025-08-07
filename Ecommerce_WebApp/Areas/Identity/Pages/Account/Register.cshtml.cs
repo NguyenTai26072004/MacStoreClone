@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using Ecommerce_WebApp.Services; // <-- THÊM USING NÀY ĐỂ NHẬN DIỆN LỚP EmailSender
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -45,57 +46,29 @@ namespace Ecommerce_WebApp.Areas.Identity.Pages.Account
             _emailSender = emailSender;
         }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [BindProperty]
         public InputModel Input { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public string ReturnUrl { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
-            [Required]
-            [EmailAddress]
-            [Display(Name = "Email")]
+            [Required(ErrorMessage = "Vui lòng nhập địa chỉ email.")]
+            [EmailAddress(ErrorMessage = "Địa chỉ email không hợp lệ.")]
+            [Display(Name = "Địa chỉ Email")]
             public string Email { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required(ErrorMessage = "Vui lòng nhập mật khẩu.")]
+            [StringLength(100, ErrorMessage = "{0} phải có độ dài từ {2} đến {1} ký tự.", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = "Mật khẩu")]
             public string Password { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Display(Name = "Xác nhận mật khẩu")]
+            [Compare("Password", ErrorMessage = "Mật khẩu và mật khẩu xác nhận không trùng khớp.")]
             public string ConfirmPassword { get; set; }
         }
 
@@ -120,7 +93,7 @@ namespace Ecommerce_WebApp.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User created a new account with password.");
+                    _logger.LogInformation("Người dùng đã tạo một tài khoản mới bằng mật khẩu.");
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -131,8 +104,35 @@ namespace Ecommerce_WebApp.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    // =======================================================================================
+                    // ===== THAY ĐỔI LOGIC GỬI EMAIL ĐỂ DÙNG MẪU (TEMPLATE) =====
+                    // =======================================================================================
+
+                    // 1. Tạo một dictionary chứa các giá trị để thay thế vào placeholder trong mẫu
+                    var replacements = new Dictionary<string, string>
+                    {
+                        { "{{UserName}}", Input.Email }, // Dùng email làm tên người dùng tạm thời
+                        { "{{CallbackUrl}}", callbackUrl } // Không cần Encode ở đây vì mẫu đã dùng href
+                    };
+
+                    // 2. Ép kiểu _emailSender sang lớp EmailSender cụ thể để gọi phương thức mới
+                    if (_emailSender is EmailSender sender)
+                    {
+                        await sender.SendEmailFromTemplateAsync(
+                            Input.Email,
+                            "Xác nhận tài khoản của bạn",
+                            "ConfirmAccountTemplate.html", // Tên tệp mẫu trong wwwroot/EmailTemplates
+                            replacements
+                        );
+                    }
+                    else
+                    {
+                        // Fallback về phương thức cũ nếu ép kiểu thất bại (an toàn hơn)
+                        await _emailSender.SendEmailAsync(Input.Email, "Xác nhận email của bạn",
+                            $"Vui lòng xác nhận tài khoản của bạn bằng cách <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>nhấp vào đây</a>.");
+                    }
+
+                    // =======================================================================================
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
@@ -150,7 +150,6 @@ namespace Ecommerce_WebApp.Areas.Identity.Pages.Account
                 }
             }
 
-            // If we got this far, something failed, redisplay form
             return Page();
         }
 
@@ -162,9 +161,8 @@ namespace Ecommerce_WebApp.Areas.Identity.Pages.Account
             }
             catch
             {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(IdentityUser)}'. " +
-                    $"Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
-                    $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
+                throw new InvalidOperationException($"Không thể tạo một thực thể của '{nameof(IdentityUser)}'. " +
+                    $"Hãy đảm bảo '{nameof(IdentityUser)}' không phải là một lớp trừu tượng và có một hàm khởi tạo không tham số.");
             }
         }
 
@@ -172,7 +170,7 @@ namespace Ecommerce_WebApp.Areas.Identity.Pages.Account
         {
             if (!_userManager.SupportsUserEmail)
             {
-                throw new NotSupportedException("The default UI requires a user store with email support.");
+                throw new NotSupportedException("Giao diện người dùng mặc định yêu cầu một user store có hỗ trợ email.");
             }
             return (IUserEmailStore<IdentityUser>)_userStore;
         }

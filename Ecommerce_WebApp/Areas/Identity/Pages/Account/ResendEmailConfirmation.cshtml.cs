@@ -28,27 +28,20 @@ namespace Ecommerce_WebApp.Areas.Identity.Pages.Account
             _emailSender = emailSender;
         }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [BindProperty]
         public InputModel Input { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
+        // =================================================================
+        // ===== BẮT ĐẦU VÙNG VIỆT HÓA VALIDATION =====
+        // =================================================================
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
-            [Required]
-            [EmailAddress]
+            [Required(ErrorMessage = "Vui lòng nhập địa chỉ email.")]
+            [EmailAddress(ErrorMessage = "Địa chỉ email không hợp lệ.")]
+            [Display(Name = "Địa chỉ Email")]
             public string Email { get; set; }
         }
+        // =================================================================
 
         public void OnGet()
         {
@@ -62,26 +55,30 @@ namespace Ecommerce_WebApp.Areas.Identity.Pages.Account
             }
 
             var user = await _userManager.FindByEmailAsync(Input.Email);
-            if (user == null)
+
+            // Logic mặc định của Identity là luôn hiển thị thông báo thành công
+            // để tránh kẻ xấu dùng form này để dò xem email nào đã tồn tại.
+            // Chúng ta chỉ cần Việt hóa thông báo này.
+            if (user != null)
             {
-                ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
-                return Page();
+                var userId = await _userManager.GetUserIdAsync(user);
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                var callbackUrl = Url.Page(
+                    "/Account/ConfirmEmail",
+                    pageHandler: null,
+                    values: new { userId = userId, code = code },
+                    protocol: Request.Scheme);
+
+                // ===== VIỆT HÓA NỘI DUNG EMAIL =====
+                await _emailSender.SendEmailAsync(
+                    Input.Email,
+                    "Xác nhận email của bạn",
+                    $"Vui lòng xác nhận tài khoản của bạn bằng cách <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>nhấp vào đây</a>.");
             }
 
-            var userId = await _userManager.GetUserIdAsync(user);
-            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            var callbackUrl = Url.Page(
-                "/Account/ConfirmEmail",
-                pageHandler: null,
-                values: new { userId = userId, code = code },
-                protocol: Request.Scheme);
-            await _emailSender.SendEmailAsync(
-                Input.Email,
-                "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-            ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
+            // ===== VIỆT HÓA THÔNG BÁO HIỂN THỊ TRÊN GIAO DIỆN =====
+            ModelState.AddModelError(string.Empty, "Gửi email thành công. Vui lòng kiểm tra hộp thư của bạn.");
             return Page();
         }
     }

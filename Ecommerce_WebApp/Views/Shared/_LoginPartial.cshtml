@@ -3,25 +3,35 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
-<ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
-    <li class="nav-item">
-        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
-    </li>
-    <li class="nav-item">
-        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
-        </form>
-    </li>
+    // Giao diện khi người dùng ĐÃ ĐĂNG NHẬP
+    <div class="position-relative user-dropdown">
+        <div class="user-icon cursor-pointer">
+            <i class="fa-regular fa-user fs-5 text-white p-2"></i>
+        </div>
+        <div class="user-dropdown-bridge"></div>
+        <div class="user-dropdown-menu bg-white text-dark rounded shadow position-absolute end-0 mt-2">
+            <a id="manage" class="d-block text-decoration-none text-dark p-3 fw-bold text-center" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+                Xin chào, @UserManager.GetUserName(User)!
+            </a>
+            <form id="logoutForm" class="m-0" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button id="logout" type="submit" class="d-block text-decoration-none text-dark p-3 fw-bold text-center w-100 btn btn-link">Đăng xuất</button>
+            </form>
+        </div>
+    </div>
 }
 else
 {
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>
+    // Giao diện khi người dùng CHƯA ĐĂNG NHẬP (theo mẫu của bạn)
+    <div class="position-relative user-dropdown">
+        <div class="user-icon cursor-pointer">
+            <i class="fa-regular fa-user fs-5 text-white p-2"></i>
+        </div>
+        <div class="user-dropdown-bridge"></div>
+        <div class="user-dropdown-menu bg-white text-dark rounded shadow position-absolute end-0 mt-2">
+            <a class="d-block mb-2 text-decoration-none text-dark p-3 fw-bold text-center" id="login" asp-area="Identity" asp-page="/Account/Login">Đăng nhập</a>
+            <a class="d-block text-decoration-none text-dark p-3 fw-bold text-center" id="register" asp-area="Identity" asp-page="/Account/Register">Đăng ký</a>
+        </div>
+    </div>
 }
-</ul>

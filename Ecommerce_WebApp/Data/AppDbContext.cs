@@ -8,7 +8,6 @@ namespace Ecommerce_WebApp.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        // Ví dụ bảng khác nếu có
-        // public DbSet<Product> Products { get; set; }
+        
     }
 }
