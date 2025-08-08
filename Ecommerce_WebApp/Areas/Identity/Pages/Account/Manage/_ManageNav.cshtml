@@ -2,14 +2,32 @@
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
-<ul class="nav nav-pills flex-column">
-    <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Profile</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">Email</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">Password</a></li>
+@* 
+    Để sử dụng icon, bạn cần thêm thư viện Font Awesome vào dự án.
+    Thêm dòng sau vào file _Layout.cshtml, trong thẻ <head>:
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+*@
+
+<div class="list-group">
+    <a asp-page="./Index" class="list-group-item list-group-item-action @ManageNavPages.IndexNavClass(ViewContext)">
+        <i class="fas fa-id-card fa-fw me-2"></i>Hồ sơ
+    </a>
+    <a asp-page="./Email" class="list-group-item list-group-item-action @ManageNavPages.EmailNavClass(ViewContext)">
+        <i class="fas fa-envelope fa-fw me-2"></i>Email
+    </a>
+    <a asp-page="./ChangePassword" class="list-group-item list-group-item-action @ManageNavPages.ChangePasswordNavClass(ViewContext)">
+        <i class="fas fa-key fa-fw me-2"></i>Mật khẩu
+    </a>
     @if (hasExternalLogins)
     {
-        <li id="external-logins" class="nav-item"><a id="external-login" class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)" asp-page="./ExternalLogins">External logins</a></li>
+        <a asp-page="./ExternalLogins" class="list-group-item list-group-item-action @ManageNavPages.ExternalLoginsNavClass(ViewContext)">
+            <i class="fas fa-link fa-fw me-2"></i>Liên kết ngoài
+        </a>
     }
-    <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Two-factor authentication</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Personal data</a></li>
-</ul>
+    <a asp-page="./TwoFactorAuthentication" class="list-group-item list-group-item-action @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)">
+        <i class="fas fa-shield-alt fa-fw me-2"></i>Xác thực hai yếu tố
+    </a>
+    <a asp-page="./PersonalData" class="list-group-item list-group-item-action @ManageNavPages.PersonalDataNavClass(ViewContext)">
+        <i class="fas fa-user-lock fa-fw me-2"></i>Dữ liệu cá nhân
+    </a>
+</div>

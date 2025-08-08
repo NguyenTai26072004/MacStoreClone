@@ -8,7 +8,9 @@
     // Giao diện khi người dùng ĐÃ ĐĂNG NHẬP
     <div class="position-relative user-dropdown">
         <div class="user-icon cursor-pointer">
-            <i class="fa-regular fa-user fs-5 text-white p-2"></i>
+            <a asp-area="Identity" asp-page="/Account/Manage/Index">
+                <i class="fa-regular fa-user fs-5 text-white p-2"></i>
+            </a>
         </div>
         <div class="user-dropdown-bridge"></div>
         <div class="user-dropdown-menu bg-white text-dark rounded shadow position-absolute end-0 mt-2">
@@ -26,7 +28,9 @@ else
     // Giao diện khi người dùng CHƯA ĐĂNG NHẬP (theo mẫu của bạn)
     <div class="position-relative user-dropdown">
         <div class="user-icon cursor-pointer">
-            <i class="fa-regular fa-user fs-5 text-white p-2"></i>
+            <a asp-area="Identity" asp-page="/Account/Login">
+                <i class="fa-regular fa-user fs-5 text-white p-2"></i>
+            </a>
         </div>
         <div class="user-dropdown-bridge"></div>
         <div class="user-dropdown-menu bg-white text-dark rounded shadow position-absolute end-0 mt-2">

@@ -1,78 +1,94 @@
 ﻿@page
 @model ExternalLoginsModel
 @{
-    ViewData["Title"] = "Quản lý liên kết ngoài";
+    ViewData["Title"] = "Quản lý liên kết tài khoản";
     ViewData["ActivePage"] = ManageNavPages.ExternalLogins;
 }
 
-<partial name="_StatusMessage" for="StatusMessage" />
 
-<h4 class="mb-3">@ViewData["Title"]</h4>
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">
+            <i class="fas fa-link me-2"></i>@ViewData["Title"]
+        </h4>
+    </div>
+    <div class="card-body p-4">
+        <partial name="_StatusMessage" for="StatusMessage" />
 
-@if (Model.CurrentLogins?.Count > 0)
-{
-    <p class="text-muted">Các tài khoản dưới đây đã được liên kết với tài khoản của bạn.</p>
-    <div class="list-group">
-        @foreach (var login in Model.CurrentLogins)
+        @if (Model.CurrentLogins?.Count > 0)
         {
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-                <div class="fw-bold">
-                    @* Thêm icon cho nhà cung cấp dịch vụ *@
-                    @if (login.ProviderDisplayName.ToLower().Contains("google"))
-                    {
-                        <i class="fa-brands fa-google text-danger me-2"></i>
-                    }
-                    else if (login.ProviderDisplayName.ToLower().Contains("facebook"))
-                    {
-                        <i class="fa-brands fa-facebook text-primary me-2"></i>
-                    }
-                    @login.ProviderDisplayName
-                </div>
-                <div>
-                    @if (Model.ShowRemoveButton)
-                    {
-                        <form id="@($"remove-login-{login.LoginProvider}")" asp-page-handler="RemoveLogin" method="post">
-                            <div>
-                                <input asp-for="@login.LoginProvider" name="LoginProvider" type="hidden" />
-                                <input asp-for="@login.ProviderKey" name="ProviderKey" type="hidden" />
-                                <button type="submit" class="btn btn-danger btn-sm" title="@($"Gỡ bỏ liên kết với tài khoản {login.ProviderDisplayName} này")">
-                                    <i class="fa-solid fa-trash-can me-1"></i> Gỡ bỏ
-                                </button>
-                            </div>
-                        </form>
-                    }
-                    else
-                    {
-                        @* Nếu không thể gỡ, hiển thị một huy hiệu thông báo *@
-                        <span class="badge bg-secondary" title="Đây là phương thức đăng nhập duy nhất của bạn, không thể gỡ bỏ.">Không thể gỡ bỏ</span>
-                    }
-                </div>
+            <h5 class="fw-bold">Các tài khoản đã liên kết</h5>
+            <p class="text-muted small">Các tài khoản dưới đây đã được liên kết và có thể dùng để đăng nhập.</p>
+            <div class="list-group">
+                @foreach (var login in Model.CurrentLogins)
+                {
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="fw-bold">
+                            @* Thêm icon cho nhà cung cấp dịch vụ *@
+                            @if (login.ProviderDisplayName.ToLower().Contains("google"))
+                            {
+                                <i class="fa-brands fa-google text-danger me-2 fa-fw"></i>
+                            }
+                            else if (login.ProviderDisplayName.ToLower().Contains("facebook"))
+                            {
+                                <i class="fa-brands fa-facebook text-primary me-2 fa-fw"></i>
+                            }
+                            else
+                            {
+                                <i class="fas fa-user-shield me-2 fa-fw"></i>
+                            }
+                            @login.ProviderDisplayName
+                        </div>
+                        <div>
+                            @if (Model.ShowRemoveButton)
+                            {
+                                <form id="@($"remove-login-{login.LoginProvider}")" asp-page-handler="RemoveLogin" method="post">
+                                    <div>
+                                        <input asp-for="@login.LoginProvider" name="LoginProvider" type="hidden" />
+                                        <input asp-for="@login.ProviderKey" name="ProviderKey" type="hidden" />
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="@($"Gỡ bỏ liên kết với tài khoản {login.ProviderDisplayName} này")">
+                                            Gỡ bỏ
+                                        </button>
+                                    </div>
+                                </form>
+                            }
+                            else
+                            {
+                                <span class="badge bg-light text-dark" title="Đây là phương thức đăng nhập duy nhất của bạn, không thể gỡ bỏ.">Không thể gỡ</span>
+                            }
+                        </div>
+                    </div>
+                }
             </div>
         }
-    </div>
-}
 
-@if (Model.OtherLogins?.Count > 0)
-{
-    <h5 class="mt-4">Thêm liên kết với dịch vụ khác</h5>
-    <hr />
-    <p class="text-muted">Bạn có thể liên kết tài khoản của mình với các dịch vụ dưới đây để đăng nhập.</p>
-    <form id="link-login-form" asp-page-handler="LinkLogin" method="post">
-        <div class="d-grid gap-2">
-            @foreach (var provider in Model.OtherLogins)
-            {
-                <button id="@($"link-login-button-{provider.Name}")" type="submit" class="btn btn-outline-primary" name="provider" value="@provider.Name" title="@($"Liên kết với tài khoản {provider.DisplayName} của bạn")">
-                    @if (provider.Name.ToLower().Contains("google"))
+        @if (Model.OtherLogins?.Count > 0)
+        {
+            <hr class="my-4">
+            <h5 class="fw-bold">Thêm liên kết với dịch vụ khác</h5>
+            <p class="text-muted small">Bạn có thể liên kết tài khoản của mình với các dịch vụ dưới đây để có thêm lựa chọn đăng nhập.</p>
+            <form id="link-login-form" asp-page-handler="LinkLogin" method="post" class="mt-3">
+                <div class="d-grid gap-2">
+                    @foreach (var provider in Model.OtherLogins)
                     {
-                        <i class="fa-brands fa-google me-2"></i>
+                        <button id="@($"link-login-button-{provider.Name}")" type="submit" class="btn btn-outline-dark" name="provider" value="@provider.Name" title="@($"Liên kết với tài khoản {provider.DisplayName} của bạn")">
+                            @if (provider.Name.ToLower().Contains("google"))
+                            {
+                                <i class="fa-brands fa-google me-2"></i>
+                            }
+                            else if (provider.Name.ToLower().Contains("facebook"))
+                            {
+                                <i class="fa-brands fa-facebook me-2"></i>
+                            }
+                            Liên kết với @provider.DisplayName
+                        </button>
                     }
-                    else if (provider.Name.ToLower().Contains("facebook"))
-                    {
-                        <i class="fa-brands fa-facebook me-2"></i>
-                    }
-                    Liên kết với @provider.DisplayName
-                </button>
-            }
-        </div>
-    </form>
+                </div>
+            </form>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 }

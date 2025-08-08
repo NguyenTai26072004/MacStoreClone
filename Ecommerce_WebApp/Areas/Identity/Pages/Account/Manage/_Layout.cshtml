@@ -9,20 +9,29 @@
     }
 }
 
-<h1>Manage your account</h1>
+@* Bọc toàn bộ khu vực quản lý tài khoản trong một container để có bố cục đẹp hơn *@
+<div class="container my-5">
 
-<div>
-    <h2>Change your account settings</h2>
-    <hr />
+    @* Tiêu đề chung cho cả khu vực *@
+    <div>
+        <h2 style="font-weight: 700;">Quản lý tài khoản</h2>
+        <p class="text-muted">Thay đổi thông tin và cài đặt bảo mật cho tài khoản của bạn.</p>
+    </div>
+    <hr class="mb-4" />
+
+    @* Chia bố cục thành 2 cột: Menu trái và Nội dung phải *@
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-lg-3">
+            @* Đây là nơi menu điều hướng (_ManageNav.cshtml) được nhúng vào *@
             <partial name="_ManageNav" />
         </div>
-        <div class="col-md-9">
+        <div class="col-lg-9">
+            @* Đây là nơi nội dung của các trang con (Hồ sơ, Mật khẩu,...) sẽ được hiển thị *@
             @RenderBody()
         </div>
     </div>
 </div>
+
 
 @section Scripts {
     @RenderSection("Scripts", required: false)

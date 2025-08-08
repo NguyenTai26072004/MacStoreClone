@@ -2,69 +2,106 @@
 @using Microsoft.AspNetCore.Http.Features
 @model TwoFactorAuthenticationModel
 @{
-    ViewData["Title"] = "Two-factor authentication (2FA)";
+    ViewData["Title"] = "Xác thực hai yếu tố (2FA)";
     ViewData["ActivePage"] = ManageNavPages.TwoFactorAuthentication;
 }
 
-<partial name="_StatusMessage" for="StatusMessage" />
-<h3>@ViewData["Title"]</h3>
-@{
-    var consentFeature = HttpContext.Features.Get<ITrackingConsentFeature>();
-    @if (consentFeature?.CanTrack ?? true)
-    {
-        @if (Model.Is2faEnabled)
-        {
-            if (Model.RecoveryCodesLeft == 0)
+
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">
+            <i class="fas fa-shield-alt me-2"></i>@ViewData["Title"]
+        </h4>
+    </div>
+    <div class="card-body p-4">
+        <partial name="_StatusMessage" for="StatusMessage" />
+
+        @{
+            var consentFeature = HttpContext.Features.Get<ITrackingConsentFeature>();
+            if (consentFeature?.CanTrack ?? true)
+            {
+                // Phần 1: Quản lý ứng dụng xác thực
+                <h5>Ứng dụng xác thực</h5>
+                <p class="text-muted small">Sử dụng một ứng dụng như Google Authenticator, Microsoft Authenticator để tăng cường bảo mật.</p>
+                <div class="list-group mb-4">
+                    @if (!Model.HasAuthenticator)
+                    {
+                        <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="list-group-item list-group-item-action">
+                            <i class="fas fa-plus-circle me-2 text-success"></i>Thêm ứng dụng xác thực
+                        </a>
+                    }
+                    else
+                    {
+                        <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="list-group-item list-group-item-action">
+                           <i class="fas fa-cog me-2"></i>Thiết lập ứng dụng xác thực
+                        </a>
+                        <a id="reset-authenticator" asp-page="./ResetAuthenticator" class="list-group-item list-group-item-action">
+                            <i class="fas fa-trash-alt me-2 text-danger"></i>Đặt lại ứng dụng xác thực
+                        </a>
+                    }
+                </div>
+
+                <hr class="my-4">
+
+                // Phần 2: Trạng thái 2FA và Mã khôi phục
+                <h5>Trạng thái chung</h5>
+                @if (Model.Is2faEnabled)
+                {
+                    // Thông báo về mã khôi phục
+                    if (Model.RecoveryCodesLeft == 0)
+                    {
+                        <div class="alert alert-danger">
+                            <strong>Bạn không còn mã khôi phục nào.</strong>
+                            <p class="mb-0">Bạn phải <a asp-page="./GenerateRecoveryCodes">tạo một bộ mã khôi phục mới</a> trước khi có thể đăng nhập bằng mã khôi phục.</p>
+                        </div>
+                    }
+                    else if (Model.RecoveryCodesLeft == 1)
+                    {
+                        <div class="alert alert-danger">
+                            <strong>Bạn còn lại 1 mã khôi phục.</strong>
+                            <p class="mb-0">Bạn có thể <a asp-page="./GenerateRecoveryCodes">tạo một bộ mã khôi phục mới</a>.</p>
+                        </div>
+                    }
+                    else if (Model.RecoveryCodesLeft <= 3)
+                    {
+                        <div class="alert alert-warning">
+                            <strong>Bạn còn lại @Model.RecoveryCodesLeft mã khôi phục.</strong>
+                            <p class="mb-0">Bạn nên <a asp-page="./GenerateRecoveryCodes">tạo một bộ mã khôi phục mới</a>.</p>
+                        </div>
+                    }
+
+                    // Các hành động khác
+                    <div class="list-group mt-3">
+                        @if (Model.IsMachineRemembered)
+                        {
+                            <form method="post" class="list-group-item list-group-item-action p-0 border-0">
+                                <button type="submit" class="btn text-start w-100 p-3">
+                                    <i class="fas fa-desktop me-2"></i>Quên trình duyệt này
+                                </button>
+                            </form>
+                        }
+                        <a asp-page="./Disable2fa" class="list-group-item list-group-item-action"><i class="fas fa-power-off me-2 text-danger"></i>Vô hiệu hóa 2FA</a>
+                        <a asp-page="./GenerateRecoveryCodes" class="list-group-item list-group-item-action"><i class="fas fa-redo-alt me-2"></i>Đặt lại mã khôi phục</a>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info">
+                         <strong>Xác thực hai yếu tố (2FA) chưa được kích hoạt.</strong>
+                         <p class="mb-0">Kích hoạt 2FA bằng cách thêm một ứng dụng xác thực ở trên.</p>
+                    </div>
+                }
+            }
+            else
             {
                 <div class="alert alert-danger">
-                    <strong>You have no recovery codes left.</strong>
-                    <p>You must <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a> before you can log in with a recovery code.</p>
+                    <strong>Chính sách về quyền riêng tư và cookie chưa được chấp nhận.</strong>
+                    <p>Bạn phải chấp nhận chính sách trước khi có thể bật xác thực hai yếu tố.</p>
                 </div>
             }
-            else if (Model.RecoveryCodesLeft == 1)
-            {
-                <div class="alert alert-danger">
-                    <strong>You have 1 recovery code left.</strong>
-                    <p>You can <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a>.</p>
-                </div>
-            }
-            else if (Model.RecoveryCodesLeft <= 3)
-            {
-                <div class="alert alert-warning">
-                    <strong>You have @Model.RecoveryCodesLeft recovery codes left.</strong>
-                    <p>You should <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a>.</p>
-                </div>
-            }
-
-            if (Model.IsMachineRemembered)
-            {
-                <form method="post" style="display: inline-block">
-                    <button type="submit" class="btn btn-primary">Forget this browser</button>
-                </form>
-            }
-            <a asp-page="./Disable2fa" class="btn btn-primary">Disable 2FA</a>
-            <a asp-page="./GenerateRecoveryCodes" class="btn btn-primary">Reset recovery codes</a>
         }
-
-        <h4>Authenticator app</h4>
-        @if (!Model.HasAuthenticator)
-        {
-            <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-primary">Add authenticator app</a>
-        }
-        else
-        {
-            <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-primary">Set up authenticator app</a>
-            <a id="reset-authenticator" asp-page="./ResetAuthenticator" class="btn btn-primary">Reset authenticator app</a>
-        }
-    }
-    else
-    {
-        <div class="alert alert-danger">
-            <strong>Privacy and cookie policy have not been accepted.</strong>
-            <p>You must accept the policy before you can enable two factor authentication.</p>
-        </div>
-    }
-}
+    </div>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

@@ -1,24 +1,42 @@
 ﻿@page
 @model PersonalDataModel
 @{
-    ViewData["Title"] = "Personal Data";
+    ViewData["Title"] = "Dữ liệu cá nhân";
     ViewData["ActivePage"] = ManageNavPages.PersonalData;
 }
 
-<h3>@ViewData["Title"]</h3>
 
-<div class="row">
-    <div class="col-md-6">
-        <p>Your account contains personal data that you have given us. This page allows you to download or delete that data.</p>
-        <p>
-            <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
-        </p>
-        <form id="download-data" asp-page="DownloadPersonalData" method="post">
-            <button class="btn btn-primary" type="submit">Download</button>
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">
+            <i class="fas fa-user-lock me-2"></i>@ViewData["Title"]
+        </h4>
+    </div>
+    <div class="card-body p-4">
+
+        <p class="text-muted">Tài khoản của bạn chứa dữ liệu cá nhân mà bạn đã cung cấp cho chúng tôi. Trang này cho phép bạn quản lý, tải xuống hoặc xóa dữ liệu đó.</p>
+
+        <hr class="my-4">
+
+        @* --- Phần 1: Tải dữ liệu --- *@
+        <h5 class="fw-bold">Tải xuống dữ liệu của bạn</h5>
+        <p>Bạn có thể tải xuống tất cả dữ liệu liên quan đến tài khoản của mình dưới dạng file JSON.</p>
+        <form id="download-data" asp-page="DownloadPersonalData" method="post" class="mb-4">
+            <button class="btn btn-primary" type="submit"><i class="fas fa-download me-2"></i>Tải xuống</button>
         </form>
-        <p>
-            <a id="delete" asp-page="DeletePersonalData" class="btn btn-danger">Delete</a>
-        </p>
+
+        <hr class="my-4">
+
+        @* --- Phần 2: Xóa tài khoản (Hành động nguy hiểm) --- *@
+        <h5 class="fw-bold text-danger">Xóa tài khoản</h5>
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading"><i class="fas fa-exclamation-triangle"></i> Cảnh báo quan trọng!</h4>
+            <p>Hành động này sẽ **xóa vĩnh viễn tài khoản của bạn** khỏi hệ thống. Một khi đã xóa, tài khoản và toàn bộ dữ liệu liên quan (lịch sử đơn hàng, thông tin cá nhân) sẽ không thể được khôi phục.</p>
+            <hr>
+            <p class="mb-0">Hãy chắc chắn rằng bạn thật sự muốn thực hiện hành động này.</p>
+        </div>
+        <a id="delete" asp-page="DeletePersonalData" class="btn btn-danger btn-lg text-white"><i class="fas fa-trash-alt me-2"></i>Tôi hiểu và muốn xóa tài khoản</a>
+
     </div>
 </div>
 

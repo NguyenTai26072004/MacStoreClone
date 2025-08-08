@@ -32,7 +32,7 @@ namespace Ecommerce_WebApp.Areas.Identity.Pages.Account
             if (userId == null || code == null)
             {
                 // Nếu thiếu thông tin, chuyển về trang chủ
-                return RedirectToPage("/Index");
+                return RedirectToPage("/Home");
             }
 
             var user = await _userManager.FindByIdAsync(userId);
