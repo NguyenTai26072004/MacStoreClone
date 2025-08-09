@@ -24,17 +24,17 @@ namespace Ecommerce_WebApp.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly IUserStore<IdentityUser> _userStore;
-        private readonly IUserEmailStore<IdentityUser> _emailStore;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUserStore<ApplicationUser> _userStore;
+        private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
-            UserManager<IdentityUser> userManager,
-            IUserStore<IdentityUser> userStore,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<ApplicationUser> userManager,
+            IUserStore<ApplicationUser> userStore,
+            SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
@@ -104,9 +104,7 @@ namespace Ecommerce_WebApp.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    // =======================================================================================
-                    // ===== THAY ĐỔI LOGIC GỬI EMAIL ĐỂ DÙNG MẪU (TEMPLATE) =====
-                    // =======================================================================================
+
 
                     // 1. Tạo một dictionary chứa các giá trị để thay thế vào placeholder trong mẫu
                     var replacements = new Dictionary<string, string>
@@ -153,26 +151,26 @@ namespace Ecommerce_WebApp.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private IdentityUser CreateUser()
+        private ApplicationUser CreateUser()
         {
             try
             {
-                return Activator.CreateInstance<IdentityUser>();
+                return Activator.CreateInstance<ApplicationUser>();
             }
             catch
             {
-                throw new InvalidOperationException($"Không thể tạo một thực thể của '{nameof(IdentityUser)}'. " +
-                    $"Hãy đảm bảo '{nameof(IdentityUser)}' không phải là một lớp trừu tượng và có một hàm khởi tạo không tham số.");
+                throw new InvalidOperationException($"Không thể tạo một thực thể của '{nameof(ApplicationUser)}'. " +
+                    $"Hãy đảm bảo '{nameof(ApplicationUser)}' không phải là một lớp trừu tượng và có một hàm khởi tạo không tham số.");
             }
         }
 
-        private IUserEmailStore<IdentityUser> GetEmailStore()
+        private IUserEmailStore<ApplicationUser> GetEmailStore()
         {
             if (!_userManager.SupportsUserEmail)
             {
                 throw new NotSupportedException("Giao diện người dùng mặc định yêu cầu một user store có hỗ trợ email.");
             }
-            return (IUserEmailStore<IdentityUser>)_userStore;
+            return (IUserEmailStore<ApplicationUser>)_userStore;
         }
     }
 }

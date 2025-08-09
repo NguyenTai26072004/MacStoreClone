@@ -1,40 +1,60 @@
 ﻿@using Microsoft.AspNetCore.Identity
-
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 @if (SignInManager.IsSignedIn(User))
 {
+    // Lấy thông tin người dùng để có thể hiển thị FullName
+    var user = await UserManager.GetUserAsync(User);
+    var displayName = user?.FullName ?? user?.UserName; // Ưu tiên FullName, nếu không có thì dùng UserName
+
     // Giao diện khi người dùng ĐÃ ĐĂNG NHẬP
     <div class="position-relative user-dropdown">
         <div class="user-icon cursor-pointer">
-            <a asp-area="Identity" asp-page="/Account/Manage/Index">
+            <a class="p-0 m-0 nav-link" href="/Account/Manage/Index">
                 <i class="fa-regular fa-user fs-5 text-white p-2"></i>
             </a>
         </div>
         <div class="user-dropdown-bridge"></div>
-        <div class="user-dropdown-menu bg-white text-dark rounded shadow position-absolute end-0 mt-2">
-            <a id="manage" class="d-block text-decoration-none text-dark p-3 fw-bold text-center" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
-                Xin chào, @UserManager.GetUserName(User)!
-            </a>
-            <form id="logoutForm" class="m-0" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button id="logout" type="submit" class="d-block text-decoration-none text-dark p-3 fw-bold text-center w-100 btn btn-link">Đăng xuất</button>
-            </form>
+        <div class="user-dropdown-menu bg-white text-dark rounded shadow-lg position-absolute end-0 mt-2" style="width: 250px; z-index: 1050;">
+            <!-- Mục 1: Lời chào -->
+            <div class="px-3 py-2 bg-light border-bottom">
+                <h6 class="mb-0 fw-bold">Chào mừng, @displayName</h6>
+            </div>
+
+            <div class="list-group list-group-flush">
+                <!-- Mục 2: Hồ sơ người dùng -->
+                <a class="list-group-item list-group-item-action" asp-area="Identity" asp-page="/Account/Manage/Index" title="Quản lý hồ sơ">
+                    <i class="fas fa-user-circle fa-fw me-2 text-primary"></i>Hồ sơ người dùng
+                </a>
+
+                <!-- Mục 3: Lịch sử mua hàng -->
+                <a class="list-group-item list-group-item-action" asp-controller="Order" asp-action="Index">
+                    <i class="fas fa-history fa-fw me-2 text-success"></i>Lịch sử mua hàng
+                </a>
+
+                <!-- Mục 4: Đăng xuất -->
+                <form class="m-0" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <button type="submit" class="list-group-item list-group-item-action text-danger">
+                        <i class="fas fa-sign-out-alt fa-fw me-2"></i>Đăng xuất
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 }
 else
 {
-    // Giao diện khi người dùng CHƯA ĐĂNG NHẬP (theo mẫu của bạn)
+    // Giao diện khi người dùng CHƯA ĐĂNG NHẬP (Giữ nguyên cấu trúc của bạn)
     <div class="position-relative user-dropdown">
         <div class="user-icon cursor-pointer">
-            <a asp-area="Identity" asp-page="/Account/Login">
+            <a class="p-0 m-0 nav-link" href="/Account/Login">
                 <i class="fa-regular fa-user fs-5 text-white p-2"></i>
             </a>
         </div>
         <div class="user-dropdown-bridge"></div>
-        <div class="user-dropdown-menu bg-white text-dark rounded shadow position-absolute end-0 mt-2">
-            <a class="d-block mb-2 text-decoration-none text-dark p-3 fw-bold text-center" id="login" asp-area="Identity" asp-page="/Account/Login">Đăng nhập</a>
+        <div class="user-dropdown-menu bg-white text-dark rounded shadow-lg position-absolute end-0 mt-2" style="width: 200px; z-index: 1050;">
+            <a class="d-block text-decoration-none text-dark p-3 fw-bold text-center border-bottom" id="login" asp-area="Identity" asp-page="/Account/Login">Đăng nhập</a>
             <a class="d-block text-decoration-none text-dark p-3 fw-bold text-center" id="register" asp-area="Identity" asp-page="/Account/Register">Đăng ký</a>
         </div>
     </div>

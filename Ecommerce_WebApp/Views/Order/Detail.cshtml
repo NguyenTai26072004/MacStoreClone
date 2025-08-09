@@ -1,0 +1,82 @@
+﻿@{
+    ViewData["Title"] = "Chi tiết đơn hàng";
+}
+
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">Chi tiết đơn hàng #DH12345</h1>
+        <a href="/Order/Index" class="text-decoration-none">
+            <i class="fas fa-arrow-left me-2"></i>Quay lại lịch sử
+        </a>
+    </div>
+
+    <div class="row g-4">
+        <!-- CỘT TRÁI: DANH SÁCH SẢN PHẨM -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    Các sản phẩm trong đơn hàng
+                </div>
+                <ul class="list-group list-group-flush">
+                    @* Bắt đầu vòng lặp sản phẩm *@
+                    <li class="list-group-item d-flex align-items-center">
+                        <img src="~/img/sp1.jpg" alt="Sản phẩm" class="img-thumbnail me-3" style="width: 60px;">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-0">MacBook Air M4</h6>
+                            <small class="text-muted">SL: 1</small>
+                        </div>
+                        <span class="fw-bold">36.999.000₫</span>
+                    </li>
+                    <li class="list-group-item d-flex align-items-center">
+                        <img src="~/img/sp2.jpg" alt="Sản phẩm" class="img-thumbnail me-3" style="width: 60px;">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-0">Magic Mouse 3</h6>
+                            <small class="text-muted">SL: 1</small>
+                        </div>
+                        <span class="fw-bold">1.999.000₫</span>
+                    </li>
+                    @* Kết thúc vòng lặp *@
+                </ul>
+            </div>
+        </div>
+
+        <!-- CỘT PHẢI: THÔNG TIN CHI TIẾT -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <strong>Thông tin đơn hàng</strong>
+                    <span class="badge bg-success">Đã giao</span>
+                </div>
+                <div class="card-body">
+                    <p><strong>Ngày đặt:</strong> 09/08/2025</p>
+                    <p><strong>Phương thức thanh toán:</strong> Thanh toán khi nhận hàng (COD)</p>
+                    <hr>
+                    <h6><strong>Địa chỉ giao hàng</strong></h6>
+                    <p class="mb-0">Nguyễn Văn A</p>
+                    <p class="mb-0">0987654321</p>
+                    <p class="mb-0">123 Đường ABC, Phường Y, Quận Z, TP. Hồ Chí Minh</p>
+                    <hr>
+                    <h6><strong>Tổng kết</strong></h6>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between ps-0">
+                            <span>Tạm tính:</span>
+                            <span>38.998.000₫</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between ps-0">
+                            <span>Phí vận chuyển:</span>
+                            <span>0₫</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between ps-0">
+                            <span>Giảm giá:</span>
+                            <span class="text-success">-100.000₫</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between ps-0 border-top fw-bold">
+                            <span>Tổng cộng:</span>
+                            <span>38.898.000₫</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

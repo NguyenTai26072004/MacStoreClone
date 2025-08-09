@@ -17,10 +17,10 @@ namespace Ecommerce_WebApp.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class RegisterConfirmationModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         // IEmailSender không còn cần thiết ở trang này, vì email đã được gửi từ trang Register
 
-        public RegisterConfirmationModel(UserManager<IdentityUser> userManager)
+        public RegisterConfirmationModel(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
         }

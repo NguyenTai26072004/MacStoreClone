@@ -1,0 +1,58 @@
+﻿@* File: Views/Shared/patial/view _OrderCard.cshtml *@
+@* Model này chỉ là ví dụ, bạn sẽ truyền model thật của mình vào *@
+@model dynamic
+
+@{
+    string statusClass = "";
+    string statusText = Model.Status;
+    switch (statusText)
+    {
+        case "Đang giao":
+            statusClass = "bg-info text-dark";
+            break;
+        case "Đã giao":
+            statusClass = "bg-success";
+            break;
+        case "Đã hủy":
+            statusClass = "bg-danger";
+            break;
+        default: // Đang xử lý
+            statusClass = "bg-warning text-dark";
+            statusText = "Đang xử lý";
+            break;
+    }
+}
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-light d-flex justify-content-between align-items-center flex-wrap">
+        <div>
+            <strong class="me-3">Mã đơn hàng: #DH12345</strong>
+            <small class="text-muted">Ngày đặt: 09/08/2025</small>
+        </div>
+        <span class="badge rounded-pill @statusClass">@statusText</span>
+    </div>
+    <div class="card-body">
+        <!-- Danh sách sản phẩm thu nhỏ -->
+        <div class="d-flex align-items-center mb-3">
+            <img src="~/img/sp1.jpg" alt="Sản phẩm" class="img-thumbnail me-2" style="width: 50px; height: 50px; object-fit: cover;">
+            <img src="~/img/sp2.jpg" alt="Sản phẩm" class="img-thumbnail me-2" style="width: 50px; height: 50px; object-fit: cover;">
+            <span class="text-muted fst-italic">+ 1 sản phẩm khác</span>
+        </div>
+        <p>Xem danh sách đầy đủ các sản phẩm trong phần chi tiết đơn hàng.</p>
+    </div>
+    <div class="card-footer d-flex justify-content-between align-items-center">
+        <div>
+            <span class="text-muted">Tổng tiền:</span>
+            <strong class="h5 ms-2">38.898.000₫</strong>
+        </div>
+        <div>
+            @if (Model.Status == "Đang giao")
+            {
+                <a href="#" class="btn btn-sm btn-info">
+                    <i class="fas fa-truck me-1"></i> Theo dõi vận chuyển
+                </a>
+            }
+            <a href="/Order/Details/12345" class="btn btn-sm btn-outline-primary">Xem chi tiết</a>
+        </div>
+    </div>
+</div>

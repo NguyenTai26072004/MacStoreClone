@@ -17,9 +17,9 @@ namespace Ecommerce_WebApp.Areas.Identity.Pages.Account
     // Trang này không cần [AllowAnonymous] vì nó không xử lý thông tin nhạy cảm
     public class ConfirmEmailModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ConfirmEmailModel(UserManager<IdentityUser> userManager)
+        public ConfirmEmailModel(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
         }
