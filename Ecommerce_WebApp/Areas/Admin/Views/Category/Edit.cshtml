@@ -1,0 +1,53 @@
+﻿@model Category
+@{
+   
+}
+
+
+<form method="post" asp-action="Edit">
+
+
+    <input asp-for="Id" hidden />
+
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+
+            <h2 class="text-primary">Sửa Danh mục</h2>
+            <hr />
+        </div>
+
+
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="ParentId"></label>
+            <select id="ParentCategoryDropdown" asp-for="ParentId" asp-items="@ViewBag.CategoryList" class="form-control">
+                <option value="">-- Đây là danh mục gốc --</option>
+            </select>
+            <span asp-validation-for="ParentId" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="DisplayOrder"></label>
+            <input asp-for="DisplayOrder" class="form-control" />
+            <span asp-validation-for="DisplayOrder" class="text-danger"></span>
+        </div>
+
+
+        <button type="submit" class="btn btn-primary" style="width:150px">Cập nhật</button>
+        <a asp-controller="Category" asp-action="Index" class="btn btn-secondary" style="width:150px">
+            Quay lại
+        </a>
+    </div>
+</form>
+
+@* Giữ nguyên section Scripts *@
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

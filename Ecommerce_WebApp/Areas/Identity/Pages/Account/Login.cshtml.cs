@@ -15,16 +15,24 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
+// Đảm bảo bạn đã có using cho ApplicationUser của bạn nếu nó ở namespace khác
+// using Ecommerce_WebApp.Models; 
+
 namespace Ecommerce_WebApp.Areas.Identity.Pages.Account
 {
     public class LoginModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager; 
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
+        //CONSTRUCTOR
+        public LoginModel(SignInManager<ApplicationUser> signInManager,
+                          UserManager<ApplicationUser> userManager, 
+                          ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
+            _userManager = userManager; 
             _logger = logger;
         }
 
@@ -38,7 +46,7 @@ namespace Ecommerce_WebApp.Areas.Identity.Pages.Account
         [TempData]
         public string ErrorMessage { get; set; }
 
-   
+
         public class InputModel
         {
             [Required(ErrorMessage = "Vui lòng nhập địa chỉ email.")]
@@ -54,7 +62,7 @@ namespace Ecommerce_WebApp.Areas.Identity.Pages.Account
             [Display(Name = "Ghi nhớ tôi?")]
             public bool RememberMe { get; set; }
         }
-  
+
 
         public async Task OnGetAsync(string returnUrl = null)
         {
@@ -65,7 +73,7 @@ namespace Ecommerce_WebApp.Areas.Identity.Pages.Account
 
             returnUrl ??= Url.Content("~/");
 
-            // Clear the existing external cookie to ensure a clean login process
+            
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -73,6 +81,7 @@ namespace Ecommerce_WebApp.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
         }
 
+        // CẬP NHẬT PHƯƠNG THỨC OnPostAsync
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
@@ -85,6 +94,25 @@ namespace Ecommerce_WebApp.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+
+                    // === PHẦN LOGIC CHUYỂN HƯỚNG DỰA TRÊN ROLE ===
+                    var user = await _userManager.FindByEmailAsync(Input.Email);
+                    if (user != null)
+                    {
+                        if (await _userManager.IsInRoleAsync(user, "Admin"))
+                        {
+                            // Nếu là Admin, chuyển hướng đến trang HomeAdmin
+                            return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+                        }
+                        else if (await _userManager.IsInRoleAsync(user, "Customer"))
+                        {
+                            // Nếu là Customer, chuyển hướng đến trang Home
+                            return RedirectToAction("Index", "Home");
+                        }
+                    }
+ 
+
+                    // Nếu không có vai trò cụ thể hoặc có returnUrl, quay lại trang trước đó
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
@@ -103,7 +131,7 @@ namespace Ecommerce_WebApp.Areas.Identity.Pages.Account
                 }
             }
 
-            // If we got this far, something failed, redisplay form
+  
             return Page();
         }
     }

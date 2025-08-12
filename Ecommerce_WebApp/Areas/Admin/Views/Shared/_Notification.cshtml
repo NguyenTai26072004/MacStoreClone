@@ -1,0 +1,29 @@
+﻿
+@if (TempData["success"] != null)
+{
+    <script type="text/javascript">
+        // Thiết lập các tùy chọn chung cho Toastr (tùy chọn)
+        toastr.options = {
+            "closeButton": true,       // Hiển thị nút đóng
+            "progressBar": true,     // Hiển thị thanh tiến trình
+            "positionClass": "toast-top-right", // Vị trí ở góc trên bên phải
+            "timeOut": "5000",         // Tự động đóng sau 5 giây
+        };
+        // Gọi hàm toastr.success để hiển thị thông báo thành công
+        toastr.success("@TempData["success"]");
+    </script>
+}
+
+@if (TempData["error"] != null)
+{
+    <script type="text/javascript">
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "5000",
+        };
+        // Gọi hàm toastr.error để hiển thị thông báo lỗi
+        toastr.error("@TempData["error"]");
+    </script>
+}

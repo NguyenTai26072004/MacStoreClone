@@ -2,11 +2,7 @@
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
-@* 
-    Để sử dụng icon, bạn cần thêm thư viện Font Awesome vào dự án.
-    Thêm dòng sau vào file _Layout.cshtml, trong thẻ <head>:
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-*@
+
 
 <div class="list-group">
     <a asp-page="./Index" class="list-group-item list-group-item-action @ManageNavPages.IndexNavClass(ViewContext)">

@@ -1,0 +1,91 @@
+﻿@model IEnumerable<Category>
+@{
+    ViewData["Title"] = "Danh sách Danh mục";
+}
+
+@* 
+    THAY ĐỔI QUAN TRỌNG SỐ 1:
+    Thêm một section "Styles" để tải file CSS riêng cho trang này.
+*@
+@section Styles {
+    <!-- Page level plugins - CSS for DataTables -->
+    <link href="~/admin/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <div class="row">
+            <div class="col-6">
+                <h6 class="m-0 font-weight-bold text-primary">@ViewData["Title"]</h6>
+            </div>
+            <div class="col-6 text-right">
+                <a asp-controller="Category" asp-action="Create" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Tạo mới
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Tên Danh mục</th>
+                        <th>Danh mục cha</th>
+                        <th>Thứ tự hiển thị</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var category in Model)
+                    {
+                        <tr>
+                            <td>@category.Name</td>
+                            <td>@(category.Parent?.Name ?? "—")</td>
+                            <td>@category.DisplayOrder</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a asp-controller="Category" asp-action="Edit" asp-route-id="@category.Id" class="btn btn-success mx-2">
+                                        <i class="fas fa-edit"></i> Sửa
+                                    </a>
+                                    <a asp-controller="Category" asp-action="Delete" asp-route-id="@category.Id" class="btn btn-danger mx-2">
+                                        <i class="fas fa-trash"></i> Xóa
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Page level plugins -->
+    <script src="~/admin/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/admin/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable({
+                // Thêm tùy chọn "language" để Việt hóa
+                "language": {
+                    "lengthMenu": "Hiển thị _MENU_ mục",
+                    "zeroRecords": "Không tìm thấy dữ liệu",
+                    "info": "Hiển thị từ _START_ đến _END_ trên tổng số _TOTAL_ mục",
+                    "infoEmpty": "Không có mục nào để hiển thị",
+                    "infoFiltered": "(được lọc từ _MAX_ mục)",
+                    "search": "Tìm kiếm:",
+                    "paginate": {
+                        "first": "Đầu",
+                        "last": "Cuối",
+                        "next": "Tiếp",
+                        "previous": "Trước"
+                    }
+                }
+            });
+        });
+    </script>
+}

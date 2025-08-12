@@ -26,15 +26,14 @@ namespace Ecommerce_WebApp.Areas.Identity.Pages.Account.Manage
         }
 
         /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
+        ///     Dùng TempData để lưu trữ các mã khôi phục tạm thời và truyền chúng
+        ///     đến trang ShowRecoveryCodes sau khi chuyển hướng.
         /// </summary>
         [TempData]
         public string[] RecoveryCodes { get; set; }
 
         /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
+        ///     Thông báo thành công sẽ được lưu ở đây và hiển thị trên trang ShowRecoveryCodes.
         /// </summary>
         [TempData]
         public string StatusMessage { get; set; }
@@ -44,13 +43,14 @@ namespace Ecommerce_WebApp.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Không thể tải người dùng với ID '{_userManager.GetUserId(User)}'.");
             }
 
+            // Kiểm tra xem người dùng đã bật 2FA chưa. Nếu chưa, không thể tạo mã khôi phục.
             var isTwoFactorEnabled = await _userManager.GetTwoFactorEnabledAsync(user);
             if (!isTwoFactorEnabled)
             {
-                throw new InvalidOperationException($"Cannot generate recovery codes for user because they do not have 2FA enabled.");
+                throw new InvalidOperationException($"Không thể tạo mã khôi phục cho người dùng vì họ chưa bật xác thực hai yếu tố (2FA).");
             }
 
             return Page();
@@ -61,21 +61,28 @@ namespace Ecommerce_WebApp.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Không thể tải người dùng với ID '{_userManager.GetUserId(User)}'.");
             }
 
+            // Kiểm tra lại lần nữa trước khi thực hiện hành động.
             var isTwoFactorEnabled = await _userManager.GetTwoFactorEnabledAsync(user);
             var userId = await _userManager.GetUserIdAsync(user);
             if (!isTwoFactorEnabled)
             {
-                throw new InvalidOperationException($"Cannot generate recovery codes for user as they do not have 2FA enabled.");
+                throw new InvalidOperationException($"Không thể tạo mã khôi phục cho người dùng vì họ chưa bật xác thực hai yếu tố (2FA).");
             }
 
+            // --- HÀNH ĐỘNG CHÍNH ---
+            // Tạo 10 mã khôi phục mới. Hành động này cũng sẽ vô hiệu hóa tất cả các mã cũ.
             var recoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
-            RecoveryCodes = recoveryCodes.ToArray();
+            RecoveryCodes = recoveryCodes.ToArray(); // Lưu mã vào TempData
 
-            _logger.LogInformation("User with ID '{UserId}' has generated new 2FA recovery codes.", userId);
-            StatusMessage = "You have generated new recovery codes.";
+            _logger.LogInformation("Người dùng có ID '{UserId}' đã tạo các mã khôi phục 2FA mới.", userId);
+
+            // Gán thông báo thành công bằng tiếng Việt.
+            StatusMessage = "Bạn đã tạo thành công các mã khôi phục mới.";
+
+            // Chuyển hướng người dùng đến trang hiển thị các mã này.
             return RedirectToPage("./ShowRecoveryCodes");
         }
     }

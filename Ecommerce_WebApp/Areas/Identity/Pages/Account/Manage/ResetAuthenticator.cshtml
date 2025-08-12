@@ -1,24 +1,41 @@
 ﻿@page
 @model ResetAuthenticatorModel
 @{
-    ViewData["Title"] = "Reset authenticator key";
+    ViewData["Title"] = "Đặt lại khóa xác thực";
     ViewData["ActivePage"] = ManageNavPages.TwoFactorAuthentication;
+    Layout = "/Areas/Identity/Pages/Account/Manage/_Layout.cshtml";
 }
 
-<partial name="_StatusMessage" for="StatusMessage" />
-<h3>@ViewData["Title"]</h3>
-<div class="alert alert-warning" role="alert">
-    <p>
-        <span class="glyphicon glyphicon-warning-sign"></span>
-        <strong>If you reset your authenticator key your authenticator app will not work until you reconfigure it.</strong>
-    </p>
-    <p>
-        This process disables 2FA until you verify your authenticator app.
-        If you do not complete your authenticator app configuration you may lose access to your account.
-    </p>
-</div>
-<div>
-    <form id="reset-authenticator-form" method="post">
-        <button id="reset-authenticator-button" class="btn btn-danger" type="submit">Reset authenticator key</button>
-    </form>
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-danger text-white">
+        <h4 class="mb-0">
+            <i class="fas fa-exclamation-triangle me-2"></i>@ViewData["Title"]
+        </h4>
+    </div>
+    <div class="card-body p-4">
+
+        <partial name="_StatusMessage" for="StatusMessage" />
+
+        <div class="alert alert-warning border-warning" role="alert">
+            <h5 class="alert-heading fw-bold">Cảnh báo quan trọng!</h5>
+            <p>
+                <strong>Hành động này sẽ vô hiệu hóa khóa xác thực hiện tại của bạn.</strong>
+                Ứng dụng xác thực (Google Authenticator, Microsoft Authenticator...) trên điện thoại của bạn sẽ ngừng hoạt động đối với tài khoản này.
+            </p>
+            <hr>
+            <p class="mb-0">
+                Quá trình này sẽ tạm thời tắt tính năng xác thực hai yếu tố (2FA). Nếu bạn không hoàn tất việc cấu hình lại ứng dụng ngay sau đó, <strong>bạn có nguy cơ bị mất quyền truy cập vào tài khoản.</strong>
+            </p>
+        </div>
+
+        <p class="mt-4 text-center">Nếu bạn đã hiểu rõ các rủi ro và chắc chắn muốn tiếp tục, hãy nhấn nút bên dưới.</p>
+
+        <form id="reset-authenticator-form" method="post">
+            <div class="d-grid gap-2 col-md-8 mx-auto mt-4">
+                <button id="reset-authenticator-button" class="btn btn-danger btn-lg" type="submit">Tôi hiểu, Đặt lại khóa xác thực</button>
+                <a class="btn btn-outline-secondary" asp-page="./TwoFactorAuthentication">Không, quay lại</a>
+            </div>
+        </form>
+
+    </div>
 </div>
