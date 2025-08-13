@@ -1,0 +1,36 @@
+﻿@using Ecommerce_WebApp.Models;
+@model ProductAttribute;
+@{
+    ViewData["Title"] = "Sửa Thuộc tính";
+}
+
+<form method="post" asp-action="Edit">
+    @* Trường ẩn này CỰC KỲ QUAN TRỌNG để server biết phải sửa mục nào *@
+    <input asp-for="Id" hidden />
+
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">@ViewData["Title"]</h2>
+            <hr />
+        </div>
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:150px">Cập nhật</button>
+        <a asp-controller="ProductAttribute" asp-action="Index" class="btn btn-secondary" style="width:150px">
+            Quay lại
+        </a>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

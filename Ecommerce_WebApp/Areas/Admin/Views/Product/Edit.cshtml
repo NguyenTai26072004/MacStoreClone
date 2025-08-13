@@ -1,0 +1,149 @@
+﻿@using Ecommerce_WebApp.ViewModels
+@model ProductVM
+
+@{
+    ViewData["Title"] = "Chỉnh sửa Sản phẩm";
+}
+
+<form method="post" asp-action="Edit" enctype="multipart/form-data">
+    <input asp-for="Product.Id" hidden />
+
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">@ViewData["Title"] - @Model.Product.Name</h2>
+            <hr />
+        </div>
+
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        @* PHẦN 1: THÔNG TIN CƠ BẢN *@
+        <div class="row">
+            <div class="col-8">
+                <div class="mb-3">
+                    <label asp-for="Product.Name"></label>
+                    <input asp-for="Product.Name" class="form-control" />
+                    <span asp-validation-for="Product.Name" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Product.Description"></label>
+                    <textarea asp-for="Product.Description" class="form-control" rows="5"></textarea>
+                    <span asp-validation-for="Product.Description" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="mb-3">
+                    <label asp-for="Product.CategoryId"></label>
+                    <select id="CategoryDropdown" asp-for="Product.CategoryId" asp-items="@Model.CategoryList" class="form-control">
+                        <option value="">-- Chọn Danh mục --</option>
+                    </select>
+                    <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        @* PHẦN 2: UPLOAD HÌNH ẢNH *@
+        <div class="mb-3">
+            <label class="form-label">Thêm ảnh mới</label>
+            <div>
+                <input asp-for="Images" type="file" multiple class="d-none" id="imageUpload" accept="image/*" />
+                <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('imageUpload').click();">
+                    <i class="fas fa-plus"></i> Chọn ảnh
+                </button>
+                <span class="ms-2" id="fileCount">Chưa có ảnh nào được chọn.</span>
+            </div>
+
+            <h6 class="mt-4">Ảnh sản phẩm:</h6>
+            <div id="imagePreviewContainer" class="mt-3 d-flex flex-wrap">
+                @* Hiển thị các ảnh đã có sẵn *@
+                @foreach (var image in Model.Product.Images)
+                {
+                    <div class="position-relative existing-image-item" style="width: 150px; height: 150px; margin-right: 0.75rem; margin-bottom: 0.75rem;">
+                        <img src="@image.ImageUrl" class="img-thumbnail w-100 h-100" style="object-fit: cover;" />
+                        <button type="button" class="btn btn-danger btn-sm position-absolute remove-existing-image-btn" style="top: -8px; right: -8px; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; line-height: 1;">&times;</button>
+                        <input type="hidden" name="imagesToDelete" value="@image.Id" disabled />
+                    </div>
+                }
+                <!-- Ảnh MỚI xem trước sẽ được thêm vào đây -->
+            </div>
+        </div>
+
+        <hr />
+
+        @* PHẦN 3: THÔNG SỐ KỸ THUẬT *@
+        <h5>Thông số kỹ thuật</h5>
+        <div id="specificationsContainer">
+            @for (int i = 0; i < Model.Product.Specifications.Count; i++)
+            {
+                <div class="row mb-2 spec-row">
+                    <input type="hidden" name="Product.Specifications.Index" value="@i" />
+                    <input type="hidden" name="Product.Specifications[@i].Id" value="@Model.Product.Specifications.ToList()[i].Id" />
+                    <input type="hidden" name="Product.Specifications[@i].ProductId" value="@Model.Product.Specifications.ToList()[i].ProductId" />
+                    <div class="col-4"><input name="Product.Specifications[@i].Key" class="form-control" value="@Model.Product.Specifications.ToList()[i].Key" /></div>
+                    <div class="col-7"><input name="Product.Specifications[@i].Value" class="form-control" value="@Model.Product.Specifications.ToList()[i].Value" /></div>
+                    <div class="col-1"><button type="button" class="btn btn-danger remove-spec">Xóa</button></div>
+                </div>
+            }
+        </div>
+        <button type="button" id="addSpecification" class="btn btn-outline-info btn-sm mt-2">Thêm thông số</button>
+
+        <hr />
+
+        @* PHẦN 4: CÁC PHIÊN BẢN HIỆN TẠI *@
+        <h5>Các phiên bản hiện tại</h5>
+        @if (Model.Product.Variants != null && Model.Product.Variants.Any())
+        {
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        @foreach (var variantValue in Model.Product.Variants.First().VariantValues.OrderBy(vv => vv.AttributeValue.AttributeId))
+                        {
+                            <th>@variantValue.AttributeValue.Attribute.Name</th>
+                        }
+                        <th>Giá</th>
+                        <th>Mã SKU</th>
+                        <th>Số lượng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var i = 0; i < Model.Product.Variants.Count; i++)
+                    {
+                        var variant = Model.Product.Variants.ToList()[i];
+                        <tr>
+                            @foreach (var variantValue in variant.VariantValues.OrderBy(vv => vv.AttributeValue.AttributeId))
+                            {
+                                <td>@variantValue.AttributeValue.Value</td>
+                            }
+                            <input type="hidden" name="Product.Variants.Index" value="@i" />
+                            <input type="hidden" name="Product.Variants[@i].Id" value="@variant.Id" />
+                            <input type="hidden" name="Product.Variants[@i].ProductId" value="@variant.ProductId" />
+                            <td><input type="number" class="form-control" name="Product.Variants[@i].Price" value="@variant.Price" /></td>
+                            <td><input type="text" class="form-control" name="Product.Variants[@i].Sku" value="@variant.Sku" /></td>
+                            <td><input type="number" class="form-control" name="Product.Variants[@i].StockQuantity" value="@variant.StockQuantity" /></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>Sản phẩm này chưa có phiên bản nào.</p>
+        }
+
+        <hr />
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary" style="width:150px">Cập nhật</button>
+            <a asp-controller="Product" asp-action="Index" class="btn btn-secondary" style="width:150px">Quay lại</a>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    @* Gọi đến file JavaScript riêng cho trang Edit *@
+    <script src="~/js/ProductJS/product-edit.js" asp-append-version="true"></script>
+}

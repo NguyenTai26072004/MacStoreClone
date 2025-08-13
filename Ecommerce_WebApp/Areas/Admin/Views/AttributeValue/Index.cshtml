@@ -1,0 +1,72 @@
+﻿@model IEnumerable<AttributeValue>
+@{
+    ViewData["Title"] = "Danh sách Giá trị Thuộc tính";
+}
+
+@section Styles {
+    <link href="~/admin/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <div class="row">
+            <div class="col-6">
+                <h6 class="m-0 font-weight-bold text-primary">@ViewData["Title"]</h6>
+            </div>
+            <div class="col-6 text-right">
+                <a asp-controller="AttributeValue" asp-action="Create" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Tạo mới Giá trị
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Tên Giá trị</th>
+                        <th>Thuộc tính cha</th>
+                        <th style="width: 150px;">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Value</td>
+                            <td>@item.Attribute.Name</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a asp-controller="AttributeValue" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-success mx-2">
+                                        <i class="fas fa-edit"></i> Sửa
+                                    </a>
+                                    <a asp-controller="AttributeValue" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger mx-2">
+                                        <i class="fas fa-trash"></i> Xóa
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/admin/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/admin/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable({
+                "language": {
+                    // ... (phần việt hóa bạn có thể copy từ các file Index trước) ...
+                    "search": "Tìm kiếm:",
+                    "info": "Hiển thị từ _START_ đến _END_ trên tổng số _TOTAL_ mục",
+                    "paginate": { "next": "Tiếp", "previous": "Trước" }
+                }
+            });
+        });
+    </script>
+}

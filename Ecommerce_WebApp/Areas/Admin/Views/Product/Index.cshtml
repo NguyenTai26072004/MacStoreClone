@@ -1,0 +1,78 @@
+﻿@model IEnumerable<Product>
+@{
+    ViewData["Title"] = "Danh sách Sản phẩm";
+}
+
+@section Styles {
+    <link href="~/admin/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <div class="row">
+            <div class="col-6">
+                <h6 class="m-0 font-weight-bold text-primary">@ViewData["Title"]</h6>
+            </div>
+            <div class="col-6 text-right">
+                <a asp-controller="Product" asp-action="Create" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Tạo mới Sản phẩm
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th style="width: 10%;">Ảnh</th>
+                        <th>Tên Sản phẩm</th>
+                        <th>Danh mục</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var product in Model)
+                    {
+                        // Tìm ảnh đại diện của sản phẩm
+                        var primaryImage = product.Images.FirstOrDefault(i => i.IsPrimary)?.ImageUrl;
+                        var imageUrl = !string.IsNullOrEmpty(primaryImage) ? primaryImage : "/images/placeholder.jpg"; // Ảnh mặc định nếu không có
+
+                        <tr>
+                            <td>
+                                <img src="@imageUrl" alt="@product.Name" style="width: 100%; max-width: 100px; height: auto; object-fit: cover;" />
+                            </td>
+                            <td>@product.Name</td>
+                            <td>@product.Category.Name</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a asp-controller="Product" asp-action="Edit" asp-route-id="@product.Id" class="btn btn-success mx-2">
+                                        <i class="fas fa-edit"></i> Sửa
+                                    </a>
+                                    <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id" class="btn btn-info mx-2">
+                                        <i class="fas fa-eye"></i> Chi tiết
+                                    </a>
+                                    <a asp-controller="Product" asp-action="Delete" asp-route-id="@product.Id" class="btn btn-danger mx-2">
+                                        <i class="fas fa-trash"></i> Xóa
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/admin/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/admin/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable({
+                "language": { "search": "Tìm kiếm:", "info": "Hiển thị từ _START_ đến _END_ trên tổng số _TOTAL_ mục", "paginate": { "next": "Tiếp", "previous": "Trước" } }
+            });
+        });
+    </script>
+}

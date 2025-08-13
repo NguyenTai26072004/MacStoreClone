@@ -1,0 +1,98 @@
+﻿@model Product
+
+@{
+    ViewData["Title"] = "Chi tiết Sản phẩm";
+}
+
+<div class="border p-3 mt-4">
+    <div class="row pb-2">
+        <div class="col-8">
+            <h2 class="text-primary">@ViewData["Title"]: @Model.Name</h2>
+        </div>
+        <div class="col-4 text-right">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success">Sửa sản phẩm này</a>
+        </div>
+        <hr />
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <dl class="row">
+                <dt class="col-sm-3">Tên sản phẩm</dt>
+                <dd class="col-sm-9">@Model.Name</dd>
+
+                <dt class="col-sm-3">Danh mục</dt>
+                <dd class="col-sm-9">@Model.Category.Name</dd>
+
+                <dt class="col-sm-3">Mô tả</dt>
+                <dd class="col-sm-9">@Model.Description</dd>
+            </dl>
+        </div>
+        <div class="col-md-4">
+            @if (Model.Images.Any(i => i.IsPrimary))
+            {
+                <img src="@Model.Images.First(i => i.IsPrimary).ImageUrl" class="img-fluid rounded" />
+            }
+        </div>
+    </div>
+
+    <hr />
+    <h5>Hình ảnh</h5>
+    <div class="d-flex flex-wrap gap-3">
+        @foreach (var image in Model.Images)
+        {
+            <img src="@image.ImageUrl" class="img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;" />
+        }
+    </div>
+
+    <hr />
+    <h5>Thông số kỹ thuật</h5>
+    <dl>
+        @foreach (var spec in Model.Specifications)
+        {
+            <dt>@spec.Key</dt>
+            <dd>@spec.Value</dd>
+        }
+    </dl>
+
+    <hr />
+    <h5>Các phiên bản</h5>
+    @if (Model.Variants != null && Model.Variants.Any())
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    @foreach (var variantValue in Model.Variants.First().VariantValues.OrderBy(vv => vv.AttributeValue.AttributeId))
+                    {
+                        <th>@variantValue.AttributeValue.Attribute.Name</th>
+                    }
+                    <th>Giá</th>
+                    <th>Mã SKU</th>
+                    <th>Số lượng</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var variant in Model.Variants)
+                {
+                    <tr>
+                        @foreach (var variantValue in variant.VariantValues.OrderBy(vv => vv.AttributeValue.AttributeId))
+                        {
+                            <td>@variantValue.AttributeValue.Value</td>
+                        }
+                        <td>@variant.Price.ToString("N0") VNĐ</td>
+                        <td>@variant.Sku</td>
+                        <td>@variant.StockQuantity</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Sản phẩm này chưa có phiên bản nào.</p>
+    }
+
+    <div class="mt-4">
+        <a asp-action="Index" class="btn btn-secondary" style="width:150px">Quay lại Danh sách</a>
+    </div>
+</div>

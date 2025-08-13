@@ -1,0 +1,39 @@
+﻿@model Product
+
+@{
+    ViewData["Title"] = "Xóa Sản phẩm";
+    var primaryImage = Model.Images.FirstOrDefault(i => i.IsPrimary)?.ImageUrl ?? "/images/placeholder.png";
+}
+
+<form method="post" asp-action="Delete">
+    <input asp-for="Id" hidden />
+
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-danger">@ViewData["Title"]</h2>
+            <hr />
+            <h4 class="text-warning mt-2">Bạn có chắc chắn muốn xóa sản phẩm này?</h4>
+            <p>Hành động này không thể hoàn tác. Tất cả các phiên bản, hình ảnh, và thông số liên quan cũng sẽ bị xóa vĩnh viễn.</p>
+        </div>
+
+        <div class="mb-3 row">
+            <div class="col-md-3">
+                <img src="@primaryImage" class="img-fluid rounded" alt="@Model.Name" />
+            </div>
+            <div class="col-md-9">
+                <dl class="row">
+                    <dt class="col-sm-3">Tên sản phẩm:</dt>
+                    <dd class="col-sm-9"><strong>@Model.Name</strong></dd>
+
+                    <dt class="col-sm-3">Mô tả:</dt>
+                    <dd class="col-sm-9">@Model.Description</dd>
+                </dl>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-danger" style="width:150px">Xác nhận Xóa</button>
+        <a asp-controller="Product" asp-action="Index" class="btn btn-secondary" style="width:150px">
+            Quay lại
+        </a>
+    </div>
+</form>

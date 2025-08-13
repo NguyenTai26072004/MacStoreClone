@@ -1,0 +1,50 @@
+﻿@model AttributeValue
+@{
+    ViewData["Title"] = "Sửa Giá trị Thuộc tính";
+}
+
+<form method="post" asp-action="Edit">
+    <input asp-for="Id" hidden />
+
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">@ViewData["Title"]</h2>
+            <hr />
+        </div>
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="AttributeId" class="form-label"></label>
+            <select id="AttributeDropdown" asp-for="AttributeId" asp-items="@ViewBag.AttributeList" class="form-control">
+                <option value="">-- Chọn Thuộc tính --</option>
+            </select>
+            <span asp-validation-for="AttributeId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Value" class="form-label"></label>
+            <input asp-for="Value" class="form-control" />
+            <span asp-validation-for="Value" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:150px">Cập nhật</button>
+        <a asp-controller="AttributeValue" asp-action="Index" class="btn btn-secondary" style="width:150px">
+            Quay lại
+        </a>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    <script>
+        $(document).ready(function() {
+            $('#AttributeDropdown').select2({
+                placeholder: "-- Chọn Thuộc tính --",
+                allowClear: true
+            });
+        });
+    </script>
+}

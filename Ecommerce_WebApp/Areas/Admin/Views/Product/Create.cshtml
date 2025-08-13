@@ -1,0 +1,117 @@
+﻿@using Ecommerce_WebApp.ViewModels
+@model ProductVM
+
+@{
+    ViewData["Title"] = "Tạo mới Sản phẩm";
+}
+
+<form method="post" enctype="multipart/form-data">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">@ViewData["Title"]</h2>
+            <hr />
+        </div>
+
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        @* PHẦN 1: THÔNG TIN CƠ BẢN *@
+        <div class="row">
+            <div class="col-8">
+                <div class="mb-3">
+                    <label asp-for="Product.Name"></label>
+                    <input asp-for="Product.Name" class="form-control" />
+                    <span asp-validation-for="Product.Name" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Product.Description"></label>
+                    <textarea asp-for="Product.Description" class="form-control" rows="5"></textarea>
+                    <span asp-validation-for="Product.Description" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="mb-3">
+                    <label asp-for="Product.CategoryId"></label>
+                    <select id="CategoryDropdown" asp-for="Product.CategoryId" asp-items="@Model.CategoryList" class="form-control">
+                        <option value="">-- Chọn Danh mục --</option>
+                    </select>
+                    <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        @* PHẦN 2: UPLOAD HÌNH ẢNH *@
+        <div class="mb-3">
+            <label asp-for="Images" class="form-label"></label>
+            <div>
+                <input asp-for="Images" type="file" multiple class="d-none" id="imageUpload" accept="image/*" />
+                <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('imageUpload').click();">
+                    <i class="fas fa-plus"></i> Chọn ảnh
+                </button>
+                <span class="ms-2" id="fileCount">Chưa có ảnh nào được chọn.</span>
+            </div>
+            <div id="imagePreviewContainer" class="mt-3 d-flex flex-wrap gap-3">
+                <!-- Ảnh xem trước sẽ được thêm vào đây -->
+            </div>
+        </div>
+
+        <hr />
+
+        @* PHẦN 3: THÔNG SỐ KỸ THUẬT *@
+        <h5>Thông số kỹ thuật</h5>
+        <div id="specificationsContainer"></div>
+        <button type="button" id="addSpecification" class="btn btn-outline-info btn-sm mt-2">Thêm thông số</button>
+
+        <hr />
+
+          @* === PHẦN 4: TÙY CHỌN & PHIÊN BẢN (PHẦN MỚI) === *@
+        <h5>Tùy chọn & Phiên bản</h5>
+        <p class="text-muted small">Chọn các giá trị thuộc tính để tự động tạo ra các phiên bản sản phẩm. Mỗi phiên bản sẽ có giá và số lượng tồn kho riêng.</p>
+        <div class="row">
+            @foreach (var attributes in Model.AttributeList)
+            {
+                <div class="col-md-4 mb-3">
+                    <strong>@attributes.Name</strong>
+                    <div class="mt-2" style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px;">
+                        @foreach (var attrValue in attributes.Values)
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input variant-checkbox" type="checkbox" 
+                                       value="@attrValue.Id" id="attrValue_@attrValue.Id" 
+                                       data-attribute-id="@attributes.Id"
+                                       data-attribute-name="@attributes.Name"
+                                       data-value-name="@attrValue.Value">
+                                <label class="form-check-label" for="attrValue_@attrValue.Id">
+                                    @attrValue.Value
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div id="variantsContainer" class="mt-3">
+            <!-- Bảng các phiên bản sẽ được tạo ra ở đây -->
+        </div>
+        
+        <hr />
+
+        @* Nút Submit và Quay lại *@
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary" style="width:150px">Tạo Sản phẩm</button>
+            <a asp-controller="Product" asp-action="Index" class="btn btn-secondary" style="width:150px">
+                Quay lại
+            </a>
+        </div>
+    </div>
+</form>
+
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    <script src="~/js/ProductJS/product-create.js" asp-append-version="true"></script>
+}

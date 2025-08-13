@@ -19,6 +19,7 @@
     <link href="~/admin/css/sb-admin-2.min.css" rel="stylesheet" />
     <!-- Toastr CSS -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body id="page-top">
@@ -54,8 +55,9 @@
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
+            <!-- Nav Item - Sản phẩm -->
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" asp-area="Admin" asp-controller="Product" asp-action="Index">
                     <i class="fas fa-fw fa-box-open"></i>
                     <span>Sản phẩm</span>
                 </a>
@@ -64,6 +66,18 @@
                 <a class="nav-link" asp-area="Admin" asp-controller="Category" asp-action="Index">
                     <i class="fas fa-fw fa-th-list"></i>
                     <span>Danh mục</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="Admin" asp-controller="ProductAttribute" asp-action="Index">
+                    <i class="fas fa-fw fa-tags"></i> 
+                    <span>Thuộc tính</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="Admin" asp-controller="AttributeValue" asp-action="Index">
+                    <i class="fas fa-fw fa-sliders-h"></i> @* Dùng icon 'sliders' cho giá trị *@
+                    <span>Giá trị Thuộc tính</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -150,13 +164,13 @@
 
     <script src="~/admin/vendor/jquery/jquery.min.js"></script>
     <script src="~/admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
+ 
 
     <script src="~/admin/vendor/jquery-easing/jquery.easing.min.js"></script>
 
 
     <script src="~/admin/js/sb-admin-2.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
