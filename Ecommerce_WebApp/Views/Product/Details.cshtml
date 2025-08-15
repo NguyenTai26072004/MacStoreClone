@@ -1,0 +1,241 @@
+﻿@using Ecommerce_WebApp.ViewModels
+@model ProductDetailVM
+
+@{
+    ViewData["Title"] = Model.Product.Name;
+
+    // --- Chuẩn bị dữ liệu để hiển thị ---
+    var product = Model.Product;
+    var primaryImage = product.Images?.FirstOrDefault(i => i.IsPrimary) ?? product.Images?.FirstOrDefault();
+    var otherImages = product.Images?.Where(i => i.Id != primaryImage?.Id).ToList();
+
+    // Gom nhóm các tùy chọn theo từng thuộc tính (Màu sắc, CPU...) để dễ dàng hiển thị
+    var options = product.Variants
+        .SelectMany(v => v.VariantValues)
+        .GroupBy(vv => vv.AttributeValue.Attribute)
+        .ToDictionary(g => g.Key, g => g.Select(vv => vv.AttributeValue).DistinctBy(av => av.Id).OrderBy(av => av.Value).ToList());
+    
+    // Lấy giá mặc định (của phiên bản đầu tiên) để hiển thị ban đầu
+    var defaultPrice = product.Variants.FirstOrDefault()?.Price ?? 0;
+}
+
+<div class="container mt-3">   
+    <!-- Breadcrumb ĐỘNG -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+            @if(product.Category?.Parent != null)
+            {
+                <li class="breadcrumb-item"><a asp-controller="Category" asp-action="Index" asp-route-id="@product.Category.Parent.Id">@product.Category.Parent.Name</a></li>
+            }
+            <li class="breadcrumb-item"><a asp-controller="Category" asp-action="Index" asp-route-id="@product.Category.Id">@product.Category.Name</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@product.Name</li>
+        </ol>
+    </nav>
+
+    <div class="container p-0  mt-5">
+        <!--Bắt đầu nội dung chính-->
+        <div class="row">
+            <!-- VÙNG 1: ẢNH SẢN PHẨM -->
+            <div class="col-12 col-lg-6 pe-lg-5 mb-4">
+                <!-- Ảnh chính -->
+                <img id="mainProductImage" src="@(primaryImage?.ImageUrl ?? "/images/placeholder.png")" onclick="showProductImageModal(this.src)" style="cursor:zoom-in; max-height: 500px; object-fit: contain;" alt="@product.Name" class="img-fluid w-100 shadow-sm rounded mb-3" />
+                <!-- Danh sách ảnh nhỏ -->
+                <div class="container p-0">
+                    <ul class="list-unstyled d-flex flex-wrap">
+                        @if (otherImages != null)
+                        {
+                            @foreach (var image in otherImages)
+                            {
+                                <li class="p-2" style="width: 20%;">
+                                    <img src="@image.ImageUrl" alt="@product.Name" class="img-fluid w-100 border rounded" style="cursor:pointer;" onclick="changeMainImage(this)" />
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- VÙNG 2: THÔNG TIN CHUNG & TÙY CHỌN -->
+            <div class="col-12 col-lg-4 mb-4">
+                <h3 class="product_detail_name">@product.Name</h3>
+                
+                <!-- Thông số tóm tắt -->
+                <ul>
+                    @foreach(var spec in product.Specifications.OrderBy(s => s.DisplayOrder).Take(10))
+                    {
+                        <li>@spec.Key: @spec.Value</li>
+                    }
+                </ul>
+                
+                <!-- Giá sản phẩm (sẽ được cập nhật bằng JS) -->
+                <h3 id="productPrice" class="product_detail_price pb-4">@defaultPrice.ToString("N0") VNĐ</h3>
+
+                <!-- Khu vực tùy chọn ĐỘNG -->
+                <div id="variantOptions" class="container p-0 mt-4 mb-4">
+                     @foreach (var option in options.OrderBy(o => o.Key.Name))
+                     {
+                         <div class="p-3 border">
+                             <h5><strong>@option.Key.Name</strong></h5>
+                             <div class="d-flex flex-wrap gap-2">
+                                 @foreach (var value in option.Value)
+                                 {
+                                     <button type="button" class="btn btn-outline-secondary rounded-2 py-3 option-btn" data-attribute-id="@option.Key.Id" data-value-id="@value.Id">
+                                         @value.Value
+                                     </button>
+                                 }
+                             </div>
+                         </div>
+                     }
+                </div>
+                
+               <div class="container p-0">
+                   <h5>Bảo Hành & Khuyến Mãi</h5>
+                   <ul>
+                        <li><i>Hư gì đổi nấy 12 tháng (<a>chi tiết</a>)</i></li>
+                        <li><i>Bảo hành chính hãng 1 năm (<a>chi tiết</a>)</i></li>
+                        <li><i>Giao hàng nhanh toàn quốc (<a>chi tiết</a>)</i></li>
+                        <li><i>Gọi đặt mua: <a>0935 023 023</a> (9:00 – 21:00)</i></li>
+                        <li><i>Hỗ trợ kỹ thuật, cài đặt phần mềm và vệ sinh máy miễn phí suốt đời.</i></li>
+                   </ul>          
+               </div>
+
+                <div class="d-flex mt-4">
+                    <input type="text" id="quantity" class="quantity_number" style="width: 60px;" value="1" readonly>
+                    <div class="button_quantity_cover">
+                        <span class="btn_increase" type="button" onclick="increaseQty()"><i class="fa-solid fa-angle-up"></i></span>
+                        <span class="btn_descrease" type="button" onclick="decreaseQty()"><i class="fa-solid fa-angle-down"></i></span>
+                    </div>
+
+                    <button id="addToCartButton" class="btn_addToCart btn btn-primary d-flex align-items-center gap-2 ms-4" disabled>
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span id="addToCartButtonText">Chọn tùy chọn để mua</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- VÙNG 3: CỘT BÊN PHẢI (giữ nguyên) -->
+            <div class="col-12 col-lg-2">
+                <div class="container p-0">
+                    <p style="color: #08c;"><strong>TƯ VẤN MUA HÀNG: <br>0935 023 023</strong></p>
+                    <i class="fa fa-check-circle"></i>  Giao hàng hỏa tốc được áp dụng<br>
+                    <i class="fa fa-check-circle"></i>  Thanh toán thẻ tiền mặt hoặc chuyển khoản<br>
+                    <i class="fa fa-check-circle"></i>  Thanh toán cà thẻ miễn phí tại cửa hàng<br>
+                    <i class="fa fa-check-circle"></i>  Thanh toán khi nhận hàng<br>
+                    <p style="color: #08c;">
+                        <strong>CHÍNH SÁCH BÁN HÀNG:</strong>
+                    </p>
+                    <i class="fa fa-check-circle"></i> Dùng thử 07 ngày miễn phí đổi máy. (Macbook like new)<br>
+                    <i class="fa fa-check-circle"></i> Lỗi 1 Đổi 1 trong 30 ngày đầu. (Macbook like new)<br>
+                    <i class="fa fa-check-circle"></i> Giao hàng tận nhà toàn quốc<br>
+                    <i class="fa fa-check-circle"></i> Thanh toán khi nhận hàng (nội thành)<br>
+                    <i class="fa fa-check-circle"></i> Hỗ trợ phần mềm trọn đời<br>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bảng thông tin sản phẩm với 3 tab -->
+        <div class="container my-4">
+            <div class="card shadow-sm">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs justify-content-center" id="productTab" role="tablist" style="height:50px">
+                    <li class="nav-item h-100" role="presentation">
+                        <button class="nav-link h-100 w-100 text-secondary active" id="detail-tab" data-bs-toggle="tab" data-bs-target="#detail" type="button" role="tab">Mô tả chi tiết</button>
+                    </li>
+                    <li class="nav-item h-100" role="presentation">
+                        <button class="nav-link h-100 w-100 text-secondary" id="spec-tab" data-bs-toggle="tab" data-bs-target="#spec" type="button" role="tab">Thông Số Kỹ Thuật</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link h-100 w-100 text-secondary" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab">Thông Tin Thêm</button>
+                    </li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content p-4 bg-white rounded-bottom">
+                    <!-- Tab 1: Mô tả chi tiết -->
+                    <div class="tab-pane fade show active" id="detail" role="tabpanel">
+                        @Html.Raw(product.Description)
+                    </div>
+                    <!-- Tab 2: Thông số kỹ thuật -->
+                    <div class="tab-pane fade" id="spec" role="tabpanel">
+                        <table class="table table-striped">
+                            <tbody>
+                                @foreach(var spec in product.Specifications.OrderBy(s => s.DisplayOrder))
+                                {
+                                    <tr>
+                                        <th style="width: 30%;">@spec.Key</th>
+                                        <td>@spec.Value</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Tab 3: Thông tin thêm (lấy từ giao diện cứng của bạn) -->
+                    <div class="tab-pane fade" id="info" role="tabpanel">
+                        <div class="container p-0">
+                            <h2 class="">Khách hàng mua hàng tại Macstores.vn</h2>
+                            <div class="text-center">
+                                <img src="https://macstores.vn/wp-content/uploads/2024/01/khach-hang-mua-san-pham-tai-cua-hang-macstores.vn_.jpg" alt="Macstores.vn chân thành cảm ơn Quý Khách Hàng đã tin tưởng" class="img-fluid"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>     
+</div>
+
+<!-- SẢN PHẨM TƯƠNG TỰ ĐỘNG -->
+<div class="py-4 my-4" style="background-color: #f8f9fa;">
+    <div class="container">
+        <h3 class="">Sản phẩm tương tự</h3>
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4 mt-1">
+            @foreach(var relatedProduct in Model.RelatedProducts)
+            {
+                <partial name="_ProductCard" model="relatedProduct"/>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal phóng to ảnh -->
+<div class="modal fade" id="productImageModal" tabindex="-1" aria-labelledby="productImageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-transparent border-0">
+            <div class="modal-body p-0 text-center">
+                <img id="modalProductImage" src="" alt="Phóng to sản phẩm" class="img-fluid rounded shadow" style="min-height:500px">
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+         // === KHÔI PHỤC LẠI CÁC HÀM JAVASCRIPT GỐC CỦA BẠN ===
+        //Hàm tăng số lượng
+        function increaseQty() {
+            var qty = document.getElementById("quantity");
+            qty.value = parseInt(qty.value) + 1;
+        }
+
+        //Hàm giảm số lượng
+        function decreaseQty() {
+            var qty = document.getElementById("quantity");
+            if (parseInt(qty.value) > 1) {
+                qty.value = parseInt(qty.value) - 1;
+            }
+        }
+        // Hàm thay đổi ảnh chính khi click vào ảnh nhỏ
+        function changeMainImage(imgElement) {
+            document.getElementById('mainProductImage').src = imgElement.src;
+        }
+
+        // Hàm phóng to ảnh (lấy từ code cứng của bạn)
+        function showProductImageModal(src) {
+            document.getElementById('modalProductImage').src = src;
+            var modal = new bootstrap.Modal(document.getElementById('productImageModal'));
+            modal.show();
+        }
+
+    </script>
+}

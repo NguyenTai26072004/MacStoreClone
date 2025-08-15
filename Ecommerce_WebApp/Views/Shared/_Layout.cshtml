@@ -50,84 +50,12 @@
                 </a>
 
                 <!-- Menu full width -->
+                <!-- Menu full width -->
                 <ul class="d-flex flex-grow-1 list-unstyled mb-0 justify-content-center gap-5 align-items-center ms-5 me-5">
-                    <!--Mac book -->
-                    <li class="nav-item position-relative dropdown-hover">
-                        <a href="#" class="text-white text-decoration-none">
-                            MacBook <i class="fa-solid fa-caret-down ms-1"></i>
-                        </a>
-                        <ul class="dropdown-menu-custom list-unstyled">
-                            <li><a href="#" class="dropdown-item-custom text-white">MacBook M1</a></li>
-                            <li><a href="#" class="dropdown-item-custom text-white">MacBook M2</a></li>
-                            <li><a href="#" class="dropdown-item-custom text-white">MacBook M3</a></li>
-                            <li><a href="#" class="dropdown-item-custom text-white">MacBook M4</a></li>
-                            <li><a href="#" class="dropdown-item-custom text-white">MacBook Air</a></li>
-                            <li><a href="#" class="dropdown-item-custom text-white">MacBook Pro</a></li>
-                        </ul>
-                    </li>
 
-                    <!--iMac -->
-                    <li class="nav-item position-relative dropdown-hover">
-                        <a href="#" class="text-white text-decoration-none">
-                            iMac <i class="fa-solid fa-caret-down ms-1"></i>
-                        </a>
-                        <ul class="dropdown-menu-custom list-unstyled">
-                            <li><a href="#" class="dropdown-item-custom text-white">iMac M1</a></li>
-                            <li><a href="#" class="dropdown-item-custom text-white">iMac M3</a></li>
-                            <li><a href="#" class="dropdown-item-custom text-white">iMac M4</a></li>
-                            <li><a href="#" class="dropdown-item-custom text-white">iMac 2024</a></li>
-                            <li><a href="#" class="dropdown-item-custom text-white">iMac 2023</a></li>
-                            <li><a href="#" class="dropdown-item-custom text-white">iMac 2021</a></li>
-                            <li><a href="#" class="dropdown-item-custom text-white">iMac 2020</a></li>
+                    @* GỌI VIEW COMPONENT ĐỂ TỰ ĐỘNG HIỂN THỊ MENU *@
+                    @await Component.InvokeAsync("CategoryMenu")
 
-                        </ul>
-                    </li>
-
-                    <!--Mac Studio -->
-                    <li class="nav-item position-relative dropdown-hover">
-                        <a href="#" class="text-white text-decoration-none">
-                            Mac Studio <i class="fa-solid fa-caret-down ms-1"></i>
-                        </a>
-                        <ul class="dropdown-menu-custom list-unstyled">
-                            <li><a href="#" class="dropdown-item-custom text-white">Mac Studio M1</a></li>
-                            <li><a href="#" class="dropdown-item-custom text-white">Mac Studio M2</a></li>
-                            <li><a href="#" class="dropdown-item-custom text-white">Mac Studio M3</a></li>
-                            <li><a href="#" class="dropdown-item-custom text-white">Mac Studio M4</a></li>
-                            <li><a href="#" class="dropdown-item-custom text-white">Mac Studio 2025</a></li>
-                            <li><a href="#" class="dropdown-item-custom text-white">Mac Studio 2023</a></li>
-                            <li><a href="#" class="dropdown-item-custom text-white">Mac Studio 2022</a></li>
-                        </ul>
-                    </li>
-
-                    <!--Mac Mini -->
-                    <li class="nav-item position-relative dropdown-hover">
-                        <a href="#" class="text-white text-decoration-none">
-                            Mac Mini <i class="fa-solid fa-caret-down ms-1"></i>
-                        </a>
-                        <ul class="dropdown-menu-custom list-unstyled">
-                            <li><a href="#" class="dropdown-item-custom text-white">Mac Mini M4</a></li>
-                            <li><a href="#" class="dropdown-item-custom text-white">Mac Mini M2</a></li>
-                            <li><a href="#" class="dropdown-item-custom text-white">Mac Mini M1</a></li>
-                            <li><a href="#" class="dropdown-item-custom text-white">Mac Mini 2024</a></li>
-                            <li><a href="#" class="dropdown-item-custom text-white">Mac Mini 2023</a></li>
-                            <li><a href="#" class="dropdown-item-custom text-white">Mac Mini 2020</a></li>
-                        </ul>
-                    </li>
-
-                    <!--Phụ kiện -->
-                    <li class="nav-item position-relative dropdown-hover">
-                        <a href="#" class="text-white text-decoration-none">
-                            Phụ kiện <i class="fa-solid fa-caret-down ms-1"></i>
-                        </a>
-                        <ul class="dropdown-menu-custom list-unstyled">
-                            <li><a href="#" class="dropdown-item-custom text-white">Phụ kiện Apple</a></li>
-                            <li><a href="#" class="dropdown-item-custom text-white">Phụ kiện Window</a></li>
-                            <li><a href="#" class="dropdown-item-custom text-white">Phụ kiện Surface</a></li>
-                        </ul>
-                    </li>
-
-                    <!--Tin tức -->
-                    <li><a href="#" class="text-white text-decoration-none">Tin tức</a></li>
                 </ul>
 
                 <!-- Icon -->
@@ -170,7 +98,7 @@
                    placeholder="Tìm kiếm..." />
         </div>
     </div>
-
+  
 
     <!-- ===== BODY ===== -->
     <div>

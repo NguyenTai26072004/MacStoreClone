@@ -24,4 +24,3 @@ document.addEventListener('click', function (e) {
         overlay.classList.add("d-none");
     }
 });
-

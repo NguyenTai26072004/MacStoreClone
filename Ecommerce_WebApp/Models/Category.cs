@@ -24,7 +24,10 @@ namespace Ecommerce_WebApp.Models
         [DisplayName("Thứ tự hiển thị")]
         public int? DisplayOrder { get; set; }
 
-       
+        [DisplayName("URL Ảnh Icon")]
+        [ValidateNever] 
+        public string IconUrl { get; set; }
+    
         [DisplayName("Danh mục cha")]
         public int? ParentId { get; set; }
 

@@ -1,59 +1,47 @@
-﻿
+﻿@using Ecommerce_WebApp.ViewModels
+@model CategoryPageVM
 @{
-    ViewData["Title"] = "Category";
+    ViewData["Title"] = Model.MainCategory.Name;
 }
 
 <div class="container my-4">
+    <!-- ICON DANH MỤC ĐỘNG -->
     <div class="d-flex justify-content-center flex-wrap gap-4">
-        <div class="text-center">
-            <a href="#">
-                <img src="https://macstores.vn/wp-content/uploads/2023/11/icon_macbook_pro_menu.jpg" alt="MacBook Pro" class="img-fluid icon-small img-hover-zoom" />
-            </a>
-        </div>
-        <div class="text-center">
-            <a href="#">
-                <img src="https://macstores.vn/wp-content/uploads/2023/11/icon_imac_menu.jpg" alt="MacBook Pro" class="img-fluid icon-small img-hover-zoom" />
-            </a>
-        </div>
-        <div class="text-center">
-            <a href="#">
-                <img src="https://macstores.vn/wp-content/uploads/2023/11/icon_mac_mini_menu.jpg" alt="MacBook Pro" class="img-fluid icon-small img-hover-zoom" />
-            </a>
-        </div>
-        <div class="text-center">
-            <a href="#">
-                <img src="https://macstores.vn/wp-content/uploads/2023/11/icon_mac_studio_menu.jpg" alt="MacBook Pro" class="img-fluid icon-small img-hover-zoom" />
-            </a>
-        </div>
-        <div class="text-center">
-            <a href="#">
-                <img src="https://macstores.vn/wp-content/uploads/2023/11/icon_accessories_menu.jpg" alt="MacBook Pro" class="img-fluid icon-small img-hover-zoom" />
-            </a>
-        </div>
+        @foreach (var rootCat in Model.RootCategories)
+        {
+            <div class="text-center">
+                <a asp-controller="Category" asp-action="Index" asp-route-id="@rootCat.Id">
+                    <img src="@(rootCat.IconUrl ?? "/images/placeholder.png")" alt="@rootCat.Name" class="img-fluid icon-small img-hover-zoom" />
+                </a>
+            </div>
+        }
     </div>
 </div>
 
 
 <div class="container">
-    <!--BREADCUMP-->
+    <!--BREADCRUMB ĐỘNG-->
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li><i class="fa fa-home me-3"></i></li>
-            <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
-            <li class="breadcrumb-item"><a href="/san-pham">Sản phẩm</a></li>
-            <li class="breadcrumb-item active" aria-current="page">MacBook Air M4</li>
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+            @if (Model.MainCategory.Parent != null)
+            {
+                <li class="breadcrumb-item"><a asp-controller="Category" asp-action="Index" asp-route-id="@Model.MainCategory.Parent.Id">@Model.MainCategory.Parent.Name</a></li>
+            }
+            <li class="breadcrumb-item active" aria-current="page">@Model.MainCategory.Name</li>
         </ol>
     </nav>
 
     <h2 class="text-center fs-5">
-        Apple MacBook – Máy tính/Laptop đẳng cấp, sang trọng dành cho bạn
+        MacStore – Máy tính/Laptop đẳng cấp, sang trọng dành cho bạn
     </h2>
     <p><strong>Thương hiệu Apple</strong> chắc sẽ không phải là cái tên xa lạ đối với mọi người. Những sản phẩm mang tính cách mạng và dẫn đầu xu hướng của Apple như <strong>iPod, iPhone, iMac, Macbook Pro, Macbook Air, Mac Studio, Mac Mini, Mac Pro</strong>…. Đối với thị phần ở Việt Nam thì Apple ngày càng được mọi người đón nhận mỗi khi ra sản phẩm mới. Một trong những sản phẩm dẫn đầu xu hướng đó là <strong>Macbook</strong>.</p>
     <p>Macbook mới nhập khẩu chính hãng bởi nhà phân phối, đầy đủ chứng từ nguồn gốc xuất xứ, giá đã bao gồm thuế VAT. Bảo hành đổi mới 30 ngày tại Macstore và 12 tháng bởi nhà phân phối.</p>
 
     <div>
         <a>
-            <h1 class="fs-5 fw-bold">Apple Macbook</h1>
+            <h1 class="fs-5 fw-bold">@Model.MainCategory.Name</h1>
         </a>
 
         <div class="price_filter">
@@ -86,470 +74,38 @@
                 </div>
             </div>
         </div>
-       
-        <div class="container p-0">
-            <div class="row g-0 text-center" id="filterGrid">
-                <div class="col filter-item p-3 active">Tất cả</div>
-                <div class="col filter-item p-3">Macbook M1</div>
-                <div class="col filter-item p-3">Macbook M2</div>
-                <div class="col filter-item p-3">Macbook M3</div>
-                <div class="col filter-item p-3">iMac</div>
-                <div class="col filter-item p-3">Mac Mini</div>
-                <div class="col filter-item p-3">Mac Studio</div>
-            </div>
+
+        <div class="row g-0 text-center" id="filterGrid">
+            <a asp-controller="Category" asp-action="Index" asp-route-id="@Model.ParentCategoryForFilter?.Id"
+               class="col filter-item p-3 text-dark text-decoration-none @(Model.MainCategory.Id == Model.ParentCategoryForFilter?.Id ? "active" : "")">
+                Tất cả
+            </a>
+
+            @foreach (var subCat in Model.SubCategories)
+            {
+                <a asp-controller="Category" asp-action="Index" asp-route-id="@subCat.Id"
+                   class="col filter-item p-3 text-dark text-decoration-none @(subCat.Id == Model.MainCategory.Id ? "active" : "")">
+                    @subCat.Name
+                </a>
+            }
         </div>
 
+        <!-- DANH SÁCH SẢN PHẨM -->
         <div class="container p-3 py-5 bg-white shadow-sm">
             <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
-                <!--PRODUCT CARD-->
-                <div class="col">
-                    <div class="product_card card h-100 shadow-sm">
-                        <a href="#" class="text-decoration-none">
-                            <img src="~/img/product1.jpg" class="card-img-top" alt="" />
-                            <div class="card-body">
-                                <h4 class="card_product_name">MacBook Air 2025 15 inch – (Chip Apple M4/Ram 24GB/SSD 512GB)</h4>
-                                <ul class="card-description">
-                                    <li>Tình trạng: Mới 100%, Nguyên Seal</li>
-                                    <li>
-                                        Chip Apple M4 với CPU 10 lõi, GPU 10 lõi và Neural Engine 16 lõi
-                                    </li>
-                                    <li>
-                                        Bộ nhớ thống nhất 24GB
-                                    </li>
-                                    <li>
-                                        Ổ lưu trữ SSD 512GB
-                                    </li>
-                                </ul>
-                                <p class="card_price">41.999.000 VND</p>
-                            </div>
-                        </a>
-                        <div class="card-footer text-center">
-                            <button type="button" class="btn btn-primary btn_addToCart">Thêm vào giỏ</button>
-                        </div>
+                @if (Model.Products.Any())
+                {
+                    @foreach (var product in Model.Products)
+                    {
+                        <partial name="_ProductCard" model="product" />
+                    }
+                }
+                else
+                {
+                    <div class="col-12 text-center">
+                        <p class="mt-4">Không có sản phẩm nào trong danh mục này.</p>
                     </div>
-                </div>
-                <!--END PRODUCT CARD-->
-                <!--PRODUCT CARD-->
-                <div class="col">
-                    <div class="product_card card h-100 shadow-sm">
-                        <a href="#" class="text-decoration-none">
-                            <img src="~/img/product1.jpg" class="card-img-top" alt="" />
-                            <div class="card-body">
-                                <h4 class="card_product_name">MacBook Air 2025 15 inch – (Chip Apple M4/Ram 24GB/SSD 512GB)</h4>
-                                <ul class="card-description">
-                                    <li>Tình trạng: Mới 100%, Nguyên Seal</li>
-                                    <li>
-                                        Chip Apple M4 với CPU 10 lõi, GPU 10 lõi và Neural Engine 16 lõi
-                                    </li>
-                                    <li>
-                                        Bộ nhớ thống nhất 24GB
-                                    </li>
-                                    <li>
-                                        Ổ lưu trữ SSD 512GB
-                                    </li>
-                                </ul>
-                                <p class="card_price">41.999.000 VND</p>
-                            </div>
-                        </a>
-                        <div class="card-footer text-center">
-                            <button type="button" class="btn btn-primary btn_addToCart">Thêm vào giỏ</button>
-                        </div>
-                    </div>
-                </div>
-                <!--END PRODUCT CARD-->
-                <!--PRODUCT CARD-->
-                <div class="col">
-                    <div class="product_card card h-100 shadow-sm">
-                        <a href="#" class="text-decoration-none">
-                            <img src="~/img/product1.jpg" class="card-img-top" alt="" />
-                            <div class="card-body">
-                                <h4 class="card_product_name">MacBook Air 2025 15 inch – (Chip Apple M4/Ram 24GB/SSD 512GB)</h4>
-                                <ul class="card-description">
-                                    <li>Tình trạng: Mới 100%, Nguyên Seal</li>
-                                    <li>
-                                        Chip Apple M4 với CPU 10 lõi, GPU 10 lõi và Neural Engine 16 lõi
-                                    </li>
-                                    <li>
-                                        Bộ nhớ thống nhất 24GB
-                                    </li>
-                                    <li>
-                                        Ổ lưu trữ SSD 512GB
-                                    </li>
-                                </ul>
-                                <p class="card_price">41.999.000 VND</p>
-                            </div>
-                        </a>
-                        <div class="card-footer text-center">
-                            <button type="button" class="btn btn-primary btn_addToCart">Thêm vào giỏ</button>
-                        </div>
-                    </div>
-                </div>
-                <!--END PRODUCT CARD-->
-                <!--PRODUCT CARD-->
-                <div class="col">
-                    <div class="product_card card h-100 shadow-sm">
-                        <a href="#" class="text-decoration-none">
-                            <img src="~/img/product1.jpg" class="card-img-top" alt="" />
-                            <div class="card-body">
-                                <h4 class="card_product_name">MacBook Air 2025 15 inch – (Chip Apple M4/Ram 24GB/SSD 512GB)</h4>
-                                <ul class="card-description">
-                                    <li>Tình trạng: Mới 100%, Nguyên Seal</li>
-                                    <li>
-                                        Chip Apple M4 với CPU 10 lõi, GPU 10 lõi và Neural Engine 16 lõi
-                                    </li>
-                                    <li>
-                                        Bộ nhớ thống nhất 24GB
-                                    </li>
-                                    <li>
-                                        Ổ lưu trữ SSD 512GB
-                                    </li>
-                                </ul>
-                                <p class="card_price">41.999.000 VND</p>
-                            </div>
-                        </a>
-                        <div class="card-footer text-center">
-                            <button type="button" class="btn btn-primary btn_addToCart">Thêm vào giỏ</button>
-                        </div>
-                    </div>
-                </div>
-                <!--END PRODUCT CARD-->
-                <!--PRODUCT CARD-->
-                <div class="col">
-                    <div class="product_card card h-100 shadow-sm">
-                        <a href="#" class="text-decoration-none">
-                            <img src="~/img/product1.jpg" class="card-img-top" alt="" />
-                            <div class="card-body">
-                                <h4 class="card_product_name">MacBook Air 2025 15 inch – (Chip Apple M4/Ram 24GB/SSD 512GB)</h4>
-                                <ul class="card-description">
-                                    <li>Tình trạng: Mới 100%, Nguyên Seal</li>
-                                    <li>
-                                        Chip Apple M4 với CPU 10 lõi, GPU 10 lõi và Neural Engine 16 lõi
-                                    </li>
-                                    <li>
-                                        Bộ nhớ thống nhất 24GB
-                                    </li>
-                                    <li>
-                                        Ổ lưu trữ SSD 512GB
-                                    </li>
-                                </ul>
-                                <p class="card_price">41.999.000 VND</p>
-                            </div>
-                        </a>
-                        <div class="card-footer text-center">
-                            <button type="button" class="btn btn-primary btn_addToCart">Thêm vào giỏ</button>
-                        </div>
-                    </div>
-                </div>
-                <!--END PRODUCT CARD-->
-                <!--PRODUCT CARD-->
-                <div class="col">
-                    <div class="product_card card h-100 shadow-sm">
-                        <a href="#" class="text-decoration-none">
-                            <img src="~/img/product1.jpg" class="card-img-top" alt="" />
-                            <div class="card-body">
-                                <h4 class="card_product_name">MacBook Air 2025 15 inch – (Chip Apple M4/Ram 24GB/SSD 512GB)</h4>
-                                <ul class="card-description">
-                                    <li>Tình trạng: Mới 100%, Nguyên Seal</li>
-                                    <li>
-                                        Chip Apple M4 với CPU 10 lõi, GPU 10 lõi và Neural Engine 16 lõi
-                                    </li>
-                                    <li>
-                                        Bộ nhớ thống nhất 24GB
-                                    </li>
-                                    <li>
-                                        Ổ lưu trữ SSD 512GB
-                                    </li>
-                                </ul>
-                                <p class="card_price">41.999.000 VND</p>
-                            </div>
-                        </a>
-                        <div class="card-footer text-center">
-                            <button type="button" class="btn btn-primary btn_addToCart">Thêm vào giỏ</button>
-                        </div>
-                    </div>
-                </div>
-                <!--END PRODUCT CARD-->
-                <!--PRODUCT CARD-->
-                <div class="col">
-                    <div class="product_card card h-100 shadow-sm">
-                        <a href="#" class="text-decoration-none">
-                            <img src="~/img/product1.jpg" class="card-img-top" alt="" />
-                            <div class="card-body">
-                                <h4 class="card_product_name">MacBook Air 2025 15 inch – (Chip Apple M4/Ram 24GB/SSD 512GB)</h4>
-                                <ul class="card-description">
-                                    <li>Tình trạng: Mới 100%, Nguyên Seal</li>
-                                    <li>
-                                        Chip Apple M4 với CPU 10 lõi, GPU 10 lõi và Neural Engine 16 lõi
-                                    </li>
-                                    <li>
-                                        Bộ nhớ thống nhất 24GB
-                                    </li>
-                                    <li>
-                                        Ổ lưu trữ SSD 512GB
-                                    </li>
-                                </ul>
-                                <p class="card_price">41.999.000 VND</p>
-                            </div>
-                        </a>
-                        <div class="card-footer text-center">
-                            <button type="button" class="btn btn-primary btn_addToCart">Thêm vào giỏ</button>
-                        </div>
-                    </div>
-                </div>
-                <!--END PRODUCT CARD-->
-                <!--PRODUCT CARD-->
-                <div class="col">
-                    <div class="product_card card h-100 shadow-sm">
-                        <a href="#" class="text-decoration-none">
-                            <img src="~/img/product1.jpg" class="card-img-top" alt="" />
-                            <div class="card-body">
-                                <h4 class="card_product_name">MacBook Air 2025 15 inch – (Chip Apple M4/Ram 24GB/SSD 512GB)</h4>
-                                <ul class="card-description">
-                                    <li>Tình trạng: Mới 100%, Nguyên Seal</li>
-                                    <li>
-                                        Chip Apple M4 với CPU 10 lõi, GPU 10 lõi và Neural Engine 16 lõi
-                                    </li>
-                                    <li>
-                                        Bộ nhớ thống nhất 24GB
-                                    </li>
-                                    <li>
-                                        Ổ lưu trữ SSD 512GB
-                                    </li>
-                                </ul>
-                                <p class="card_price">41.999.000 VND</p>
-                            </div>
-                        </a>
-                        <div class="card-footer text-center">
-                            <button type="button" class="btn btn-primary btn_addToCart">Thêm vào giỏ</button>
-                        </div>
-                    </div>
-                </div>
-                <!--END PRODUCT CARD-->
-
-                 <!--PRODUCT CARD-->
-                <div class="col">
-                    <div class="product_card card h-100 shadow-sm">
-                        <a href="#" class="text-decoration-none">
-                            <img src="~/img/product1.jpg" class="card-img-top" alt="" />
-                            <div class="card-body">
-                                <h4 class="card_product_name">MacBook Air 2025 15 inch – (Chip Apple M4/Ram 24GB/SSD 512GB)</h4>
-                                <ul class="card-description">
-                                    <li>Tình trạng: Mới 100%, Nguyên Seal</li>
-                                    <li>
-                                        Chip Apple M4 với CPU 10 lõi, GPU 10 lõi và Neural Engine 16 lõi
-                                    </li>
-                                    <li>
-                                        Bộ nhớ thống nhất 24GB
-                                    </li>
-                                    <li>
-                                        Ổ lưu trữ SSD 512GB
-                                    </li>
-                                </ul>
-                                <p class="card_price">41.999.000 VND</p>
-                            </div>
-                        </a>
-                        <div class="card-footer text-center">
-                            <button type="button" class="btn btn-primary btn_addToCart">Thêm vào giỏ</button>
-                        </div>
-                    </div>
-                </div>
-                <!--END PRODUCT CARD-->
-                <!--PRODUCT CARD-->
-                <div class="col">
-                    <div class="product_card card h-100 shadow-sm">
-                        <a href="#" class="text-decoration-none">
-                            <img src="~/img/product1.jpg" class="card-img-top" alt="" />
-                            <div class="card-body">
-                                <h4 class="card_product_name">MacBook Air 2025 15 inch – (Chip Apple M4/Ram 24GB/SSD 512GB)</h4>
-                                <ul class="card-description">
-                                    <li>Tình trạng: Mới 100%, Nguyên Seal</li>
-                                    <li>
-                                        Chip Apple M4 với CPU 10 lõi, GPU 10 lõi và Neural Engine 16 lõi
-                                    </li>
-                                    <li>
-                                        Bộ nhớ thống nhất 24GB
-                                    </li>
-                                    <li>
-                                        Ổ lưu trữ SSD 512GB
-                                    </li>
-                                </ul>
-                                <p class="card_price">41.999.000 VND</p>
-                            </div>
-                        </a>
-                        <div class="card-footer text-center">
-                            <button type="button" class="btn btn-primary btn_addToCart">Thêm vào giỏ</button>
-                        </div>
-                    </div>
-                </div>
-                <!--END PRODUCT CARD-->
-                <!--PRODUCT CARD-->
-                <div class="col">
-                    <div class="product_card card h-100 shadow-sm">
-                        <a href="#" class="text-decoration-none">
-                            <img src="~/img/product1.jpg" class="card-img-top" alt="" />
-                            <div class="card-body">
-                                <h4 class="card_product_name">MacBook Air 2025 15 inch – (Chip Apple M4/Ram 24GB/SSD 512GB)</h4>
-                                <ul class="card-description">
-                                    <li>Tình trạng: Mới 100%, Nguyên Seal</li>
-                                    <li>
-                                        Chip Apple M4 với CPU 10 lõi, GPU 10 lõi và Neural Engine 16 lõi
-                                    </li>
-                                    <li>
-                                        Bộ nhớ thống nhất 24GB
-                                    </li>
-                                    <li>
-                                        Ổ lưu trữ SSD 512GB
-                                    </li>
-                                </ul>
-                                <p class="card_price">41.999.000 VND</p>
-                            </div>
-                        </a>
-                        <div class="card-footer text-center">
-                            <button type="button" class="btn btn-primary btn_addToCart">Thêm vào giỏ</button>
-                        </div>
-                    </div>
-                </div>
-                <!--END PRODUCT CARD-->
-                <!--PRODUCT CARD-->
-                <div class="col">
-                    <div class="product_card card h-100 shadow-sm">
-                        <a href="#" class="text-decoration-none">
-                            <img src="~/img/product1.jpg" class="card-img-top" alt="" />
-                            <div class="card-body">
-                                <h4 class="card_product_name">MacBook Air 2025 15 inch – (Chip Apple M4/Ram 24GB/SSD 512GB)</h4>
-                                <ul class="card-description">
-                                    <li>Tình trạng: Mới 100%, Nguyên Seal</li>
-                                    <li>
-                                        Chip Apple M4 với CPU 10 lõi, GPU 10 lõi và Neural Engine 16 lõi
-                                    </li>
-                                    <li>
-                                        Bộ nhớ thống nhất 24GB
-                                    </li>
-                                    <li>
-                                        Ổ lưu trữ SSD 512GB
-                                    </li>
-                                </ul>
-                                <p class="card_price">41.999.000 VND</p>
-                            </div>
-                        </a>
-                        <div class="card-footer text-center">
-                            <button type="button" class="btn btn-primary btn_addToCart">Thêm vào giỏ</button>
-                        </div>
-                    </div>
-                </div>
-                <!--END PRODUCT CARD-->
-                <!--PRODUCT CARD-->
-                <div class="col">
-                    <div class="product_card card h-100 shadow-sm">
-                        <a href="#" class="text-decoration-none">
-                            <img src="~/img/product1.jpg" class="card-img-top" alt="" />
-                            <div class="card-body">
-                                <h4 class="card_product_name">MacBook Air 2025 15 inch – (Chip Apple M4/Ram 24GB/SSD 512GB)</h4>
-                                <ul class="card-description">
-                                    <li>Tình trạng: Mới 100%, Nguyên Seal</li>
-                                    <li>
-                                        Chip Apple M4 với CPU 10 lõi, GPU 10 lõi và Neural Engine 16 lõi
-                                    </li>
-                                    <li>
-                                        Bộ nhớ thống nhất 24GB
-                                    </li>
-                                    <li>
-                                        Ổ lưu trữ SSD 512GB
-                                    </li>
-                                </ul>
-                                <p class="card_price">41.999.000 VND</p>
-                            </div>
-                        </a>
-                        <div class="card-footer text-center">
-                            <button type="button" class="btn btn-primary btn_addToCart">Thêm vào giỏ</button>
-                        </div>
-                    </div>
-                </div>
-                <!--END PRODUCT CARD-->
-                <!--PRODUCT CARD-->
-                <div class="col">
-                    <div class="product_card card h-100 shadow-sm">
-                        <a href="#" class="text-decoration-none">
-                            <img src="~/img/product1.jpg" class="card-img-top" alt="" />
-                            <div class="card-body">
-                                <h4 class="card_product_name">MacBook Air 2025 15 inch – (Chip Apple M4/Ram 24GB/SSD 512GB)</h4>
-                                <ul class="card-description">
-                                    <li>Tình trạng: Mới 100%, Nguyên Seal</li>
-                                    <li>
-                                        Chip Apple M4 với CPU 10 lõi, GPU 10 lõi và Neural Engine 16 lõi
-                                    </li>
-                                    <li>
-                                        Bộ nhớ thống nhất 24GB
-                                    </li>
-                                    <li>
-                                        Ổ lưu trữ SSD 512GB
-                                    </li>
-                                </ul>
-                                <p class="card_price">41.999.000 VND</p>
-                            </div>
-                        </a>
-                        <div class="card-footer text-center">
-                            <button type="button" class="btn btn-primary btn_addToCart">Thêm vào giỏ</button>
-                        </div>
-                    </div>
-                </div>
-                <!--END PRODUCT CARD-->
-                <!--PRODUCT CARD-->
-                <div class="col">
-                    <div class="product_card card h-100 shadow-sm">
-                        <a href="#" class="text-decoration-none">
-                            <img src="~/img/product1.jpg" class="card-img-top" alt="" />
-                            <div class="card-body">
-                                <h4 class="card_product_name">MacBook Air 2025 15 inch – (Chip Apple M4/Ram 24GB/SSD 512GB)</h4>
-                                <ul class="card-description">
-                                    <li>Tình trạng: Mới 100%, Nguyên Seal</li>
-                                    <li>
-                                        Chip Apple M4 với CPU 10 lõi, GPU 10 lõi và Neural Engine 16 lõi
-                                    </li>
-                                    <li>
-                                        Bộ nhớ thống nhất 24GB
-                                    </li>
-                                    <li>
-                                        Ổ lưu trữ SSD 512GB
-                                    </li>
-                                </ul>
-                                <p class="card_price">41.999.000 VND</p>
-                            </div>
-                        </a>
-                        <div class="card-footer text-center">
-                            <button type="button" class="btn btn-primary btn_addToCart">Thêm vào giỏ</button>
-                        </div>
-                    </div>
-                </div>
-                <!--END PRODUCT CARD-->
-                <!--PRODUCT CARD-->
-                <div class="col">
-                    <div class="product_card card h-100 shadow-sm">
-                        <a href="#" class="text-decoration-none">
-                            <img src="~/img/product1.jpg" class="card-img-top" alt="" />
-                            <div class="card-body">
-                                <h4 class="card_product_name">MacBook Air 2025 15 inch – (Chip Apple M4/Ram 24GB/SSD 512GB)</h4>
-                                <ul class="card-description">
-                                    <li>Tình trạng: Mới 100%, Nguyên Seal</li>
-                                    <li>
-                                        Chip Apple M4 với CPU 10 lõi, GPU 10 lõi và Neural Engine 16 lõi
-                                    </li>
-                                    <li>
-                                        Bộ nhớ thống nhất 24GB
-                                    </li>
-                                    <li>
-                                        Ổ lưu trữ SSD 512GB
-                                    </li>
-                                </ul>
-                                <p class="card_price">41.999.000 VND</p>
-                            </div>
-                        </a>
-                        <div class="card-footer text-center">
-                            <button type="button" class="btn btn-primary btn_addToCart">Thêm vào giỏ</button>
-                        </div>
-                    </div>
-                </div>
-                <!--END PRODUCT CARD-->
+                }
             </div>
         </div>
 
@@ -572,34 +128,3 @@
 </div>
 
 
-<script>
-    const priceRange = document.getElementById('priceRange');
-    const priceValue = document.getElementById('priceValue');
-
-    function formatVND(value) {
-        return value.toLocaleString('vi-VN') + '₫';
-    }
-
-    priceRange.addEventListener('input', function () {
-        priceValue.textContent = formatVND(parseInt(this.value));
-    });
-
-    function toggleIcon(button) {
-        const icon = button.querySelector('i');
-        icon.classList.toggle('fa-angle-down');
-        icon.classList.toggle('fa-angle-up');
-    }
-
-
-    document.addEventListener("DOMContentLoaded", function () {
-        const items = document.querySelectorAll("#filterGrid .filter-item");
-
-        items.forEach(item => {
-            item.addEventListener("click", function () {
-                items.forEach(i => i.classList.remove("active"));
-                this.classList.add("active");
-            });
-        });
-    });
-
-</script>

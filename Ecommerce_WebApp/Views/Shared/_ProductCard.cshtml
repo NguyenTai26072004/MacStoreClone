@@ -1,0 +1,37 @@
+﻿@model Product
+
+@{
+    // Tìm ảnh đại diện
+    var primaryImage = Model.Images?.FirstOrDefault(i => i.IsPrimary)?.ImageUrl ?? "/images/placeholder.png";
+
+    // Tìm giá thấp nhất từ các phiên bản, hoặc giá mặc định nếu không có phiên bản nào
+    var lowestPrice = Model.Variants.Any() ? Model.Variants.Min(v => v.Price) : 0;
+}
+
+<div class="col">
+    <div class="product_card card h-100 shadow-sm">
+        @* Sửa href để trỏ đến trang chi tiết sản phẩm (chúng ta sẽ làm sau) *@
+        <a asp-controller="Product" asp-action="Details" asp-route-id="@Model.Id" class="text-decoration-none">
+            <img src="@primaryImage" class="card-img-top" alt="@Model.Name" />
+            <div class="card-body">
+                <h4 class="card_product_name">@Model.Name</h4>
+
+                @if (Model.Specifications != null && Model.Specifications.Any())
+                {
+                    <ul class="card-description">
+                        @* Chỉ hiển thị 4 thông số kỹ thuật đầu tiên *@
+                        @foreach (var spec in Model.Specifications.OrderBy(s => s.DisplayOrder).Take(4))
+                        {
+                            <li><strong>@spec.Key:</strong> @spec.Value</li>
+                        }
+                    </ul>
+                }
+
+                <p class="card_price">@lowestPrice.ToString("N0") VNĐ</p>
+            </div>
+        </a>
+        <div class="card-footer text-center">
+            <button type="button" class="btn btn-primary btn_addToCart">Thêm vào giỏ</button>
+        </div>
+    </div>
+</div>

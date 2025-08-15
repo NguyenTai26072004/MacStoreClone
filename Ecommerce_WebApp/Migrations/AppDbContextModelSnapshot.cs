@@ -132,6 +132,10 @@ namespace Ecommerce_WebApp.Migrations
                     b.Property<int?>("DisplayOrder")
                         .HasColumnType("int");
 
+                    b.Property<string>("IconUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)

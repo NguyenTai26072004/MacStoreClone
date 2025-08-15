@@ -1,53 +1,69 @@
-﻿@model Category
+﻿@using Ecommerce_WebApp.ViewModels
+@model CategoryFormVM
 @{
-   
+    ViewData["Title"] = "Sửa Danh mục";
 }
 
-
-<form method="post" asp-action="Edit">
-
-
-    <input asp-for="Id" hidden />
-
+<form method="post" asp-action="Edit" enctype="multipart/form-data">
+    <input asp-for="Category.Id" hidden />
     <div class="border p-3 mt-4">
         <div class="row pb-2">
-
-            <h2 class="text-primary">Sửa Danh mục</h2>
+            <h2 class="text-primary">@ViewData["Title"]</h2>
             <hr />
         </div>
 
-
-        <div asp-validation-summary="All" class="text-danger"></div>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         <div class="mb-3">
-            <label asp-for="Name"></label>
-            <input asp-for="Name" class="form-control" />
-            <span asp-validation-for="Name" class="text-danger"></span>
+            <label asp-for="Category.Name"></label>
+            <input asp-for="Category.Name" class="form-control" />
+            <span asp-validation-for="Category.Name" class="text-danger"></span>
         </div>
+
         <div class="mb-3">
-            <label asp-for="ParentId"></label>
-            <select id="ParentCategoryDropdown" asp-for="ParentId" asp-items="@ViewBag.CategoryList" class="form-control">
+            <label asp-for="Category.ParentId"></label>
+            <select id="ParentCategoryDropdown" asp-for="Category.ParentId" asp-items="@Model.ParentCategoryList" class="form-control">
                 <option value="">-- Đây là danh mục gốc --</option>
             </select>
-            <span asp-validation-for="ParentId" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="DisplayOrder"></label>
-            <input asp-for="DisplayOrder" class="form-control" />
-            <span asp-validation-for="DisplayOrder" class="text-danger"></span>
+            <span asp-validation-for="Category.ParentId" class="text-danger"></span>
         </div>
 
+        <div class="mb-3">
+            <label asp-for="Category.DisplayOrder"></label>
+            <input asp-for="Category.DisplayOrder" class="form-control" />
+            <span asp-validation-for="Category.DisplayOrder" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="IconImage">Thay đổi ảnh Icon</label>
+            <input asp-for="IconImage" type="file" class="form-control" />
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.Category.IconUrl))
+        {
+            <div class="mb-3">
+                <label>Ảnh hiện tại:</label>
+                <div>
+                    <img src="@Model.Category.IconUrl" style="width: 100px; height: 100px; object-fit: cover; border: 1px solid #ddd; padding: 5px;" />
+                </div>
+            </div>
+        }
 
         <button type="submit" class="btn btn-primary" style="width:150px">Cập nhật</button>
-        <a asp-controller="Category" asp-action="Index" class="btn btn-secondary" style="width:150px">
-            Quay lại
-        </a>
+        <a asp-controller="Category" asp-action="Index" class="btn btn-secondary" style="width:150px">Quay lại</a>
     </div>
 </form>
 
-@* Giữ nguyên section Scripts *@
 @section Scripts {
     @{
         <partial name="_ValidationScriptsPartial" />
     }
+    <script>
+        $(document).ready(function() {
+            $('#ParentCategoryDropdown').select2({
+                placeholder: "-- Chọn danh mục cha --",
+                allowClear: true
+            });
+        });
+    </script>
 }

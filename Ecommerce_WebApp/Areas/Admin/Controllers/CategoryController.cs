@@ -1,10 +1,12 @@
-﻿using Ecommerce_WebApp.Data;
-using Ecommerce_WebApp.Models;
+﻿using Ecommerce_WebApp.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc;
+using Ecommerce_WebApp.Data;
+using Ecommerce_WebApp.ViewModels; 
+using Microsoft.AspNetCore.Hosting; 
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+using System.IO; 
 using System.Linq;
 
 namespace Ecommerce_WebApp.Areas.Admin.Controllers
@@ -13,139 +15,144 @@ namespace Ecommerce_WebApp.Areas.Admin.Controllers
     [Authorize(Roles = "Admin")]
     public class CategoryController : Controller
     {
-        private readonly AppDbContext _db; // Thay bằng tên DbContext của bạn
+        private readonly AppDbContext _db;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public CategoryController(AppDbContext db)
+        public CategoryController(AppDbContext db, IWebHostEnvironment webHostEnvironment)
         {
             _db = db;
+            _webHostEnvironment = webHostEnvironment;
         }
 
-        // HIỂN THỊ DANH SÁCH DANH MỤC
-        // GET: /Admin/Category/Index
+        // GET: Hiển thị danh sách
         public IActionResult Index()
         {
-            // Lấy tất cả danh mục, đồng thời lấy cả thông tin của danh mục cha đi kèm
-            // để hiển thị tên của cha trong bảng danh sách.
-            List<Category> allCategories = _db.Categories.Include(c => c.Parent).ToList();
+            List<Category> allCategories = _db.Categories.Include(c => c.Parent).OrderBy(c => c.DisplayOrder).ToList();
             return View(allCategories);
         }
 
-        // HIỂN THỊ FORM TẠO MỚI
-        // GET: /Admin/Category/Create
+        // GET: Hiển thị form tạo mới
         public IActionResult Create()
         {
-            // Chuẩn bị danh sách các danh mục hiện có để đưa vào dropdown "Danh mục cha".
-            ViewBag.CategoryList = _db.Categories.Select(c => new SelectListItem
+            var viewModel = new CategoryFormVM
             {
-                Text = c.Name,
-                Value = c.Id.ToString()
-            }).ToList();
-
-            return View();
+                Category = new Category(),
+                ParentCategoryList = _db.Categories.Select(c => new SelectListItem { Text = c.Name, Value = c.Id.ToString() })
+            };
+            return View(viewModel);
         }
 
-        // XỬ LÝ KHI SUBMIT FORM TẠO MỚI
-        // POST: /Admin/Category/Create
+        // POST: Xử lý tạo mới
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Category categoryObject)
+        public IActionResult Create(CategoryFormVM viewModel)
         {
-            // Nếu người dùng không nhập thứ tự hiển thị, tự động tính toán.
-            if (!categoryObject.DisplayOrder.HasValue)
+            if (!ModelState.IsValid)
             {
-                // Lọc các danh mục cùng cấp (cùng cha).
-                var siblings = _db.Categories.Where(c => c.ParentId == categoryObject.ParentId);
-                int maxOrder = siblings.Any() ? siblings.Max(c => c.DisplayOrder) ?? 0 : 0;
-                categoryObject.DisplayOrder = maxOrder + 1;
+                // Lấy ra tất cả các cặp Key-Value trong ModelState
+                var errors = ModelState
+                    .Where(x => x.Value.Errors.Count > 0)
+                    .Select(x => new { x.Key, x.Value.Errors })
+                    .ToArray();
+
+                // Đoạn code trên sẽ gom tất cả lỗi lại.
+                // Bạn chỉ cần đặt breakpoint ở dòng dưới đây để xem.
+                // Khi chương trình dừng lại, hãy di chuột lên biến "errors"
+                // và xem nội dung của nó.
             }
 
-            // Kiểm tra xem thứ tự hiển thị đã tồn tại trong cùng cấp cha chưa.
-            bool displayOrderExists = _db.Categories.Any(c =>
-                c.DisplayOrder == categoryObject.DisplayOrder &&
-                c.ParentId == categoryObject.ParentId);
-
-            if (displayOrderExists)
-            {
-                // Nếu trùng, thêm lỗi vào ModelState để hiển thị cho người dùng.
-                ModelState.AddModelError("DisplayOrder", "Thứ tự hiển thị này đã tồn tại trong cùng danh mục cha.");
-            }
-
-            // Nếu tất cả dữ liệu đều hợp lệ (bao gồm cả lỗi tự thêm ở trên).
             if (ModelState.IsValid)
             {
-                _db.Categories.Add(categoryObject);
+                // Xử lý upload file icon
+                if (viewModel.IconImage != null)
+                {
+                    string wwwRootPath = _webHostEnvironment.WebRootPath;
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(viewModel.IconImage.FileName);
+                    string categoryPath = Path.Combine(wwwRootPath, @"img\categories");
+
+                    if (!Directory.Exists(categoryPath)) Directory.CreateDirectory(categoryPath);
+
+                    using (var fileStream = new FileStream(Path.Combine(categoryPath, fileName), FileMode.Create))
+                    {
+                        viewModel.IconImage.CopyTo(fileStream);
+                    }
+                    viewModel.Category.IconUrl = @"/img/categories/" + fileName;
+                }
+
+                _db.Categories.Add(viewModel.Category);
                 _db.SaveChanges();
                 TempData["success"] = "Tạo danh mục thành công!";
                 return RedirectToAction("Index");
             }
 
-            // Nếu có lỗi, phải chuẩn bị lại danh sách dropdown trước khi trả về View.
-            ViewBag.CategoryList = _db.Categories.Select(c => new SelectListItem
-            {
-                Text = c.Name,
-                Value = c.Id.ToString()
-            }).ToList();
-
-            return View(categoryObject);
+            viewModel.ParentCategoryList = _db.Categories.Select(c => new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
+            return View(viewModel);
         }
 
-        // HIỂN THỊ FORM CHỈNH SỬA
-        // GET: /Admin/Category/Edit/{id}
+        // GET: Hiển thị form sửa
         public IActionResult Edit(int? id)
         {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
+            if (id == null || id == 0) return NotFound();
             var categoryFromDb = _db.Categories.Find(id);
-            if (categoryFromDb == null)
-            {
-                return NotFound();
-            }
+            if (categoryFromDb == null) return NotFound();
 
-            // Chuẩn bị danh sách dropdown, loại trừ chính danh mục này ra để không tự làm cha của chính mình.
-            ViewBag.CategoryList = _db.Categories.Where(c => c.Id != id).Select(c => new SelectListItem
+            var viewModel = new CategoryFormVM
             {
-                Text = c.Name,
-                Value = c.Id.ToString()
-            }).ToList();
-
-            return View(categoryFromDb);
+                Category = categoryFromDb,
+                ParentCategoryList = _db.Categories.Where(c => c.Id != id).Select(c => new SelectListItem { Text = c.Name, Value = c.Id.ToString() })
+            };
+            return View(viewModel);
         }
 
-        // XỬ LÝ KHI SUBMIT FORM CHỈNH SỬA
-        // POST: /Admin/Category/Edit
+        // POST: Xử lý sửa
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Category categoryObject)
+        public IActionResult Edit(CategoryFormVM viewModel)
         {
-            // Kiểm tra trùng lặp thứ tự hiển thị, nhưng phải loại trừ chính nó ra.
-            bool displayOrderExists = _db.Categories.Any(c =>
-                c.DisplayOrder == categoryObject.DisplayOrder &&
-                c.ParentId == categoryObject.ParentId &&
-                c.Id != categoryObject.Id);
-
-            if (displayOrderExists)
-            {
-                ModelState.AddModelError("DisplayOrder", "Thứ tự hiển thị này đã tồn tại trong cùng danh mục cha.");
-            }
+            // Bỏ qua validation cho file ảnh mới, vì người dùng có thể không muốn thay đổi ảnh
+            ModelState.Remove("IconImage");
 
             if (ModelState.IsValid)
             {
-                _db.Categories.Update(categoryObject);
+                var categoryFromDb = _db.Categories.Find(viewModel.Category.Id);
+                if (categoryFromDb == null) return NotFound();
+
+                // Cập nhật thông tin
+                categoryFromDb.Name = viewModel.Category.Name;
+                categoryFromDb.ParentId = viewModel.Category.ParentId;
+                categoryFromDb.DisplayOrder = viewModel.Category.DisplayOrder;
+
+                // Xử lý upload ảnh mới (nếu có)
+                if (viewModel.IconImage != null)
+                {
+                    // Xóa ảnh cũ (nếu có)
+                    if (!string.IsNullOrEmpty(categoryFromDb.IconUrl))
+                    {
+                        var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, categoryFromDb.IconUrl.TrimStart('\\', '/'));
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+                    // Lưu ảnh mới
+                    string wwwRootPath = _webHostEnvironment.WebRootPath;
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(viewModel.IconImage.FileName);
+                    string categoryPath = Path.Combine(wwwRootPath, @"img\categories");
+                    using (var fileStream = new FileStream(Path.Combine(categoryPath, fileName), FileMode.Create))
+                    {
+                        viewModel.IconImage.CopyTo(fileStream);
+                    }
+                    categoryFromDb.IconUrl = @"/img/categories/" + fileName;
+                }
+
+                _db.Categories.Update(categoryFromDb);
                 _db.SaveChanges();
                 TempData["success"] = "Cập nhật danh mục thành công!";
                 return RedirectToAction("Index");
             }
 
-            // Nếu có lỗi, chuẩn bị lại dropdown và trả về View.
-            ViewBag.CategoryList = _db.Categories.Where(c => c.Id != categoryObject.Id).Select(c => new SelectListItem
-            {
-                Text = c.Name,
-                Value = c.Id.ToString()
-            }).ToList();
-
-            return View(categoryObject);
+            viewModel.ParentCategoryList = _db.Categories.Where(c => c.Id != viewModel.Category.Id).Select(c => new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
+            return View(viewModel);
         }
 
         // HIỂN THỊ TRANG XÁC NHẬN XÓA

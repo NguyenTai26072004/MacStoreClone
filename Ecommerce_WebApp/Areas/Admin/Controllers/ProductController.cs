@@ -324,10 +324,6 @@ namespace Ecommerce_WebApp.Areas.Admin.Controllers
                 }
             }
 
-            // === BƯỚC 2: XÓA BẢN GHI TRONG DATABASE ===
-            // Nhờ có Cascading Delete, chúng ta chỉ cần xóa đối tượng Product.
-            // EF Core và CSDL sẽ tự động xóa các bản ghi liên quan trong
-            // ProductImages, ProductVariants, VariantValues, ProductSpecifications.
             _db.Products.Remove(productToDelete);
             _db.SaveChanges();
 
