@@ -1,4 +1,5 @@
 ﻿@using Ecommerce_WebApp.ViewModels
+@using System.Text.Json
 @model ProductDetailVM
 
 @{
@@ -81,7 +82,7 @@
                              <div class="d-flex flex-wrap gap-2">
                                  @foreach (var value in option.Value)
                                  {
-                                     <button type="button" class="btn btn-outline-secondary rounded-2 py-3 option-btn" data-attribute-id="@option.Key.Id" data-value-id="@value.Id">
+                                    <button type="button" class="btn btn-outline-secondary rounded-2 py-3 option-btn" data-attribute-id="@option.Key.Id" data-value-id="@value.Id">
                                          @value.Value
                                      </button>
                                  }
@@ -101,7 +102,7 @@
                    </ul>          
                </div>
 
-                <div class="d-flex mt-4">
+                <div class="d-flex mt-4" id="root_stock">
                     <input type="text" id="quantity" class="quantity_number" style="width: 60px;" value="1" readonly>
                     <div class="button_quantity_cover">
                         <span class="btn_increase" type="button" onclick="increaseQty()"><i class="fa-solid fa-angle-up"></i></span>
@@ -210,8 +211,25 @@
 </div>
 
 @section Scripts {
+    @{
+        // Tạo một đối tượng C# chỉ chứa thông tin cần thiết
+        var variantsDataForJs = Model.Product.Variants.Select(v => new
+        {
+            id = v.Id,
+            price = v.Price,
+            stock = v.StockQuantity,
+            attributeValueIds = v.VariantValues.Select(vv => vv.AttributeValueId).OrderBy(id => id).ToList()
+        });
+        var variantsJson = JsonSerializer.Serialize(variantsDataForJs);
+
+        var defaultPrice = Model.Product.Variants.FirstOrDefault()?.Price ?? 0;
+    }
+
     <script>
-         // === KHÔI PHỤC LẠI CÁC HÀM JAVASCRIPT GỐC CỦA BẠN ===
+            // === BIẾN DỮ LIỆU TỪ C# SANG JAVASCRIPT ===
+            const productVariants = JSON.parse('@Html.Raw(variantsJson)');
+            const defaultPrice = @defaultPrice;
+
         //Hàm tăng số lượng
         function increaseQty() {
             var qty = document.getElementById("quantity");
@@ -230,7 +248,7 @@
             document.getElementById('mainProductImage').src = imgElement.src;
         }
 
-        // Hàm phóng to ảnh (lấy từ code cứng của bạn)
+        // Hàm phóng to ảnh 
         function showProductImageModal(src) {
             document.getElementById('modalProductImage').src = src;
             var modal = new bootstrap.Modal(document.getElementById('productImageModal'));
@@ -238,4 +256,5 @@
         }
 
     </script>
+    <script src="~/js/ProductJS/product-detail.js" asp-append-version="true"></script>
 }

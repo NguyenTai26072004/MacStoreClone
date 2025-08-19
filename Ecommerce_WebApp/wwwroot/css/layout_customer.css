@@ -170,4 +170,14 @@ a {
 }
 
 
+/*CSS cho các nút biến thể sản phẩm */
+.option-btn {
+    border-width: 2px; 
+}
+
+    .option-btn.active {      
+        background-color: #343a40 !important; 
+        border-color: #343a40 !important; 
+        color: white !important; 
+    }
 
