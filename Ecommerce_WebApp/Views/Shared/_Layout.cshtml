@@ -50,7 +50,6 @@
                 </a>
 
                 <!-- Menu full width -->
-                <!-- Menu full width -->
                 <ul class="d-flex flex-grow-1 list-unstyled mb-0 justify-content-center gap-5 align-items-center ms-5 me-5">
 
                     @* GỌI VIEW COMPONENT ĐỂ TỰ ĐỘNG HIỂN THỊ MENU *@
@@ -77,12 +76,7 @@
         <!-- MOBILE MENU -->
         <div id="mobileMenu" class="d-lg-none d-none mt-2 px-3">
             <ul class="list-unstyled">
-                <li class="py-2"><a href="#" class="text-white text-decoration-none">MacBook</a></li>
-                <li class="py-2"><a href="#" class="text-white text-decoration-none">iMac</a></li>
-                <li class="py-2"><a href="#" class="text-white text-decoration-none">Mac Mini</a></li>
-                <li class="py-2"><a href="#" class="text-white text-decoration-none">Mac Studio</a></li>
-                <li class="py-2"><a href="#" class="text-white text-decoration-none">Phụ kiện</a></li>
-                <li class="py-2"><a href="#" class="text-white text-decoration-none">Tin tức</a></li>
+                @await Component.InvokeAsync("CategoryMenu")
             </ul>
         </div>
     </header>
@@ -92,10 +86,16 @@
          class="position-absolute top-0 start-0 w-100 bg-black d-none px-3"
          style="z-index: 1050; height: 46px;">
         <div class="container-fluid h-100 d-flex justify-content-center align-items-center">
-            <input type="text"
-                   class="form-control form-control-sm w-50 border-0"
-                   style="border-radius: 0; height: 32px;"
-                   placeholder="Tìm kiếm..." />
+            @* Form sẽ gửi dữ liệu đến SearchController bằng method GET *@
+            <form asp-controller="Search" asp-action="Index" method="get" class="w-100 d-flex justify-content-center">
+                <input type="text"
+                       name="searchTerm" 
+                       class="form-control form-control-sm w-50 border-0"
+                       style="border-radius: 0; height: 32px;"
+                       placeholder="Tìm kiếm sản phẩm..."
+                       required />
+                <button type="submit" class="btn btn-primary btn-sm" style="border-radius: 0;">Tìm</button>
+            </form>
         </div>
     </div>
   

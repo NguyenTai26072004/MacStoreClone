@@ -15,5 +15,9 @@ namespace Ecommerce_WebApp.ViewModels
         public IEnumerable<Category> RootCategories { get; set; }
 
         public Category ParentCategoryForFilter { get; set; }
+
+        public decimal? MaxPriceSelected { get; set; } // Giá tối đa người dùng đã chọn
+        public decimal MinPriceAvailable { get; set; }  // Giá thấp nhất trong danh mục
+        public decimal MaxPriceAvailable { get; set; }  // Giá cao nhất trong danh mục
     }
 }

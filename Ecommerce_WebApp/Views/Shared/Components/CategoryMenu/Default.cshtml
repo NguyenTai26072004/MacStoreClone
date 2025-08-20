@@ -1,36 +1,50 @@
 ﻿@model IEnumerable<Category>
 
-@foreach (var category in Model)
-{
-    // Kiểm tra xem danh mục này có con không
-    bool hasChildren = category.Children != null && category.Children.Any();
-
-    // Nếu không có con VÀ KHÔNG phải menu xổ xuống (ví dụ: Tin tức)
-    if (!hasChildren)
+@* ===      PHẦN DÀNH CHO GIAO DIỆN DESKTOP    === *@
+<ul class="d-none d-lg-flex flex-grow-1 list-unstyled mb-0 justify-content-center gap-5 align-items-center ms-5 me-5">
+    @foreach (var category in Model)
     {
-        <li>
+        bool hasChildren = category.Children != null && category.Children.Any();
+
+        if (!hasChildren)
+        {
+            <li>
+                <a asp-controller="Category" asp-action="Index" asp-route-id="@category.Id" class="text-white text-decoration-none">
+                    @category.Name
+                </a>
+            </li>
+        }
+        else
+        {
+            <li class="nav-item position-relative dropdown-hover">
+                <a asp-controller="Category" asp-action="Index" asp-route-id="@category.Id" class="text-white text-decoration-none">
+                    @category.Name <i class="fa-solid fa-caret-down ms-1"></i>
+                </a>
+                <ul class="dropdown-menu-custom list-unstyled">
+                    @foreach (var child in category.Children)
+                    {
+                        <li>
+                            <a asp-controller="Category" asp-action="Index" asp-route-id="@child.Id" class="dropdown-item-custom text-white">
+                                @child.Name
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+    }
+</ul>
+
+
+
+@* ===      PHẦN DÀNH CHO GIAO DIỆN MOBILE     === *@
+<ul class="list-unstyled d-lg-none">
+    @foreach (var category in Model)
+    {
+        <li class="py-2">
             <a asp-controller="Category" asp-action="Index" asp-route-id="@category.Id" class="text-white text-decoration-none">
                 @category.Name
             </a>
         </li>
     }
-    // Nếu có con, tạo menu xổ xuống
-    else
-    {
-        <li class="nav-item position-relative dropdown-hover">
-            <a asp-controller="Category" asp-action="Index" asp-route-id="@category.Id" class="text-white text-decoration-none">
-                @category.Name <i class="fa-solid fa-caret-down ms-1"></i>
-            </a>
-            <ul class="dropdown-menu-custom list-unstyled">
-                @foreach (var child in category.Children)
-                {
-                    <li>
-                        <a asp-controller="Category" asp-action="Index" asp-route-id="@child.Id" class="dropdown-item-custom text-white">
-                            @child.Name
-                        </a>
-                    </li>
-                }
-            </ul>
-        </li>
-    }
-}
+</ul>

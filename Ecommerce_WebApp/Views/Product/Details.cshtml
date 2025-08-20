@@ -171,7 +171,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <!-- Tab 3: Thông tin thêm (lấy từ giao diện cứng của bạn) -->
+                    <!-- Tab 3: Thông tin thêm -->
                     <div class="tab-pane fade" id="info" role="tabpanel">
                         <div class="container p-0">
                             <h2 class="">Khách hàng mua hàng tại Macstores.vn</h2>
@@ -228,7 +228,7 @@
     <script>
             // === BIẾN DỮ LIỆU TỪ C# SANG JAVASCRIPT ===
             const productVariants = JSON.parse('@Html.Raw(variantsJson)');
-            const defaultPrice = @defaultPrice;
+            const defaultPrice = @defaultPrice
 
         //Hàm tăng số lượng
         function increaseQty() {

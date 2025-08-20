@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Threading.Tasks; // Cần dùng async để truy vấn hiệu quả
 
 namespace Ecommerce_WebApp.Controllers
 {
@@ -18,60 +18,54 @@ namespace Ecommerce_WebApp.Controllers
             _db = db;
         }
 
-
-        public IActionResult Index(int id)
+        
+        public async Task<IActionResult> Index(int id, decimal? maxPrice = null)
         {
-            // BƯỚC 1: TÌM DANH MỤC ĐANG XEM
-            // Dùng .Include() để lấy luôn thông tin của Cha (nếu có)
-            var currentCategory = _db.Categories.Include(c => c.Parent).FirstOrDefault(c => c.Id == id);
-            if (currentCategory == null)
-            {
-                return NotFound(); // Trả về lỗi 404 nếu không tìm thấy ID
-            }
+            
+            var currentCategory = await _db.Categories.AsNoTracking().Include(c => c.Parent).FirstOrDefaultAsync(c => c.Id == id);
+            if (currentCategory == null) return NotFound();
 
-            // BƯỚC 2: TÌM RA "ĐẦU TÀU" CỦA BỘ LỌC
-            // Nếu danh mục hiện tại có cha -> "đầu tàu" là cha của nó.
-            // Nếu không -> "đầu tàu" là chính nó.
             var parentCategoryForFilter = currentCategory.Parent ?? currentCategory;
 
-            // BƯỚC 3: LẤY DANH SÁCH CÁC MỤC CẦN HIỂN THỊ TRÊN THANH FILTER
-            // Đây là danh sách tất cả các "anh em" của danh mục hiện tại.
-            var filterCategories = _db.Categories
+            var filterCategories = await _db.Categories.AsNoTracking()
                 .Where(c => c.ParentId == parentCategoryForFilter.Id)
                 .OrderBy(c => c.DisplayOrder)
-                .ToList();
+                .ToListAsync();
 
-            // BƯỚC 4: LẤY DANH SÁCH SẢN PHẨM CẦN HIỂN THỊ
-            List<Product> products;
-            if (currentCategory.ParentId == null) // Nếu đang xem danh mục cha (ví dụ: MacBook)
-            {
-                // Lấy ID của chính nó và tất cả các con của nó
-                var categoryIds = new List<int> { currentCategory.Id };
-                categoryIds.AddRange(filterCategories.Select(c => c.Id));
+            var rootCategoriesForIcons = await _db.Categories.AsNoTracking().Where(c => c.ParentId == null).OrderBy(c => c.DisplayOrder).ToListAsync();
 
-                // Lấy sản phẩm của TẤT CẢ các danh mục đó
-                products = _db.Products
-                    .Where(p => categoryIds.Contains(p.CategoryId) && p.IsPublished)
-                    .Include(p => p.Images) 
-                    .Include(p => p.Specifications.OrderBy(s => s.DisplayOrder))
-                    .Include(p => p.Variants)
-                    .ToList();
-            }
-            else // Nếu đang xem danh mục con (ví dụ: MacBook Air)
+
+            var categoryIdsToLoad = new List<int> { id };
+            if (currentCategory.ParentId == null)
             {
-                // Thì CHỈ lấy sản phẩm của chính nó mà thôi
-                products = _db.Products
-                    .Where(p => p.CategoryId == currentCategory.Id && p.IsPublished)
-                    .Include(p => p.Images)
-                    .Include(p => p.Specifications.OrderBy(s => s.DisplayOrder))
-                    .Include(p => p.Variants)
-                    .ToList();
+                categoryIdsToLoad.AddRange(filterCategories.Select(c => c.Id));
             }
 
-            // BƯỚC 5 (PHỤ): LẤY CÁC ICON ĐẦU TRANG
-            var rootCategoriesForIcons = _db.Categories.Where(c => c.ParentId == null).OrderBy(c => c.DisplayOrder).ToList();
+            // 1. Tạo câu truy vấn ban đầu 
+            var productsQuery = _db.Products
+                .AsNoTracking()
+                .Where(p => categoryIdsToLoad.Contains(p.CategoryId) && p.IsPublished);
 
-            // BƯỚC 6: GÓI MỌI THỨ VÀO VIEWMODEL VÀ GỬI ĐI
+            // 2. Tìm khoảng giá min/max từ TẤT CẢ sản phẩm trong nhóm
+            var allVariantsInCategories = productsQuery.SelectMany(p => p.Variants);
+            decimal minPriceAvailable = await allVariantsInCategories.AnyAsync() ? await allVariantsInCategories.MinAsync(v => v.Price) : 0;
+            decimal maxPriceAvailable = await allVariantsInCategories.AnyAsync() ? await allVariantsInCategories.MaxAsync(v => v.Price) : 0;
+
+            // 3. Áp dụng bộ lọc giá (nếu người dùng đã chọn)
+            if (maxPrice.HasValue)
+            {
+                productsQuery = productsQuery.Where(p => p.Variants.Any(v => v.Price <= maxPrice.Value));
+            }
+
+            // 4. Lấy danh sách sản phẩm cuối cùng SAU KHI đã lọc
+            var products = await productsQuery
+                .OrderByDescending(p => p.Id)
+                .Include(p => p.Images)
+                .Include(p => p.Specifications.OrderBy(s => s.DisplayOrder))
+                .Include(p => p.Variants)
+                .ToListAsync();
+
+            // --- TẠO VIEWMODEL HOÀN CHỈNH ---
             var viewModel = new CategoryPageVM
             {
                 MainCategory = currentCategory,
@@ -79,6 +73,11 @@ namespace Ecommerce_WebApp.Controllers
                 Products = products,
                 RootCategories = rootCategoriesForIcons,
                 ParentCategoryForFilter = parentCategoryForFilter,
+
+                // Gửi các giá trị cho bộ lọc giá
+                MaxPriceSelected = maxPrice,
+                MinPriceAvailable = minPriceAvailable,
+                MaxPriceAvailable = maxPriceAvailable > minPriceAvailable ? maxPriceAvailable : (minPriceAvailable + 10000000) // Đảm bảo max > min
             };
 
             return View(viewModel);

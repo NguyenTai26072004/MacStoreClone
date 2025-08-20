@@ -44,35 +44,48 @@
             <h1 class="fs-5 fw-bold">@Model.MainCategory.Name</h1>
         </a>
 
-        <div class="price_filter">
-            <div class="btn_filter d-flex justify-content-between align-items-center"
-                 type="button"
-                 data-bs-toggle="collapse"
-                 data-bs-target="#collapseWidthExample"
-                 aria-expanded="false"
-                 aria-controls="collapseWidthExample"
-                 onclick="toggleIcon(this)">
-                Chọn giá
-                <i class="fa-solid fa-angle-down ms-2" id="toggleIcon"></i>
-            </div>
-              
-            <div class="position-absolute" style="min-height: 120px; z-index:9999">
-                <div class="collapse collapse-horizontal" id="collapseWidthExample">
-                    <div class="card card-body border shadow-sm" style="width: 320px;">
-                        <label class="form-label fw-bold mb-2">Giá tối đa:</label>
+        @* BỘ LỌC GIÁ *@
+        <div class="dropdown mb-3">
+            @* Nút bấm chính để mở dropdown *@
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="priceFilterDropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                <i class="fas fa-dollar-sign me-2"></i>
+                @if (Model.MaxPriceSelected.HasValue)
+                {
+                    <span>Lọc theo giá: Dưới @Model.MaxPriceSelected.Value.ToString("N0")đ</span>
+                }
+                else
+                {
+                    <span>Chọn khoảng giá</span>
+                }
+            </button>
 
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>Lọc sản phẩm theo giá:</span>
-                            <span>0đ  - </span>
-                            <span id="priceValue"> 50.000.000₫</span>
+            @* Nội dung của dropdown menu *@
+            <div class="dropdown-menu p-4" aria-labelledby="priceFilterDropdown" style="width: 350px;">
+                <form asp-action="Index" asp-route-id="@Model.MainCategory.Id" method="get">
+                    <div class="mb-3">
+                        <label for="priceRange" class="form-label fw-bold">Kéo để chọn mức giá tối đa</label>
+                        <div class="d-flex justify-content-between text-muted small">
+                            <span>@Model.MinPriceAvailable.ToString("N0")đ</span>
+                            <span>@Model.MaxPriceAvailable.ToString("N0")đ</span>
                         </div>
-
-                        <input type="range" class="form-range" id="priceRange" min="10000000" max="50000000" step="1000000" value="50000000">
-
-                        <button class="btn btn-primary btn-sm mt-3 w-100">Áp dụng</button>
+                        <input type="range" class="form-range" id="priceRange"
+                               name="maxPrice"
+                               min="@Model.MinPriceAvailable"
+                               max="@Model.MaxPriceAvailable"
+                               step="1000000"
+                               value="@(Model.MaxPriceSelected ?? Model.MaxPriceAvailable)">
+                        <div class="text-center mt-2 fw-bold" style="color: var(--bs-primary);">
+                            Dưới <span id="priceValue">@((Model.MaxPriceSelected ?? Model.MaxPriceAvailable).ToString("N0"))</span> đ
+                        </div>
                     </div>
-                </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" asp-route-id="@Model.MainCategory.Id" class="btn btn-warning btn-outline-dark text-white">Xóa lọc</a>
+                        <button type="submit" class="btn btn-sm btn-primary">Áp dụng</button>
+                    </div>
+                </form>
             </div>
+        </div>
         </div>
 
         <div class="row g-0 text-center" id="filterGrid">
@@ -128,3 +141,27 @@
 </div>
 
 
+@section Scripts {
+    <script>
+        // === SCRIPT CHO BỘ LỌC GIÁ ===
+        document.addEventListener("DOMContentLoaded", function () {
+            const priceRange = document.getElementById('priceRange');
+            const priceValue = document.getElementById('priceValue');
+
+            function formatVND(value) {
+                // Chuyển đổi thành số và sau đó định dạng
+                return Number(value).toLocaleString('vi-VN') + '₫';
+            }
+
+            // Cập nhật hiển thị khi người dùng kéo thanh trượt
+            if(priceRange && priceValue) {
+                priceRange.addEventListener('input', function () {
+                    priceValue.textContent = formatVND(this.value);
+                });
+            }
+        });
+
+        // Bạn có thể giữ lại hàm toggleIcon nếu cần
+        function toggleIcon(button) { ... }
+    </script>
+}

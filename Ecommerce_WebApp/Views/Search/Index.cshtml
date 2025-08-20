@@ -1,0 +1,22 @@
+﻿@model SearchVM
+@{
+    ViewData["Title"] = "Kết quả tìm kiếm";
+}
+
+<div class="container my-5">
+    <h1 class="mb-4">Kết quả tìm kiếm cho: "@Model.SearchTerm"</h1>
+
+    @if (Model.Products.Any())
+    {
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
+            @foreach (var product in Model.Products)
+            {
+                <partial name="_ProductCard" model="product" />
+            }
+        </div>
+    }
+    else
+    {
+        <p>Không tìm thấy sản phẩm nào phù hợp với từ khóa của bạn.</p>
+    }
+</div>
