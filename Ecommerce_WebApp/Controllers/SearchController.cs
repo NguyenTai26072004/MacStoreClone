@@ -13,19 +13,34 @@ public class SearchController : Controller
         _db = db;
     }
 
-    public async Task<IActionResult> Index(string searchTerm)
+    public async Task<IActionResult> Index(string searchTerm, string sortBy = "newest")
     {
-        var viewModel = new SearchVM { SearchTerm = searchTerm };
+        var viewModel = new SearchVM { SearchTerm = searchTerm, SortBy = sortBy };
 
         if (!string.IsNullOrEmpty(searchTerm))
         {
-            // Tìm sản phẩm có Name chứa searchTerm (không phân biệt hoa thường)
-            viewModel.Products = await _db.Products
+            var productsQuery = _db.Products
                 .Where(p => p.Name.ToLower().Contains(searchTerm.ToLower()))
                 .Include(p => p.Images)
                 .Include(p => p.Variants)
-                .AsNoTracking()
-                .ToListAsync();
+                .AsNoTracking();
+
+            // XỬ LÝ LOGIC SẮP XẾP
+            switch (sortBy)
+            {
+                case "price_asc":
+                    productsQuery = productsQuery.OrderBy(p => p.Variants.Min(v => v.Price));
+                    break;
+                case "price_desc":
+                    productsQuery = productsQuery.OrderByDescending(p => p.Variants.Min(v => v.Price));
+                    break;
+                case "newest":
+                default:
+                    productsQuery = productsQuery.OrderByDescending(p => p.Id);
+                    break;
+            }
+
+            viewModel.Products = await productsQuery.ToListAsync();
         }
         else
         {

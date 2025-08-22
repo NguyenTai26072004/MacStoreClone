@@ -20,7 +20,7 @@ namespace Ecommerce_WebApp.Controllers
         {
             // Truy vấn để lấy sản phẩm đang xem và tất cả dữ liệu liên quan
             var product = _db.Products
-                .Include(p => p.Category).ThenInclude(c => c.Parent) // Lấy cả cha và ông
+                .Include(p => p.Category).ThenInclude(c => c.Parent) // Lấy cả cha
                 .Include(p => p.Images)
                 .Include(p => p.Specifications.OrderBy(s => s.DisplayOrder))
                 .Include(p => p.Variants)

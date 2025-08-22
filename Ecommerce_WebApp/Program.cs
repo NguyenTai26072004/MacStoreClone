@@ -35,7 +35,16 @@ builder.Services.AddControllersWithViews();
 
 
 // Để dùng Razor cho Identity
-builder.Services.AddRazorPages(); 
+builder.Services.AddRazorPages();
+
+
+builder.Services.AddDistributedMemoryCache(); // Cần thiết cho session
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 var app = builder.Build();
 
@@ -58,6 +67,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseSession();
 app.MapControllerRoute(
     name: "AdminArea",
     pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}"

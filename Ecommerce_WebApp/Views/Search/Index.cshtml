@@ -1,11 +1,46 @@
 ﻿@model SearchVM
 @{
-    ViewData["Title"] = "Kết quả tìm kiếm";
+    ViewData["Title"] = $"Tìm kiếm cho: {Model.SearchTerm}";
 }
 
 <div class="container my-5">
-    <h1 class="mb-4">Kết quả tìm kiếm cho: "@Model.SearchTerm"</h1>
 
+    <!-- KHỐI KẾT QUẢ VÀ SẮP XẾP -->
+    <div class="row align-items-center mb-4 pb-2 border-bottom">
+        <div class="col-md-8">
+            @if (Model.Products.Any())
+            {
+                <h1 class="h4">
+                    Tìm thấy <strong class="text-primary">@Model.Products.Count()</strong> kết quả cho từ khóa: <em class="fw-normal">"@Model.SearchTerm"</em>
+                </h1>
+            }
+            else
+            {
+                <h1 class="h4">
+                    Không tìm thấy kết quả nào cho từ khóa: <em class="fw-normal">"@Model.SearchTerm"</em>
+                </h1>
+            }
+        </div>
+
+        <div class="col-md-4">
+            <!-- Dropdown Sắp xếp -->
+            <div class="d-flex justify-content-md-end">
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        Sắp xếp theo
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="sortDropdown">
+                        <li><a class="dropdown-item @(Model.SortBy == "newest" ? "active" : "")" asp-action="Index" asp-route-searchTerm="@Model.SearchTerm" asp-route-sortBy="newest">Mới nhất</a></li>
+                        <li><a class="dropdown-item @(Model.SortBy == "price_asc" ? "active" : "")" asp-action="Index" asp-route-searchTerm="@Model.SearchTerm" asp-route-sortBy="price_asc">Giá: Thấp đến cao</a></li>
+                        <li><a class="dropdown-item @(Model.SortBy == "price_desc" ? "active" : "")" asp-action="Index" asp-route-searchTerm="@Model.SearchTerm" asp-route-sortBy="price_desc">Giá: Cao đến thấp</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- DANH SÁCH SẢN PHẨM -->
     @if (Model.Products.Any())
     {
         <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
@@ -17,6 +52,14 @@
     }
     else
     {
-        <p>Không tìm thấy sản phẩm nào phù hợp với từ khóa của bạn.</p>
+        <!-- TRƯỜNG HỢP KHÔNG TÌM THẤY KẾT QUẢ -->
+        <div class="text-center p-5 bg-light rounded">
+            <p class="lead">Rất tiếc, chúng tôi không tìm thấy sản phẩm nào phù hợp.</p>
+            <p>Vui lòng thử lại với một từ khóa khác hoặc khám phá các danh mục phổ biến của chúng tôi.</p>
+            <div class="mt-4">
+                <a asp-controller="Home" asp-action="Index" class="btn btn-primary me-2 text-white">Quay về Trang chủ</a>
+                <a asp-controller="Category" asp-action="Index" asp-route-id="1" class="btn btn-outline-secondary">Xem MacBook</a>
+            </div>
+        </div>
     }
 </div>
