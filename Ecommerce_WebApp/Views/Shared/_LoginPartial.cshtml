@@ -29,12 +29,12 @@
                 </a>
 
                 <!-- Mục 3: Lịch sử mua hàng -->
-                <a class="list-group-item list-group-item-action" asp-controller="Order" asp-action="Index">
+                <a class="list-group-item list-group-item-action" asp-area="" asp-controller="Order" asp-action="Index">
                     <i class="fas fa-history fa-fw me-2 text-success"></i>Lịch sử mua hàng
                 </a>
 
                 <!-- Mục 4: Đăng xuất -->
-                <form class="m-0" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <form class="m-0" asp-area="Identity"  asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                     <button type="submit" class="list-group-item list-group-item-action text-danger">
                         <i class="fas fa-sign-out-alt fa-fw me-2"></i>Đăng xuất
                     </button>

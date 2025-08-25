@@ -1,0 +1,122 @@
+﻿@using Ecommerce_WebApp.ViewModels
+@using Ecommerce_WebApp.Utility
+@model CheckoutVM;
+
+@{
+    ViewData["Title"] = "Thông tin Thanh toán";
+}
+
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h1>@ViewData["Title"]</h1>
+        <p class="text-muted">Vui lòng điền đầy đủ các thông tin dưới đây để hoàn tất đơn hàng.</p>
+    </div>
+
+    <!-- Form sẽ gửi dữ liệu đến Action Checkout (POST) -->
+    <form method="post">
+        <div class="row g-5">
+            <!-- CỘT THÔNG TIN THANH TOÁN (BÊN TRÁI) -->
+            <div class="col-lg-7">
+
+                <!-- 1. Thông tin liên hệ và giao hàng -->
+                <h4 class="mb-3">Địa chỉ giao hàng</h4>
+
+                @* Hiển thị lỗi validation tổng hợp *@
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label asp-for="OrderHeader.Email" class="form-label"></label>
+                        <input type="email" asp-for="OrderHeader.Email" class="form-control" placeholder="you@example.com">
+                        <span asp-validation-for="OrderHeader.Email" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="OrderHeader.FullName" class="form-label">Họ và Tên người nhận</label>
+                        <input type="text" asp-for="OrderHeader.FullName" class="form-control" placeholder="Nguyễn Văn A" required>
+                        <span asp-validation-for="OrderHeader.FullName" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="OrderHeader.PhoneNumber" class="form-label">Số điện thoại</label>
+                        <input type="tel" asp-for="OrderHeader.PhoneNumber" class="form-control" placeholder="09xxxxxxxx" required>
+                        <span asp-validation-for="OrderHeader.PhoneNumber" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="OrderHeader.Address" class="form-label">Số nhà, Tên đường</label>
+                        <input type="text" asp-for="OrderHeader.Address" class="form-control" placeholder="123 Đường ABC" required>
+                        <span asp-validation-for="OrderHeader.Address" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="OrderHeader.City" class="form-label">Tỉnh / Thành phố</label>
+                        <input type="text" asp-for="OrderHeader.City" class="form-control" required>
+                        <span asp-validation-for="OrderHeader.City" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="OrderHeader.District" class="form-label">Quận / Huyện</label>
+                        <input type="text" asp-for="OrderHeader.District" class="form-control" required>
+                        <span asp-validation-for="OrderHeader.District" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="OrderHeader.Ward" class="form-label">Phường / Xã</label>
+                        <input type="text" asp-for="OrderHeader.Ward" class="form-control" required>
+                        <span asp-validation-for="OrderHeader.Ward" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <!-- 2. Phương thức thanh toán -->
+                <h4 class="mb-3">Phương thức thanh toán</h4>
+                <div class="my-3">
+                    <div class="form-check p-3 border rounded">
+                        <input asp-for="PaymentMethod" type="radio" class="form-check-input" value="@SD.PaymentMethodCOD" checked required>
+                        <label class="form-check-label" asp-for="PaymentMethod">
+                            Thanh toán khi nhận hàng (COD)
+                        </label>
+                    </div>
+                    @* Các phương thức thanh toán khác tạm thời vô hiệu hóa *@
+                    <div class="form-check p-3 border rounded mt-2 bg-light">
+                        <input id="momo" name="paymentMethod" type="radio" class="form-check-input" disabled>
+                        <label class="form-check-label text-muted" for="momo">Thanh toán qua Ví MoMo (Sắp ra mắt)</label>
+                    </div>
+                </div>
+
+                <button class="w-100 btn btn-primary btn-lg" type="submit">HOÀN TẤT ĐẶT HÀNG</button>
+            </div>
+
+            <!-- CỘT TÓM TẮT ĐƠN HÀNG (BÊN PHẢI) -->
+            <div class="col-lg-5">
+                <div class="card shadow-sm sticky-top" style="top: 2rem;">
+                    <div class="card-header py-3">
+                        <h4 class="my-0 fw-normal">Tóm tắt đơn hàng (@Model.ShoppingCart.Items.Sum(i => i.Quantity) sản phẩm)</h4>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            @* Vòng lặp foreach để hiển thị từng sản phẩm trong giỏ hàng *@
+                            @foreach (var item in Model.ShoppingCart.Items)
+                            {
+                                <li class="list-group-item d-flex justify-content-between lh-sm">
+                                    <div>
+                                        <h6 class="my-0">@item.ProductName</h6>
+                                        <small class="text-muted">SL: @item.Quantity</small>
+                                    </div>
+                                    <span class="text-muted">@item.SubTotal.ToString("N0")₫</span>
+                                </li>
+                            }
+
+                            <li class="list-group-item d-flex justify-content-between">
+                                <strong>Tổng cộng (VND)</strong>
+                                <strong>@Model.ShoppingCart.Items.Sum(i => i.SubTotal).ToString("N0")₫</strong>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

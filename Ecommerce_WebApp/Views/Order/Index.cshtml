@@ -1,71 +1,87 @@
-﻿@{
+﻿@using Ecommerce_WebApp.Utility
+@model IEnumerable<OrderHeader>
+
+@{
     ViewData["Title"] = "Lịch sử mua hàng";
 }
 
 <div class="container my-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h2">Lịch sử Đơn hàng</h1>
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold">@ViewData["Title"]</h1>
+        <p class="text-muted">Theo dõi và quản lý tất cả các đơn hàng bạn đã đặt.</p>
     </div>
 
-    <!-- BỘ LỌC DẠNG TABS -->
-    <ul class="nav nav-pills mb-4" id="order-tabs" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all-orders-pane" type="button" role="tab">Tất cả</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="processing-tab" data-bs-toggle="tab" data-bs-target="#processing-orders-pane" type="button" role="tab">Đang xử lý</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="delivering-tab" data-bs-toggle="tab" data-bs-target="#delivering-orders-pane" type="button" role="tab">Đang giao</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="delivered-tab" data-bs-toggle="tab" data-bs-target="#delivered-orders-pane" type="button" role="tab">Đã giao</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="cancelled-tab" data-bs-toggle="tab" data-bs-target="#cancelled-orders-pane" type="button" role="tab">Đã hủy</button>
-        </li>
-    </ul>
-
-    <!-- NỘI DUNG CÁC TABS -->
-    <div class="tab-content" id="order-tabs-content">
-        <!-- Tab 1: Tất cả đơn hàng -->
-        <div class="tab-pane fade show active" id="all-orders-pane" role="tabpanel">
-            @* Trong thực tế, bạn sẽ dùng một vòng lặp @foreach duy nhất ở đây và lọc bằng LINQ.
-               Đây chỉ là giao diện cứng để minh họa. *@
-
-            <!-- Ví dụ đơn hàng Đang giao -->
-            @await Html.PartialAsync("_OrderCard", new { Status = "Đang giao" })
-
-            <!-- Ví dụ đơn hàng Đã giao -->
-            @await Html.PartialAsync("_OrderCard", new { Status = "Đã giao" })
-
-            <!-- Ví dụ đơn hàng Đã hủy -->
-            @await Html.PartialAsync("_OrderCard", new { Status = "Đã hủy" })
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <i class="fas fa-box-open fa-4x text-muted mb-4"></i>
+            <h2 class="mb-3">Bạn chưa có đơn hàng nào</h2>
+            <p class="text-muted mb-4">Hãy bắt đầu mua sắm để xem lịch sử đơn hàng của bạn tại đây.</p>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Bắt đầu mua sắm</a>
         </div>
+    }
+    else
+    {
+        <!-- BỘ LỌC DẠNG TABS - GIỮ NGUYÊN THIẾT KẾ MỚI -->
+        <ul class="nav nav-tabs nav-fill mb-4" id="order-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#all-orders-pane">Tất cả <span class="badge bg-secondary ms-1 rounded-pill">@Model.Count()</span></button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#pending-orders-pane">Chờ xử lý <span class="badge bg-secondary ms-1 rounded-pill">@Model.Count(o => o.OrderStatus == SD.OrderStatusPending || o.OrderStatus == SD.OrderStatusProcessing)</span></button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#shipped-orders-pane">Đang giao <span class="badge bg-info ms-1 rounded-pill">@Model.Count(o => o.OrderStatus == SD.OrderStatusShipped)</span></button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#completed-orders-pane">Hoàn thành <span class="badge bg-success ms-1 rounded-pill">@Model.Count(o => o.OrderStatus == SD.OrderStatusCompleted)</span></button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#cancelled-orders-pane">Đã hủy <span class="badge bg-danger ms-1 rounded-pill">@Model.Count(o => o.OrderStatus == SD.OrderStatusCancelled)</span></button>
+            </li>
+        </ul>
 
-        <!-- Tab 2: Đang xử lý -->
-        <div class="tab-pane fade" id="processing-orders-pane" role="tabpanel">
-            @* @foreach(var order in Model.Where(o => o.Status == "Processing")) { ... } *@
-            @* Giao diện khi không có đơn hàng *@
-            <div class="text-center py-5">
-                <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
-                <p class="text-muted">Bạn không có đơn hàng nào đang được xử lý.</p>
+        <!-- NỘI DUNG CÁC TABS - QUAY LẠI CÁCH ĐƠN GIẢN -->
+        <div class="tab-content pt-3">
+            <!-- Tab 1: Tất cả đơn hàng -->
+            <div class="tab-pane fade show active" id="all-orders-pane" role="tabpanel">
+                @foreach (var order in Model)
+                {
+                    <partial name="_OrderCard" model="order" />
+                }
+            </div>
+
+            <!-- Tab 2: Chờ xử lý -->
+            <div class="tab-pane fade" id="pending-orders-pane" role="tabpanel">
+                @foreach (var order in Model.Where(o => o.OrderStatus == SD.OrderStatusPending || o.OrderStatus == SD.OrderStatusProcessing))
+                {
+                    <partial name="_OrderCard" model="order" />
+                }
+            </div>
+
+            <!-- Tab 3: Đang giao -->
+            <div class="tab-pane fade" id="shipped-orders-pane" role="tabpanel">
+                @foreach (var order in Model.Where(o => o.OrderStatus == SD.OrderStatusShipped))
+                {
+                    <partial name="_OrderCard" model="order" />
+                }
+            </div>
+
+            <!-- Tab 4: Hoàn thành -->
+            <div class="tab-pane fade" id="completed-orders-pane" role="tabpanel">
+                @foreach (var order in Model.Where(o => o.OrderStatus == SD.OrderStatusCompleted))
+                {
+                    <partial name="_OrderCard" model="order" />
+                }
+            </div>
+
+            <!-- Tab 5: Đã hủy -->
+            <div class="tab-pane fade" id="cancelled-orders-pane" role="tabpanel">
+                @foreach (var order in Model.Where(o => o.OrderStatus == SD.OrderStatusCancelled))
+                {
+                    <partial name="_OrderCard" model="order" />
+                }
             </div>
         </div>
-
-        <!-- Tab 3: Đang giao -->
-        <div class="tab-pane fade" id="delivering-orders-pane" role="tabpanel">
-            @await Html.PartialAsync("_OrderCard", new { Status = "Đang giao" })
-        </div>
-
-        <!-- Tab 4: Đã giao -->
-        <div class="tab-pane fade" id="delivered-orders-pane" role="tabpanel">
-            @await Html.PartialAsync("_OrderCard", new { Status = "Đã giao" })
-        </div>
-
-        <!-- Tab 5: Đã hủy -->
-        <div class="tab-pane fade" id="cancelled-orders-pane" role="tabpanel">
-            @await Html.PartialAsync("_OrderCard", new { Status = "Đã hủy" })
-        </div>
-    </div>
+    }
 </div>

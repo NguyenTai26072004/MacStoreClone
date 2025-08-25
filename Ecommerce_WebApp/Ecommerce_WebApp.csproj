@@ -36,7 +36,6 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
-    <Folder Include="Views\Shared\partialview\" />
     <Folder Include="wwwroot\img\categories\" />
     <Folder Include="wwwroot\img\products\" />
   </ItemGroup>

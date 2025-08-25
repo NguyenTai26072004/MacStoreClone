@@ -1,78 +1,70 @@
-﻿@{
-    ViewData["Title"] = "Chi tiết đơn hàng";
+﻿@using Ecommerce_WebApp.Utility
+@model OrderHeader
+
+@{
+    ViewData["Title"] = $"Chi tiết đơn hàng #{Model.Id}";
+
+    var statusConfig = Model.OrderStatus switch
+    {
+        SD.OrderStatusPending => ("secondary", "Chờ xử lý"),
+        SD.OrderStatusProcessing => ("primary", "Đang xử lý"),
+        SD.OrderStatusShipped => ("info", "Đang giao"),
+        SD.OrderStatusCompleted => ("success", "Hoàn thành"),
+        SD.OrderStatusCancelled => ("danger", "Đã hủy"),
+        _ => ("dark", "Không rõ")
+    };
 }
+
+
 
 <div class="container my-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3">Chi tiết đơn hàng #DH12345</h1>
-        <a href="/Order/Index" class="text-decoration-none">
+        <h1 class="h3">@ViewData["Title"]</h1>
+        <a asp-action="Index" class="text-decoration-none">
             <i class="fas fa-arrow-left me-2"></i>Quay lại lịch sử
         </a>
     </div>
 
     <div class="row g-4">
-        <!-- CỘT TRÁI: DANH SÁCH SẢN PHẨM -->
         <div class="col-lg-8">
             <div class="card">
-                <div class="card-header">
-                    Các sản phẩm trong đơn hàng
-                </div>
+                <div class="card-header">Các sản phẩm trong đơn hàng</div>
                 <ul class="list-group list-group-flush">
-                    @* Bắt đầu vòng lặp sản phẩm *@
-                    <li class="list-group-item d-flex align-items-center">
-                        <img src="~/img/sp1.jpg" alt="Sản phẩm" class="img-thumbnail me-3" style="width: 60px;">
-                        <div class="flex-grow-1">
-                            <h6 class="mb-0">MacBook Air M4</h6>
-                            <small class="text-muted">SL: 1</small>
-                        </div>
-                        <span class="fw-bold">36.999.000₫</span>
-                    </li>
-                    <li class="list-group-item d-flex align-items-center">
-                        <img src="~/img/sp2.jpg" alt="Sản phẩm" class="img-thumbnail me-3" style="width: 60px;">
-                        <div class="flex-grow-1">
-                            <h6 class="mb-0">Magic Mouse 3</h6>
-                            <small class="text-muted">SL: 1</small>
-                        </div>
-                        <span class="fw-bold">1.999.000₫</span>
-                    </li>
-                    @* Kết thúc vòng lặp *@
+                    @foreach (var detail in Model.OrderDetails)
+                    {
+                        <li class="list-group-item d-flex align-items-center">
+                            <img src="@(detail.ProductVariant.Product.Images?.FirstOrDefault()?.ImageUrl ?? "/images/placeholder.png")" alt="Sản phẩm" class="img-thumbnail me-3" style="width: 60px;">
+                            <div class="flex-grow-1">
+                                <h6 class="mb-0">@detail.ProductVariant.Product.Name</h6>
+                                <small class="text-muted">SL: @detail.Quantity</small>
+                            </div>
+                            <span class="fw-bold">@detail.Price.ToString("N0")₫</span>
+                        </li>
+                    }
                 </ul>
             </div>
         </div>
 
-        <!-- CỘT PHẢI: THÔNG TIN CHI TIẾT -->
         <div class="col-lg-4">
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <strong>Thông tin đơn hàng</strong>
-                    <span class="badge bg-success">Đã giao</span>
+                     <span class="badge bg-@statusConfig.Item1">@statusConfig.Item2</span>
                 </div>
                 <div class="card-body">
-                    <p><strong>Ngày đặt:</strong> 09/08/2025</p>
+                    <p><strong>Ngày đặt:</strong> @Model.OrderDate.ToString("g")</p>
                     <p><strong>Phương thức thanh toán:</strong> Thanh toán khi nhận hàng (COD)</p>
                     <hr>
                     <h6><strong>Địa chỉ giao hàng</strong></h6>
-                    <p class="mb-0">Nguyễn Văn A</p>
-                    <p class="mb-0">0987654321</p>
-                    <p class="mb-0">123 Đường ABC, Phường Y, Quận Z, TP. Hồ Chí Minh</p>
+                    <p class="mb-0">@Model.FullName</p>
+                    <p class="mb-0">@Model.PhoneNumber</p>
+                    <p class="mb-0">@Model.Address, @Model.Ward, @Model.District, @Model.City</p>
                     <hr>
                     <h6><strong>Tổng kết</strong></h6>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item d-flex justify-content-between ps-0">
-                            <span>Tạm tính:</span>
-                            <span>38.998.000₫</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between ps-0">
-                            <span>Phí vận chuyển:</span>
-                            <span>0₫</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between ps-0">
-                            <span>Giảm giá:</span>
-                            <span class="text-success">-100.000₫</span>
-                        </li>
                         <li class="list-group-item d-flex justify-content-between ps-0 border-top fw-bold">
                             <span>Tổng cộng:</span>
-                            <span>38.898.000₫</span>
+                            <span>@Model.OrderTotal.ToString("N0")₫</span>
                         </li>
                     </ul>
                 </div>

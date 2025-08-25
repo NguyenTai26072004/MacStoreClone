@@ -1,58 +1,44 @@
-﻿@* File: Views/Shared/patial/view _OrderCard.cshtml *@
-@* Model này chỉ là ví dụ, bạn sẽ truyền model thật của mình vào *@
-@model dynamic
+﻿@using Ecommerce_WebApp.Utility
+@model OrderHeader
 
 @{
-    string statusClass = "";
-    string statusText = Model.Status;
-    switch (statusText)
+    var statusConfig = Model.OrderStatus switch
     {
-        case "Đang giao":
-            statusClass = "bg-info text-dark";
-            break;
-        case "Đã giao":
-            statusClass = "bg-success";
-            break;
-        case "Đã hủy":
-            statusClass = "bg-danger";
-            break;
-        default: // Đang xử lý
-            statusClass = "bg-warning text-dark";
-            statusText = "Đang xử lý";
-            break;
-    }
+        SD.OrderStatusPending => ("secondary", "fa-hourglass-start", "Chờ xử lý"),
+        SD.OrderStatusProcessing => ("primary", "fa-person-digging", "Đang xử lý"),
+        SD.OrderStatusShipped => ("info", "fa-truck-fast", "Đang giao"),
+        SD.OrderStatusCompleted => ("success", "fa-circle-check", "Hoàn thành"),
+        SD.OrderStatusCancelled => ("danger", "fa-circle-xmark", "Đã hủy"),
+        _ => ("dark", "fa-question-circle", "Không rõ")
+    };
 }
 
-<div class="card shadow-sm mb-4">
-    <div class="card-header bg-light d-flex justify-content-between align-items-center flex-wrap">
+<div class="card card-order shadow-sm mb-3">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center flex-wrap gap-2 py-3">
         <div>
-            <strong class="me-3">Mã đơn hàng: #DH12345</strong>
-            <small class="text-muted">Ngày đặt: 09/08/2025</small>
+            <h6 class="card-title mb-0 fw-bold">Đơn hàng #@Model.Id</h6>
+            <small class="text-muted">Ngày đặt: @Model.OrderDate.ToString("dd/MM/yyyy")</small>
         </div>
-        <span class="badge rounded-pill @statusClass">@statusText</span>
+        <span class="badge rounded-pill bg-@statusConfig.Item1 fs-6 px-3 py-2">
+            <i class="fas @statusConfig.Item2 me-1"></i>
+            @statusConfig.Item3
+        </span>
     </div>
     <div class="card-body">
-        <!-- Danh sách sản phẩm thu nhỏ -->
-        <div class="d-flex align-items-center mb-3">
-            <img src="~/img/sp1.jpg" alt="Sản phẩm" class="img-thumbnail me-2" style="width: 50px; height: 50px; object-fit: cover;">
-            <img src="~/img/sp2.jpg" alt="Sản phẩm" class="img-thumbnail me-2" style="width: 50px; height: 50px; object-fit: cover;">
-            <span class="text-muted fst-italic">+ 1 sản phẩm khác</span>
+        <div class="row">
+            <div class="col-md-8">
+                <p class="mb-1"><strong>Người nhận:</strong> @Model.FullName</p>
+                <p class="text-muted mb-0"><strong>Địa chỉ:</strong> @Model.Address, @Model.District, @Model.City</p>
+            </div>
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                <small class="text-muted d-block">Tổng tiền</small>
+                <span class="fw-bold fs-5 text-primary">@Model.OrderTotal.ToString("N0")₫</span>
+            </div>
         </div>
-        <p>Xem danh sách đầy đủ các sản phẩm trong phần chi tiết đơn hàng.</p>
     </div>
-    <div class="card-footer d-flex justify-content-between align-items-center">
-        <div>
-            <span class="text-muted">Tổng tiền:</span>
-            <strong class="h5 ms-2">38.898.000₫</strong>
-        </div>
-        <div>
-            @if (Model.Status == "Đang giao")
-            {
-                <a href="#" class="btn btn-sm btn-info">
-                    <i class="fas fa-truck me-1"></i> Theo dõi vận chuyển
-                </a>
-            }
-            <a href="/Order/Details/12345" class="btn btn-sm btn-outline-primary">Xem chi tiết</a>
-        </div>
+    <div class="card-footer bg-light-subtle text-end border-top-0">
+        <a asp-controller="Order" asp-action="Detail" asp-route-orderId="@Model.Id" class="btn btn-outline-primary btn-sm">
+            Xem chi tiết đơn hàng <i class="fas fa-chevron-right ms-1"></i>
+        </a>
     </div>
 </div>

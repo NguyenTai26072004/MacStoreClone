@@ -23,14 +23,15 @@ namespace Ecommerce_WebApp.Data
         // --- Bảng nối giữa Phiên bản và Giá trị thuộc tính ---
         public DbSet<VariantValue> VariantValues { get; set; }
 
+        // --- Bảng cho đơn hàng và chi tiết đơn hàng ---
+        public DbSet<OrderHeader> OrderHeaders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Luôn gọi phương thức của lớp cha trước, ĐẶC BIỆT QUAN TRỌNG khi dùng ASP.NET Core Identity.
             base.OnModelCreating(modelBuilder);
-            // === CẤU HÌNH KHÓA CHÍNH KẾT HỢP CHO BẢNG NỐI VariantValue ===
-            // "Đối với bảng VariantValue, khóa chính của nó KHÔNG PHẢI là một cột,
-            // mà là sự kết hợp của hai cột ProductVariantId và AttributeValueId."
+
             modelBuilder.Entity<VariantValue>()
                 .HasKey(vv => new { vv.ProductVariantId, vv.AttributeValueId });
 
@@ -64,6 +65,15 @@ namespace Ecommerce_WebApp.Data
                 .WithOne(vv => vv.ProductVariant)
                 .HasForeignKey(vv => vv.ProductVariantId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+
+            modelBuilder.Entity<OrderHeader>()
+               .Property(oh => oh.OrderTotal)
+               .HasColumnType("decimal(18, 2)");
+
+            modelBuilder.Entity<OrderDetail>()
+               .Property(od => od.Price)
+               .HasColumnType("decimal(18, 2)");
         }
 
     }
