@@ -1,0 +1,112 @@
+﻿@using Ecommerce_WebApp.Utility
+@model OrderHeader
+
+@{
+    ViewData["Title"] = $"Chi tiết Đơn hàng #{Model.Id}";
+}
+
+<form method="post">
+    @* Form để chứa các nút submit *@
+    <input asp-for="Id" hidden />
+    <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4>@ViewData["Title"]</h4>
+            <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <!-- THÔNG TIN KHÁCH HÀNG & GIAO HÀNG -->
+                <div class="col-md-6">
+                    <h5>Thông tin Giao hàng</h5>
+                    <p><strong>Người nhận:</strong> @Model.FullName</p>
+                    <p><strong>Số điện thoại:</strong> @Model.PhoneNumber</p>
+                    <p><strong>Địa chỉ:</strong> @Model.Address, @Model.Ward, @Model.District, @Model.City</p>
+                    @if (!string.IsNullOrEmpty(Model.OrderNotes))
+                    {
+                        <p><strong>Ghi chú:</strong> @Model.OrderNotes</p>
+                    }
+                </div>
+                <!-- THÔNG TIN ĐƠN HÀNG -->
+                <div class="col-md-6">
+                    <h5>Thông tin Đơn hàng</h5>
+                    <p><strong>Ngày đặt:</strong> @Model.OrderDate.ToString("g")</p>
+                    <p><strong>Trạng thái:</strong> <span class="badge bg-info">@Model.OrderStatus</span></p>
+                    <p><strong>Thanh toán:</strong> <span class="badge bg-warning text-dark">@Model.PaymentStatus</span></p>
+                </div>
+            </div>
+            <hr />
+            <!-- DANH SÁCH SẢN PHẨM -->
+            <h5 class="mt-4">Các sản phẩm đã đặt</h5>
+            <table class="table table-striped table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 10%;">Ảnh</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Mô tả Phiên bản</th>
+                        <th class="text-center">Số lượng</th>
+                        <th class="text-end">Đơn giá</th>
+                        <th class="text-end">Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var detail in Model.OrderDetails)
+                    {
+                        var product = detail.ProductVariant.Product;
+                        var imageUrl = product.Images?.FirstOrDefault()?.ImageUrl ?? "/images/placeholder.png";
+
+                        <tr>
+                            <td style="width: 10%;">
+                                <img src="@imageUrl" class="img-fluid rounded" alt="@product.Name" />
+                            </td>
+                            <td>
+                                <p class="fw-bold mb-0">@product.Name</p>
+                            </td>
+                            <td>
+                                <ul class="list-unstyled mb-0 small">
+                                    @foreach (var vv in detail.ProductVariant.VariantValues)
+                                    {
+                                        <li>
+                                            <strong>@vv.AttributeValue.Attribute.Name:</strong> @vv.AttributeValue.Value
+                                        </li>
+                                    }
+                                </ul>
+                            </td>
+                            <td class="text-center align-middle">
+                                @detail.Quantity
+                            </td>
+                            <td class="text-end align-middle">
+                                @detail.Price.ToString("N0")₫
+                            </td>
+                            <td class="text-end fw-bold align-middle">
+                                @((detail.Price * detail.Quantity).ToString("N0"))₫
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="text-end">
+                <h4>Tổng cộng: <span class="text-danger">@Model.OrderTotal.ToString("N0")₫</span></h4>
+            </div>
+        </div>
+        <!-- KHU VỰC CÁC NÚT HÀNH ĐỘNG -->
+        <div class="card-footer text-center">
+            @if (Model.OrderStatus == SD.OrderStatusPending)
+            {
+                <button type="submit" asp-action="ProcessOrder" class="btn btn-primary">Xác nhận & Bắt đầu xử lý</button>
+            }
+            @if (Model.OrderStatus == SD.OrderStatusProcessing)
+            {
+                <button type="submit" asp-action="ShipOrder" class="btn btn-info">Bàn giao Vận chuyển</button>
+            }
+            @if (Model.OrderStatus == SD.OrderStatusShipped)
+            {
+                <button type="submit" asp-action="CompleteOrder" class="btn btn-success">Hoàn tất Đơn hàng</button>
+            }
+            @if (Model.OrderStatus != SD.OrderStatusCompleted && Model.OrderStatus != SD.OrderStatusCancelled)  
+            {
+                <button type="submit" asp-action="CancelOrder" class="btn btn-danger">Hủy Đơn hàng</button>
+            }
+        </div>
+    </div>
+</form>

@@ -3,6 +3,7 @@ using Ecommerce_WebApp.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using Ecommerce_WebApp.Utility;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,9 +27,15 @@ builder.Services.AddAuthentication()
         googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
     });
 
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
-// Đăng ký dịch vụ EmailSender
-builder.Services.AddTransient<IEmailSender, EmailSender>();
+// 1.Đăng ký cho IEmailSender của Identity.
+//    Hệ thống Identity (ví dụ: khi gửi mail xác nhận, quên mật khẩu) sẽ dùng cái này.
+builder.Services.AddTransient<Microsoft.AspNetCore.Identity.UI.Services.IEmailSender, EmailSender>();
+
+// 2. Đăng ký cho IEmailSender của Utility (mà chúng ta tự tạo).
+//    OrderController và các Controller khác của chúng ta sẽ dùng cái này.
+builder.Services.AddTransient<Ecommerce_WebApp.Utility.IEmailSender, EmailSender>();
 
 
 builder.Services.AddControllersWithViews();

@@ -1,74 +1,83 @@
-﻿using Microsoft.AspNetCore.Identity.UI.Services;
+﻿using Ecommerce_WebApp.Utility; 
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Extensions.Options; 
 using System.Net;
 using System.Net.Mail;
+using System.IO; 
+using System.Collections.Generic; 
+using System.Threading.Tasks; 
 
 namespace Ecommerce_WebApp.Services
 {
-    public class EmailSender : IEmailSender
+    // Lớp này kế thừa cả IEmailSender của Identity và IEmailSender của chúng ta
+    public class EmailSender : Microsoft.AspNetCore.Identity.UI.Services.IEmailSender, Utility.IEmailSender
     {
-        private readonly IConfiguration _configuration;
-        private readonly IWebHostEnvironment _webHostEnvironment; // Thêm dịch vụ này
+        private readonly MailSettings _mailSettings;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public EmailSender(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
+        // Tiêm IOptions<MailSettings> thay vì IConfiguration
+        public EmailSender(IOptions<MailSettings> mailSettings, IWebHostEnvironment webHostEnvironment)
         {
-            _configuration = configuration;
-            _webHostEnvironment = webHostEnvironment; // Gán vào
+            _mailSettings = mailSettings.Value;
+            _webHostEnvironment = webHostEnvironment;
         }
 
-        // Ghi đè phương thức gốc, nhưng chúng ta sẽ không dùng nó trực tiếp nữa
-        public Task SendEmailAsync(string email, string subject, string htmlMessage)
+        // --- TRIỂN KHAI PHƯƠNG THỨC GỬI EMAIL CHUNG ---
+        // Phương thức này sẽ là "trái tim" gửi tất cả các loại email
+        public async Task SendEmailAsync(string toEmail, string subject, string body)
         {
-            // Có thể tạo một Dictionary ở đây và gọi phương thức mới nếu muốn
-            var replacements = new Dictionary<string, string>
-            {
-                { "{{Content}}", htmlMessage } // Ví dụ
-            };
-            return SendEmailFromTemplateAsync(email, subject, "DefaultTemplate.html", replacements);
-        }
-
-        // TẠO PHƯƠNG THỨC MỚI, MẠNH MẼ HƠN
-        public async Task SendEmailFromTemplateAsync(string email, string subject, string templateName, Dictionary<string, string> replacements)
-        {
-            // 1. Lấy đường dẫn đến tệp mẫu trong wwwroot
-            var templatePath = Path.Combine(_webHostEnvironment.WebRootPath, "EmailTemplates", templateName);
-
-            // 2. Đọc toàn bộ nội dung của tệp mẫu
-            var templateContent = await File.ReadAllTextAsync(templatePath);
-
-            // 3. Thay thế các placeholder bằng giá trị thực
-            foreach (var (placeholder, value) in replacements)
-            {
-                templateContent = templateContent.Replace(placeholder, value);
-            }
-
-            // 4. Lấy thông tin người gửi từ secrets.json
-            var fromMail = _configuration["EmailSettings:FromMail"];
-            var fromPassword = _configuration["EmailSettings:FromPassword"];
+            // Lấy thông tin người gửi từ MailSettings đã được tiêm vào
+            var fromMail = _mailSettings.FromMail;
+            var fromPassword = _mailSettings.FromPassword;
+            var displayName = _mailSettings.DisplayName;
+            var host = _mailSettings.Host;
+            var port = _mailSettings.Port;
 
             if (string.IsNullOrEmpty(fromMail) || string.IsNullOrEmpty(fromPassword))
             {
-                // Ghi log lỗi, không gửi email
-                return;
+                // Xử lý lỗi nếu cấu hình bị thiếu
+                throw new InvalidOperationException("Email settings are not configured properly.");
             }
 
             var message = new MailMessage
             {
-                From = new MailAddress(fromMail),
+                From = new MailAddress(fromMail, displayName),
                 Subject = subject,
-                Body = templateContent, 
-                IsBodyHtml = true
+                Body = body,
+                IsBodyHtml = true // Luôn cho phép HTML
             };
-            message.To.Add(new MailAddress(email));
+            message.To.Add(new MailAddress(toEmail));
 
-            // Cấu hình SMTP và gửi đi
-            using var smtpClient = new SmtpClient("smtp.gmail.com")
+            // Cấu hình SmtpClient và gửi đi
+            using var smtpClient = new SmtpClient(host, port)
             {
-                Port = 587,
                 Credentials = new NetworkCredential(fromMail, fromPassword),
                 EnableSsl = true,
             };
 
             await smtpClient.SendMailAsync(message);
+        }
+
+        // --- PHƯƠNG THỨC GỬI EMAIL DỰA TRÊN TEMPLATE (TÙY CHỌN, NÂNG CAO) ---
+        // Giữ lại phương thức cũ của bạn, nhưng dùng phương thức SendEmailAsync mới
+        public async Task SendEmailFromTemplateAsync(string toEmail, string subject, string templateName, Dictionary<string, string> replacements)
+        {
+            var templatePath = Path.Combine(_webHostEnvironment.WebRootPath, "EmailTemplates", templateName);
+
+            if (!File.Exists(templatePath))
+            {
+                throw new FileNotFoundException($"Email template not found at {templatePath}");
+            }
+
+            var templateContent = await File.ReadAllTextAsync(templatePath);
+
+            foreach (var (placeholder, value) in replacements)
+            {
+                templateContent = templateContent.Replace(placeholder, value);
+            }
+
+            // Gọi lại hàm gửi email chung
+            await SendEmailAsync(toEmail, subject, templateContent);
         }
     }
 }

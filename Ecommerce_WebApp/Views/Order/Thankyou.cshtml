@@ -1,10 +1,12 @@
-﻿@{
+﻿@using System.Security.Claims
+
+@{
     ViewData["Title"] = "Đặt hàng thành công";
 }
 
 <div class="container my-5 text-center">
     <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
+        <div class="col-md-8 col-lg-7">
             <div class="card shadow-sm border-0 p-4 p-md-5">
                 <div class="card-body">
                     <i class="fas fa-check-circle fa-5x text-success mb-4"></i>
@@ -16,17 +18,20 @@
                         Mã đơn hàng của bạn là: <strong class="text-primary">#@ViewBag.OrderId</strong>
                     </p>
                     <p class="text-muted mb-4">
-                        Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất để xác nhận đơn hàng.
-                        Một email xác nhận chi tiết đã được gửi đến địa chỉ của bạn.
+                        Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất để xác nhận.
+                        Một email chi tiết đã được gửi đến địa chỉ bạn đã cung cấp.
                     </p>
 
                     <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
                         <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-lg px-4 gap-3 text-white">
-                            <i class="fas fa-home me-2"></i>Tiếp tục mua sắm
+                            <i class="fas fa-shopping-bag me-2"></i>Tiếp tục mua sắm
                         </a>
-                        <a asp-controller="Order" asp-action="Index" class="btn btn-outline-secondary btn-lg px-4">
-                            Xem lịch sử đơn hàng
-                        </a>
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <a asp-controller="Order" asp-action="Index" class="btn btn-outline-secondary btn-lg px-4">
+                                Xem lịch sử đơn hàng
+                            </a>
+                        }
                     </div>
                 </div>
             </div>

@@ -33,12 +33,23 @@
                     @foreach (var detail in Model.OrderDetails)
                     {
                         <li class="list-group-item d-flex align-items-center">
-                            <img src="@(detail.ProductVariant.Product.Images?.FirstOrDefault()?.ImageUrl ?? "/images/placeholder.png")" alt="Sản phẩm" class="img-thumbnail me-3" style="width: 60px;">
+                            <img src="@(detail.ProductVariant.Product.Images?.FirstOrDefault()?.ImageUrl ?? "/images/placeholder.png")" alt="Sản phẩm" class="img-thumbnail me-3" style="width: 75px;">
                             <div class="flex-grow-1">
-                                <h6 class="mb-0">@detail.ProductVariant.Product.Name</h6>
-                                <small class="text-muted">SL: @detail.Quantity</small>
+                                <h6 class="mb-1">@detail.ProductVariant.Product.Name</h6>
+
+                                @* Dùng vòng lặp nhỏ để hiển thị Key: Value *@
+                                @foreach (var vv in detail.ProductVariant.VariantValues)
+                                {
+                                    <small class="text-muted d-block" style="font-size: 0.8rem;">
+                                        <strong>@vv.AttributeValue.Attribute.Name:</strong> @vv.AttributeValue.Value
+                                    </small>
+                                }
+
                             </div>
-                            <span class="fw-bold">@detail.Price.ToString("N0")₫</span>
+                            <div class="text-end">
+                                <p class="fw-bold mb-1">@detail.Price.ToString("N0")₫</p>
+                                <small class="text-muted">Số lượng: @detail.Quantity</small>
+                            </div>
                         </li>
                     }
                 </ul>
