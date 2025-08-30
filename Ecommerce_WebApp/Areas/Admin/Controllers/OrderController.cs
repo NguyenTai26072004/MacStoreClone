@@ -1,5 +1,5 @@
 ﻿using Ecommerce_WebApp.Data;
-using Ecommerce_WebApp.Utility; // Dùng cho SD
+using Ecommerce_WebApp.Utility; 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

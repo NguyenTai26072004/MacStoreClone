@@ -64,7 +64,8 @@
                 </div>
                 <div class="card-body">
                     <p><strong>Ngày đặt:</strong> @Model.OrderDate.ToString("g")</p>
-                    <p><strong>Phương thức thanh toán:</strong> Thanh toán khi nhận hàng (COD)</p>
+                    <p><strong>Phương thức thanh toán:</strong> @Model.PaymentMethod</p>
+                    <p><strong>Trạng thái thanh toán:</strong> @Model.PaymentStatus</p>
                     <hr>
                     <h6><strong>Địa chỉ giao hàng</strong></h6>
                     <p class="mb-0">@Model.FullName</p>

@@ -53,6 +53,9 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+// === ĐĂNG KÝ MOMOSERVICE  ===
+builder.Services.AddScoped<IMomoService, MomoService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

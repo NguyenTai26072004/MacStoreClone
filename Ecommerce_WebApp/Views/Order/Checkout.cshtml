@@ -47,40 +47,54 @@
                     </div>
                     <div class="col-md-4">
                         <label asp-for="OrderHeader.City" class="form-label">Tỉnh / Thành phố</label>
-                        <input type="text" asp-for="OrderHeader.City" class="form-control" required>
+                        <select asp-for="OrderHeader.City" id="city" class="form-select" required>
+                            <option value="" selected>Chọn Tỉnh/Thành</option>
+                        </select>
                         <span asp-validation-for="OrderHeader.City" class="text-danger small"></span>
                     </div>
                     <div class="col-md-4">
                         <label asp-for="OrderHeader.District" class="form-label">Quận / Huyện</label>
-                        <input type="text" asp-for="OrderHeader.District" class="form-control" required>
+                        <select asp-for="OrderHeader.District" id="district" class="form-select" required>
+                            <option value="" selected>Chọn Quận/Huyện</option>
+                        </select>
                         <span asp-validation-for="OrderHeader.District" class="text-danger small"></span>
                     </div>
                     <div class="col-md-4">
                         <label asp-for="OrderHeader.Ward" class="form-label">Phường / Xã</label>
-                        <input type="text" asp-for="OrderHeader.Ward" class="form-control" required>
+                        <select asp-for="OrderHeader.Ward" id="ward" class="form-select" required>
+                            <option value="" selected>Chọn Phường/Xã</option>
+                        </select>
                         <span asp-validation-for="OrderHeader.Ward" class="text-danger small"></span>
                     </div>
                 </div>
 
                 <hr class="my-4">
 
-                <!-- 2. Phương thức thanh toán -->
                 <h4 class="mb-3">Phương thức thanh toán</h4>
                 <div class="my-3">
+
+                    @* --- LỰA CHỌN 1: COD --- *@
                     <div class="form-check p-3 border rounded">
-                        <input asp-for="PaymentMethod" type="radio" class="form-check-input" value="@SD.PaymentMethodCOD" checked required>
-                        <label class="form-check-label" asp-for="PaymentMethod">
-                            Thanh toán khi nhận hàng (COD)
+                        @* Dùng asp-for để binding vào thuộc tính PaymentMethod của ViewModel *@
+                        <input asp-for="PaymentMethod" type="radio" class="form-check-input" value="@SD.PaymentMethodCOD" id="codPayment" checked>
+                        <label class="form-check-label" for="codPayment">
+                            <i class="fas fa-truck me-2"></i>Thanh toán khi nhận hàng (COD)
                         </label>
                     </div>
-                    @* Các phương thức thanh toán khác tạm thời vô hiệu hóa *@
-                    <div class="form-check p-3 border rounded mt-2 bg-light">
-                        <input id="momo" name="paymentMethod" type="radio" class="form-check-input" disabled>
-                        <label class="form-check-label text-muted" for="momo">Thanh toán qua Ví MoMo (Sắp ra mắt)</label>
+
+                    @* --- LỰA CHỌN 2: MOMO --- *@
+                    <div class="form-check p-3 border rounded mt-2">
+                        <input asp-for="PaymentMethod" type="radio" class="form-check-input" value="@SD.PaymentMethodMomo" id="momoPayment">
+                        <label class="form-check-label" for="momoPayment">
+                            @* Dùng logo của MoMo cho đẹp *@
+                            <img src="~/img/momo_logo.png" height="20" alt="MoMo" class="me-2" />
+                            Thanh toán qua Ví MoMo
+                        </label>
                     </div>
+
                 </div>
 
-                <button class="w-100 btn btn-primary btn-lg" type="submit">HOÀN TẤT ĐẶT HÀNG</button>
+                <button id="checkoutButton" class="w-100 btn btn-primary btn-lg" type="submit">HOÀN TẤT ĐẶT HÀNG</button>
             </div>
 
             <!-- CỘT TÓM TẮT ĐƠN HÀNG (BÊN PHẢI) -->
@@ -119,4 +133,76 @@
     @{
         <partial name="_ValidationScriptsPartial" />
     }
+    <script>
+        // === CHỈ SỬ DỤNG MỘT KHỐI DOCUMENT.READY DUY NHẤT ===
+        $(document).ready(function() {
+
+            // --- LOGIC CHO NÚT THANH TOÁN ---
+            $('input[name="PaymentMethod"]').on('change', function() {
+                var selectedMethod = $(this).val();
+                var button = $('#checkoutButton');
+
+                if (selectedMethod === '@SD.PaymentMethodMomo') {
+                    button.text('TIẾP TỤC VỚI MOMO');
+                } else {
+                    button.text('HOÀN TẤT ĐẶT HÀNG');
+                }
+            });
+
+            // =======================================================
+            // == LOGIC LẤY ĐỊA CHỈ HÀNH CHÍNH (DÙNG FETCH API)
+            // =======================================================
+            const host = "https://provinces.open-api.vn/api/";
+
+            var callAPI = (api) => {
+                // Sử dụng fetch API của trình duyệt
+                return fetch(api).then(response => response.json());
+            }
+
+            var renderData = (array, selectElementId) => {
+                let select = document.getElementById(selectElementId);
+                select.innerHTML = '<option value="" disabled selected>Vui lòng chọn</option>';
+                array.forEach(element => {
+                    let option = document.createElement('option');
+                    option.dataset.code = element.code;
+                    option.value = element.name;
+                    option.textContent = element.name;
+                    select.appendChild(option);
+                });
+                // Kích hoạt lại Select2 sau khi đã thêm các option
+                 $('#' + selectElementId).trigger('change.select2');
+            }
+
+            // 1. Tải danh sách Tỉnh/Thành
+            callAPI(host + "?depth=1").then(data => {
+                renderData(data, "city");
+            });
+
+            // 2. Xử lý khi chọn Tỉnh/Thành
+            $("#city").on("change", function () {
+                const selectedOption = $(this).find('option:selected');
+                const cityCode = selectedOption.data('code');
+                callAPI(host + "p/" + cityCode + "?depth=2").then(data => {
+                    renderData(data.districts, "district");
+                    document.getElementById('ward').innerHTML = '<option value="" disabled selected>Vui lòng chọn</option>';
+                    $('#district, #ward').trigger('change.select2'); // Reset cả 2
+                });
+            });
+
+            // 3. Xử lý khi chọn Quận/Huyện
+            $("#district").on("change", function () {
+                const selectedOption = $(this).find('option:selected');
+                const districtCode = selectedOption.data('code');
+                 callAPI(host + "d/" + districtCode + "?depth=2").then(data => {
+                    renderData(data.wards, "ward");
+                });
+            });
+
+             // 4. Khởi tạo Select2 cho các dropdown
+            $('#city, #district, #ward').select2({
+                placeholder: "Vui lòng chọn...",
+                allowClear: true
+            });
+        });
+    </script>
 }

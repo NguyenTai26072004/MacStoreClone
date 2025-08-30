@@ -25,6 +25,7 @@ namespace Ecommerce_WebApp.Models
         public string FullName { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập số điện thoại.")]
+        [RegularExpression(@"^(0[0-9]{9})$", ErrorMessage = "Số điện thoại không hợp lệ.")]
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập địa chỉ.")]
@@ -48,6 +49,7 @@ namespace Ecommerce_WebApp.Models
 
         // Các trạng thái của đơn hàng
         public string? OrderStatus { get; set; }
+        public string? PaymentMethod { get; set; }
         public string? PaymentStatus { get; set; }
 
         // Thông tin thanh toán và vận chuyển

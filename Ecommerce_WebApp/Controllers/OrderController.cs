@@ -1,6 +1,7 @@
 ﻿using Ecommerce_WebApp.Data;
 using Ecommerce_WebApp.Helpers;
 using Ecommerce_WebApp.Models;
+using Ecommerce_WebApp.Services;
 using Ecommerce_WebApp.Utility;
 using Ecommerce_WebApp.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -19,16 +20,18 @@ namespace Ecommerce_WebApp.Controllers
 
     public class OrderController : Controller
     {
-        private readonly AppDbContext _db;
-
+        private readonly AppDbContext _db;       
         private readonly Utility.IEmailSender _emailSender;
-        public OrderController(AppDbContext db, Utility.IEmailSender emailSender)
+        private readonly IMomoService _momoService;
+
+        public OrderController(AppDbContext db, Utility.IEmailSender emailSender, IMomoService momoService)
         {
             _db = db;
             _emailSender = emailSender;
+            _momoService = momoService;
         }
 
-        // GET: Hiển thị trang Checkout (code cũ của bạn đã tốt, chỉ thêm [Authorize])
+        // GET: Hiển thị trang Checkout
         public IActionResult Checkout()
         {
             var cart = HttpContext.Session.Get<ShoppingCart>(CartController.SessionKey);
@@ -57,7 +60,7 @@ namespace Ecommerce_WebApp.Controllers
             return View(viewModel);
         }
 
-
+        // --- ACTION CHÍNH: XỬ LÝ ĐẶT HÀNG ---
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Checkout(CheckoutVM viewModel)
@@ -70,26 +73,80 @@ namespace Ecommerce_WebApp.Controllers
             }
             viewModel.ShoppingCart = cart;
 
-            // Liên kết với người dùng nếu đã đăng nhập
             LinkUserToOrderHeader(viewModel.OrderHeader);
 
             ModelState.Remove("OrderHeader.ApplicationUser");
             if (ModelState.IsValid)
             {
-                // Thực hiện toàn bộ quy trình đặt hàng
-                await ProcessOrder(viewModel);
+                // Bước 1: Tạo và Lưu Đơn hàng ở trạng thái Pending (Chưa xử lý)
+                // Áp dụng cho cả COD và MoMo.
+                await CreateAndSaveOrderHeaderAndDetails(viewModel);
 
-                // Gửi email xác nhận
-                await SendConfirmationEmail(viewModel);
-
-                // Dọn dẹp và chuyển hướng
-                HttpContext.Session.Remove(CartController.SessionKey);
-                return RedirectToAction("ThankYou", new { orderId = viewModel.OrderHeader.Id });
+                // Bước 2: Phân nhánh xử lý theo phương thức thanh toán
+                if (viewModel.PaymentMethod == SD.PaymentMethodMomo)
+                {
+                    // Chuyển hướng đến MoMo để thanh toán
+                    string paymentUrl = await _momoService.CreatePaymentUrlAsync(viewModel.OrderHeader, HttpContext);
+                    if (!string.IsNullOrEmpty(paymentUrl))
+                    {
+                        return Redirect(paymentUrl);
+                    }
+                    else
+                    {
+                        TempData["error"] = "Không thể tạo yêu cầu thanh toán MoMo. Vui lòng thử lại sau.";
+                        return View(viewModel); // Lỗi, quay lại trang checkout
+                    }
+                }
+                else // Mặc định là COD
+                {
+                    // Với COD, chúng ta có thể trừ kho và gửi email ngay
+                    await FinalizeOrder(viewModel.OrderHeader);
+                    return RedirectToAction("ThankYou", new { orderId = viewModel.OrderHeader.Id });
+                }
             }
 
-            // Nếu có lỗi, quay lại form
-            return View(viewModel);
+            return View(viewModel); // Lỗi validation, quay lại trang checkout
         }
+
+
+        // --- ACTION XỬ LÝ PHẢN HỒI TỪ MOMO ---
+        public async Task<IActionResult> PaymentCallBack()
+        {
+            var query = HttpContext.Request.Query;
+            var extraData = query["extraData"].ToString();
+
+            if (int.TryParse(extraData, out int dbOrderId))
+            {
+                var orderHeader = await _db.OrderHeaders.FindAsync(dbOrderId);
+                if (orderHeader == null)
+                {
+                    TempData["error"] = "Không tìm thấy đơn hàng trong hệ thống.";
+                    return RedirectToAction("Index", "Cart");
+                }
+
+                var resultCode = query["resultCode"].ToString();
+                if (resultCode == "0") // Giao dịch thành công
+                {
+                    // Đánh dấu đơn hàng là đã thanh toán
+                    orderHeader.PaymentStatus = SD.PaymentStatusPaid;
+                    _db.OrderHeaders.Update(orderHeader);
+                    await _db.SaveChangesAsync();
+
+                    // Hoàn tất đơn hàng (trừ kho, gửi mail)
+                    await FinalizeOrder(orderHeader);
+
+                    return RedirectToAction("ThankYou", new { orderId = orderHeader.Id });
+                }
+            }
+
+            TempData["error"] = $"Thanh toán MoMo thất bại: {query["message"]}";
+            // Cập nhật trạng thái đơn hàng là "thanh toán thất bại"
+            // (Bạn có thể thêm logic này nếu muốn)
+            return RedirectToAction("Index", "Cart");
+        }
+
+
+
 
 
         [Authorize] 
@@ -147,6 +204,60 @@ namespace Ecommerce_WebApp.Controllers
             return View();
         }
 
+
+        /// <summary>
+        /// Tạo và lưu OrderHeader & OrderDetail, trả về OrderHeader đã được lưu
+        /// </summary>
+        private async Task CreateAndSaveOrderHeaderAndDetails(CheckoutVM viewModel)
+        {
+            var orderHeader = viewModel.OrderHeader;
+            orderHeader.OrderDate = DateTime.Now;
+            orderHeader.OrderTotal = viewModel.ShoppingCart.Items.Sum(i => i.SubTotal);
+            orderHeader.OrderStatus = SD.OrderStatusPending;
+            orderHeader.PaymentStatus = SD.PaymentStatusPending;
+            orderHeader.PaymentMethod = viewModel.PaymentMethod;
+            _db.OrderHeaders.Add(orderHeader);
+            await _db.SaveChangesAsync();
+
+            var orderDetails = viewModel.ShoppingCart.Items.Select(item => new OrderDetail
+            {
+                OrderHeaderId = orderHeader.Id,
+                ProductVariantId = item.VariantId,
+                Quantity = item.Quantity,
+                Price = item.Price
+            }).ToList();
+            _db.OrderDetails.AddRange(orderDetails);
+            await _db.SaveChangesAsync();
+
+            // Gán lại OrderDetails để các hàm sau có thể dùng
+            orderHeader.OrderDetails = orderDetails;
+        }
+
+        /// <summary>
+        /// Hoàn tất đơn hàng: Trừ kho, gửi mail, xóa giỏ hàng
+        /// </summary>
+        private async Task FinalizeOrder(OrderHeader orderHeader)
+        {
+            // 1. Trừ kho
+            var orderDetails = _db.OrderDetails.Where(od => od.OrderHeaderId == orderHeader.Id).ToList();
+            foreach (var item in orderDetails)
+            {
+                var variantInDb = await _db.ProductVariants.FindAsync(item.ProductVariantId);
+                if (variantInDb != null)
+                {
+                    variantInDb.StockQuantity -= item.Quantity;
+                }
+            }
+            await _db.SaveChangesAsync();
+
+            // 2. Gửi email
+            await SendConfirmationEmail(orderHeader);
+
+            // 3. Xóa giỏ hàng
+            HttpContext.Session.Remove(CartController.SessionKey);
+        }
+
+
         /// <summary>
         /// Gán ApplicationUserId vào đơn hàng nếu người dùng đã đăng nhập.
         /// </summary>
@@ -202,27 +313,36 @@ namespace Ecommerce_WebApp.Controllers
             // 4. Lưu tất cả thay đổi (OrderDetail và cập nhật Stock)
             await _db.SaveChangesAsync();
         }
-
         /// <summary>
         /// Chuẩn bị và gửi email xác nhận đơn hàng.
         /// </summary>
-        private async Task SendConfirmationEmail(CheckoutVM viewModel)
+        private async Task SendConfirmationEmail(OrderHeader orderHeader)
         {
             try
             {
-                string subject = $"MacStore - Xác nhận đơn hàng #{viewModel.OrderHeader.Id}";
-                string orderItemsHtml = await BuildOrderItemsHtml(viewModel.ShoppingCart.Items);
+                // Đảm bảo OrderDetails đã được tải đầy đủ thông tin cần thiết
+                if (orderHeader.OrderDetails == null || !orderHeader.OrderDetails.Any())
+                {
+                    orderHeader.OrderDetails = await _db.OrderDetails
+                        .Where(od => od.OrderHeaderId == orderHeader.Id)
+                        .ToListAsync();
+                }
+
+                string subject = $"MacStore - Xác nhận đơn hàng #{orderHeader.Id}";
+
+                // Gọi hàm BuildOrderItemsHtml với danh sách OrderDetails
+                string orderItemsHtml = await BuildOrderItemsHtml(orderHeader.OrderDetails);
 
                 var replacements = new Dictionary<string, string>
                 {
-                    { "{{CustomerName}}", viewModel.OrderHeader.FullName },
-                    { "{{OrderId}}", viewModel.OrderHeader.Id.ToString() },
+                    { "{{CustomerName}}", orderHeader.FullName },
+                    { "{{OrderId}}", orderHeader.Id.ToString() },
                     { "{{OrderItems}}", orderItemsHtml },
-                    { "{{OrderTotal}}", viewModel.OrderHeader.OrderTotal.ToString("N0") },
-                    { "{{ShippingAddress}}", $"{viewModel.OrderHeader.Address}, {viewModel.OrderHeader.Ward}, {viewModel.OrderHeader.District}, {viewModel.OrderHeader.City}" }
+                    { "{{OrderTotal}}", orderHeader.OrderTotal.ToString("N0") },
+                    { "{{ShippingAddress}}", $"{orderHeader.Address}, {orderHeader.Ward}, {orderHeader.District}, {orderHeader.City}" }
                 };
 
-                await _emailSender.SendEmailFromTemplateAsync(viewModel.OrderHeader.Email, subject, "OrderConfirmation.html", replacements);
+                await _emailSender.SendEmailFromTemplateAsync(orderHeader.Email, subject, "OrderConfirmation.html", replacements);
             }
             catch (Exception)
             {
@@ -230,46 +350,46 @@ namespace Ecommerce_WebApp.Controllers
             }
         }
 
+
         /// <summary>
-        /// Xây dựng chuỗi HTML chứa danh sách sản phẩm cho email từ giỏ hàng.
-        /// </summary>  
-        private async Task<string> BuildOrderItemsHtml(List<CartItem> cartItems)
+        /// Xây dựng chuỗi HTML chứa danh sách sản phẩm cho email từ danh sách OrderDetail.
+        /// </summary>
+        private async Task<string> BuildOrderItemsHtml(List<OrderDetail> orderDetails)
         {
             var htmlBuilder = new StringBuilder();
-            foreach (var item in cartItems)
+            foreach (var detail in orderDetails)
             {
-                // Truy vấn lại thông tin đầy đủ của phiên bản (bao gồm các giá trị thuộc tính)
-                // Chúng ta vẫn cần truy vấn lại để lấy tên của các thuộc tính (Attribute.Name)
+                // Truy vấn thông tin của phiên bản sản phẩm tương ứng
                 var variant = await _db.ProductVariants
-                                       .Include(v => v.Product) 
+                                       .Include(v => v.Product)
                                        .Include(v => v.VariantValues)
                                            .ThenInclude(vv => vv.AttributeValue)
-                                               .ThenInclude(av => av.Attribute) 
+                                               .ThenInclude(av => av.Attribute)
                                        .AsNoTracking()
-                                       .FirstOrDefaultAsync(v => v.Id == item.VariantId);
+                                       .FirstOrDefaultAsync(v => v.Id == detail.ProductVariantId);
 
                 if (variant != null)
                 {
-                    // Lấy tên sản phẩm từ DB để đảm bảo chính xác nhất
                     var productName = variant.Product.Name;
 
-                    // Lấy mô tả phiên bản từ DB
+                    // Lấy mô tả phiên bản
                     var variantDescriptionHtml = string.Join("<br/>",
                         variant.VariantValues.Select(vv =>
                             $"<small style='color: #6c757d;'><strong>{vv.AttributeValue.Attribute.Name}:</strong> {vv.AttributeValue.Value}</small>"
                         )
                     );
-            
-                    // Xây dựng thẻ <tr> cho sản phẩm này
+
+                    var subTotal = detail.Quantity * detail.Price;
+
                     htmlBuilder.Append($@"
-                        <tr>
-                            <td style='padding: 10px; border: 1px solid #dee2e6;'>
-                                <strong>{productName}</strong><br/>
-                                {variantDescriptionHtml}
-                            </td>
-                            <td style='padding: 10px; border: 1px solid #dee2e6; text-align: center; vertical-align: middle;'>{item.Quantity}</td>
-                            <td style='padding: 10px; border: 1px solid #dee2e6; text-align: right; vertical-align: middle;'>{item.SubTotal.ToString("N0")}đ</td>
-                        </tr>");
+                <tr>
+                    <td style='padding: 10px; border: 1px solid #dee2e6;'>
+                        <strong>{productName}</strong><br/>
+                        {variantDescriptionHtml}
+                    </td>
+                    <td style='padding: 10px; border: 1px solid #dee2e6; text-align: center; vertical-align: middle;'>{detail.Quantity}</td>
+                    <td style='padding: 10px; border: 1px solid #dee2e6; text-align: right; vertical-align: middle;'>{subTotal.ToString("N0")}đ</td>
+                </tr>");
                 }
             }
             return htmlBuilder.ToString();
