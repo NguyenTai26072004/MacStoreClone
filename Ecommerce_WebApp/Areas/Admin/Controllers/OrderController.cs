@@ -138,5 +138,33 @@ namespace Ecommerce_WebApp.Areas.Admin.Controllers
             TempData["info"] = "Đơn hàng đã được hủy."; 
             return RedirectToAction("Details", new { orderId = Id });
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteOrder(int Id)
+        {
+            // Tìm đơn hàng cần xóa
+            var orderHeaderToDelete = await _db.OrderHeaders.FindAsync(Id);
+
+            if (orderHeaderToDelete == null)
+            {
+                TempData["error"] = "Không tìm thấy đơn hàng để xóa.";
+                return RedirectToAction("Index");
+            }
+
+            // Chỉ cho phép xóa các đơn hàng đã bị hủy
+            if (orderHeaderToDelete.OrderStatus != SD.OrderStatusCancelled)
+            {
+                TempData["error"] = "Chỉ có thể xóa các đơn hàng đã bị hủy.";
+                return RedirectToAction("Details", new { orderId = Id });
+            }
+
+
+            _db.OrderHeaders.Remove(orderHeaderToDelete);
+            await _db.SaveChangesAsync();
+
+            TempData["success"] = $"Đã xóa vĩnh viễn đơn hàng #{Id}.";
+            return RedirectToAction("Index");
+        }
     }
 }

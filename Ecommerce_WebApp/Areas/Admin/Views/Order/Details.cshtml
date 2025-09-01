@@ -107,6 +107,13 @@
             {
                 <button type="submit" asp-action="CancelOrder" class="btn btn-danger">Hủy Đơn hàng</button>
             }
+            @if (Model.OrderStatus == SD.OrderStatusCancelled)
+            {
+                <button type="submit" asp-action="DeleteOrder" class="btn btn-danger"
+                        onclick="return confirm('HÀNH ĐỘNG NÀY KHÔNG THỂ HOÀN TÁC! Bạn có chắc chắn muốn XÓA VĨNH VIỄN đơn hàng này không?')">
+                    <i class="fas fa-trash-alt me-1"></i> Xóa Vĩnh viễn
+                </button>
+            }
         </div>
     </div>
 </form>

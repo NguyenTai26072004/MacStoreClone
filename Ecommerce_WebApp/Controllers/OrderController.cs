@@ -109,39 +109,50 @@ namespace Ecommerce_WebApp.Controllers
         }
 
 
-        // --- ACTION XỬ LÝ PHẢN HỒI TỪ MOMO ---
         public async Task<IActionResult> PaymentCallBack()
         {
             var query = HttpContext.Request.Query;
             var extraData = query["extraData"].ToString();
+
+
 
             if (int.TryParse(extraData, out int dbOrderId))
             {
                 var orderHeader = await _db.OrderHeaders.FindAsync(dbOrderId);
                 if (orderHeader == null)
                 {
-                    TempData["error"] = "Không tìm thấy đơn hàng trong hệ thống.";
+                    TempData["error"] = "Lỗi: Không tìm thấy đơn hàng trong hệ thống.";
                     return RedirectToAction("Index", "Cart");
                 }
 
                 var resultCode = query["resultCode"].ToString();
-                if (resultCode == "0") // Giao dịch thành công
+                if (resultCode == "0") // Giao dịch THÀNH CÔNG
                 {
-                    // Đánh dấu đơn hàng là đã thanh toán
-                    orderHeader.PaymentStatus = SD.PaymentStatusPaid;
-                    _db.OrderHeaders.Update(orderHeader);
-                    await _db.SaveChangesAsync();
+                    if (orderHeader.PaymentStatus != SD.PaymentStatusPaid)
+                    {
+                        // 1. Cập nhật trạng thái
+                        orderHeader.PaymentStatus = SD.PaymentStatusPaid;
+                        orderHeader.OrderStatus = SD.OrderStatusProcessing;
+                        _db.OrderHeaders.Update(orderHeader);
 
-                    // Hoàn tất đơn hàng (trừ kho, gửi mail)
-                    await FinalizeOrder(orderHeader);
-
+                        // 2. Trừ kho, gửi mail, và XÓA GIỎ HÀNG
+                        await FinalizeOrder(orderHeader); 
+                    }
                     return RedirectToAction("ThankYou", new { orderId = orderHeader.Id });
+                }
+                else // Giao dịch THẤT BẠI
+                {
+
+                    _db.OrderHeaders.Remove(orderHeader);
+                    await _db.SaveChangesAsync();
+  
+
+                    TempData["error"] = $"Thanh toán MoMo thất bại. Vui lòng thử lại.";
+                    return RedirectToAction("Index", "Cart"); 
                 }
             }
 
-            TempData["error"] = $"Thanh toán MoMo thất bại: {query["message"]}";
-            // Cập nhật trạng thái đơn hàng là "thanh toán thất bại"
-            // (Bạn có thể thêm logic này nếu muốn)
+            TempData["error"] = "Dữ liệu trả về từ MoMo không hợp lệ.";
             return RedirectToAction("Index", "Cart");
         }
 
