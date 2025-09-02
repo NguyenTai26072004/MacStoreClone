@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading.Tasks; 
 
 namespace Ecommerce_WebApp.Areas.Admin.Controllers
 {
@@ -19,99 +20,135 @@ namespace Ecommerce_WebApp.Areas.Admin.Controllers
             _db = db;
         }
 
-        // GET: Hiển thị danh sách các giá trị thuộc tính
-        public IActionResult Index()
-        {
+        #region READ ACTIONS (Các hành động đọc dữ liệu)
 
-            var attributeValues = _db.AttributeValues.Include(av => av.Attribute).ToList();
+        // GET: /Admin/AttributeValue
+        public async Task<IActionResult> Index()
+        {
+            // Lấy danh sách, sắp xếp theo tên thuộc tính cha rồi đến giá trị
+            var attributeValues = await _db.AttributeValues
+                .Include(av => av.Attribute)
+                .OrderBy(av => av.Attribute.Name)
+                .ThenBy(av => av.Value)
+                .ToListAsync();
+
             return View(attributeValues);
         }
 
-        // GET: Hiển thị form tạo mới
-        public IActionResult Create()
+        #endregion
+
+        #region CREATE ACTIONS (Các hành động tạo mới)
+
+        // GET: /Admin/AttributeValue/Create
+        public async Task<IActionResult> Create()
         {
-            // Chuẩn bị dữ liệu cho dropdown chọn thuộc tính cha.
-            PrepareAttributeDropdown();
+            // Chuẩn bị dữ liệu cho dropdown và trả về View
+            await PrepareAttributeDropdownAsync();
             return View();
         }
 
-        // POST: Xử lý tạo mới
+        // POST: /Admin/AttributeValue/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(AttributeValue attributeValue)
+        public async Task<IActionResult> Create(AttributeValue attributeValue)
         {
             if (ModelState.IsValid)
             {
                 _db.AttributeValues.Add(attributeValue);
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 TempData["success"] = "Tạo giá trị thuộc tính thành công!";
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
 
-            // Nếu lỗi, chuẩn bị lại dropdown và hiển thị lại form.
-            PrepareAttributeDropdown();
+            // Nếu lỗi, chuẩn bị lại dropdown và hiển thị lại form
+            await PrepareAttributeDropdownAsync();
             return View(attributeValue);
         }
 
-        // GET: Hiển thị form sửa
-        public IActionResult Edit(int? id)
+        #endregion
+
+        #region EDIT ACTIONS (Các hành động chỉnh sửa)
+
+        // GET: /Admin/AttributeValue/Edit/{id}
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || id == 0) return NotFound();
-            var attributeValue = _db.AttributeValues.Find(id);
+
+            var attributeValue = await _db.AttributeValues.FindAsync(id);
             if (attributeValue == null) return NotFound();
 
-            PrepareAttributeDropdown();
+            await PrepareAttributeDropdownAsync();
             return View(attributeValue);
         }
 
-        // POST: Xử lý sửa
+        // POST: /Admin/AttributeValue/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(AttributeValue attributeValue)
+        public async Task<IActionResult> Edit(AttributeValue attributeValue)
         {
             if (ModelState.IsValid)
             {
                 _db.AttributeValues.Update(attributeValue);
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 TempData["success"] = "Cập nhật giá trị thành công!";
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
-            PrepareAttributeDropdown();
+
+            await PrepareAttributeDropdownAsync();
             return View(attributeValue);
         }
 
-        // GET: Hiển thị trang xác nhận xóa
-        public IActionResult Delete(int? id)
+        #endregion
+
+        #region DELETE ACTIONS (Các hành động xóa)
+
+        // GET: /Admin/AttributeValue/Delete/{id}
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || id == 0) return NotFound();
-            // Lấy cả thông tin cha để hiển thị trên trang xác nhận.
-            var attributeValue = _db.AttributeValues.Include(av => av.Attribute).FirstOrDefault(av => av.Id == id);
+
+            // Lấy cả thông tin cha để hiển thị trên trang xác nhận
+            var attributeValue = await _db.AttributeValues
+                .Include(av => av.Attribute)
+                .FirstOrDefaultAsync(av => av.Id == id);
+
             if (attributeValue == null) return NotFound();
             return View(attributeValue);
         }
 
-        // POST: Xử lý xóa
+        // POST: /Admin/AttributeValue/Delete/{id}
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeletePOST(int? id)
+        public async Task<IActionResult> DeletePOST(int? id)
         {
-            var attributeValue = _db.AttributeValues.Find(id);
+            var attributeValue = await _db.AttributeValues.FindAsync(id);
             if (attributeValue == null) return NotFound();
+
             _db.AttributeValues.Remove(attributeValue);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             TempData["success"] = "Xóa giá trị thành công!";
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
-        // --- Phương thức hỗ trợ (Helper Method) ---
-        private void PrepareAttributeDropdown()
+        #endregion
+
+        #region PRIVATE HELPER METHODS (Các hàm hỗ trợ)
+
+        /// <summary>
+        /// Chuẩn bị danh sách thuộc tính (dạng SelectListItem) và gán vào ViewBag.
+        /// </summary>
+        private async Task PrepareAttributeDropdownAsync()
         {
-            // Lấy tất cả các thuộc tính (Màu sắc, RAM...) để làm danh sách chọn.
-            ViewBag.AttributeList = _db.Attributes.Select(pa => new SelectListItem
-            {
-                Text = pa.Name,
-                Value = pa.Id.ToString()
-            }).ToList();
+            ViewBag.AttributeList = await _db.Attributes
+                .OrderBy(pa => pa.Name)
+                .Select(pa => new SelectListItem
+                {
+                    Text = pa.Name,
+                    Value = pa.Id.ToString()
+                })
+                .ToListAsync();
         }
+
+        #endregion
     }
 }

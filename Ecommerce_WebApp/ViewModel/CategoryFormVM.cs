@@ -12,7 +12,7 @@ namespace Ecommerce_WebApp.ViewModels
         public Category Category { get; set; } = new Category();
 
         // Dùng cho việc upload ảnh icon MỚI
-        public IFormFile IconImage { get; set; }
+        public IFormFile? IconImage { get; set; }
 
         // Dùng để chứa danh sách chọn danh mục cha
         [ValidateNever]

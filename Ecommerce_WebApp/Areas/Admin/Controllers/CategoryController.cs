@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc;
 using Ecommerce_WebApp.Data;
-using Ecommerce_WebApp.ViewModels; 
-using Microsoft.AspNetCore.Hosting; 
+using Ecommerce_WebApp.ViewModels;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using System.IO; 
+using System.IO;
 using System.Linq;
 
 namespace Ecommerce_WebApp.Areas.Admin.Controllers
@@ -34,49 +34,30 @@ namespace Ecommerce_WebApp.Areas.Admin.Controllers
         // GET: Hiển thị form tạo mới
         public IActionResult Create()
         {
-            var viewModel = new CategoryFormVM
-            {
-                Category = new Category(),
-                ParentCategoryList = _db.Categories.Select(c => new SelectListItem { Text = c.Name, Value = c.Id.ToString() })
-            };
+            var viewModel = new CategoryFormVM();
+            PopulateParentCategoryList(viewModel);
             return View(viewModel);
         }
 
-        // POST: Xử lý tạo mới
+        // POST: Xử lý tạo mới - ĐÃ HOÀN THIỆN VÀ TÁCH HÀM
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(CategoryFormVM viewModel)
         {
-            if (!ModelState.IsValid)
+            if (_db.Categories.Any(c => c.Name == viewModel.Category.Name))
             {
-                // Lấy ra tất cả các cặp Key-Value trong ModelState
-                var errors = ModelState
-                    .Where(x => x.Value.Errors.Count > 0)
-                    .Select(x => new { x.Key, x.Value.Errors })
-                    .ToArray();
-
-                // Đoạn code trên sẽ gom tất cả lỗi lại.
-                // Bạn chỉ cần đặt breakpoint ở dòng dưới đây để xem.
-                // Khi chương trình dừng lại, hãy di chuột lên biến "errors"
-                // và xem nội dung của nó.
+                ModelState.AddModelError("Category.Name", "Tên danh mục này đã tồn tại.");
             }
 
             if (ModelState.IsValid)
             {
-                // Xử lý upload file icon
-                if (viewModel.IconImage != null)
+                // Gọi hàm helper để xử lý ảnh
+                viewModel.Category.IconUrl = ProcessUploadedIcon(viewModel.IconImage);
+
+                // Gọi hàm helper để xử lý thứ tự hiển thị
+                if (!viewModel.Category.DisplayOrder.HasValue)
                 {
-                    string wwwRootPath = _webHostEnvironment.WebRootPath;
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(viewModel.IconImage.FileName);
-                    string categoryPath = Path.Combine(wwwRootPath, @"img\categories");
-
-                    if (!Directory.Exists(categoryPath)) Directory.CreateDirectory(categoryPath);
-
-                    using (var fileStream = new FileStream(Path.Combine(categoryPath, fileName), FileMode.Create))
-                    {
-                        viewModel.IconImage.CopyTo(fileStream);
-                    }
-                    viewModel.Category.IconUrl = @"/img/categories/" + fileName;
+                    viewModel.Category.DisplayOrder = GetNextDisplayOrder(viewModel.Category.ParentId);
                 }
 
                 _db.Categories.Add(viewModel.Category);
@@ -85,7 +66,8 @@ namespace Ecommerce_WebApp.Areas.Admin.Controllers
                 return RedirectToAction("Index");
             }
 
-            viewModel.ParentCategoryList = _db.Categories.Select(c => new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
+            // Nếu không hợp lệ, gọi hàm helper để tải lại danh sách và hiển thị lại form
+            PopulateParentCategoryList(viewModel);
             return View(viewModel);
         }
 
@@ -93,108 +75,195 @@ namespace Ecommerce_WebApp.Areas.Admin.Controllers
         public IActionResult Edit(int? id)
         {
             if (id == null || id == 0) return NotFound();
+
             var categoryFromDb = _db.Categories.Find(id);
             if (categoryFromDb == null) return NotFound();
 
             var viewModel = new CategoryFormVM
             {
-                Category = categoryFromDb,
-                ParentCategoryList = _db.Categories.Where(c => c.Id != id).Select(c => new SelectListItem { Text = c.Name, Value = c.Id.ToString() })
+                Category = categoryFromDb
             };
+
+            PopulateParentCategoryList(viewModel, id);
             return View(viewModel);
         }
 
-        // POST: Xử lý sửa
+        // POST: Xử lý sửa - ĐÃ HOÀN THIỆN VÀ TÁCH HÀM
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(CategoryFormVM viewModel)
         {
-            // Bỏ qua validation cho file ảnh mới, vì người dùng có thể không muốn thay đổi ảnh
+            if (_db.Categories.Any(c => c.Name == viewModel.Category.Name && c.Id != viewModel.Category.Id))
+            {
+                ModelState.AddModelError("Category.Name", "Tên danh mục này đã tồn tại.");
+            }
+
             ModelState.Remove("IconImage");
 
             if (ModelState.IsValid)
             {
-                var categoryFromDb = _db.Categories.Find(viewModel.Category.Id);
+                // Dùng AsNoTracking để lấy thông tin ảnh cũ mà không gây xung đột tracking
+                var categoryFromDb = _db.Categories.AsNoTracking().FirstOrDefault(c => c.Id == viewModel.Category.Id);
                 if (categoryFromDb == null) return NotFound();
 
-                // Cập nhật thông tin
-                categoryFromDb.Name = viewModel.Category.Name;
-                categoryFromDb.ParentId = viewModel.Category.ParentId;
-                categoryFromDb.DisplayOrder = viewModel.Category.DisplayOrder;
-
-                // Xử lý upload ảnh mới (nếu có)
+                // Gọi hàm helper để xử lý ảnh (nếu có ảnh mới)
+                // Nó sẽ tự động xóa ảnh cũ nếu có ảnh mới được tải lên
                 if (viewModel.IconImage != null)
                 {
-                    // Xóa ảnh cũ (nếu có)
-                    if (!string.IsNullOrEmpty(categoryFromDb.IconUrl))
-                    {
-                        var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, categoryFromDb.IconUrl.TrimStart('\\', '/'));
-                        if (System.IO.File.Exists(oldImagePath))
-                        {
-                            System.IO.File.Delete(oldImagePath);
-                        }
-                    }
-                    // Lưu ảnh mới
-                    string wwwRootPath = _webHostEnvironment.WebRootPath;
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(viewModel.IconImage.FileName);
-                    string categoryPath = Path.Combine(wwwRootPath, @"img\categories");
-                    using (var fileStream = new FileStream(Path.Combine(categoryPath, fileName), FileMode.Create))
-                    {
-                        viewModel.IconImage.CopyTo(fileStream);
-                    }
-                    categoryFromDb.IconUrl = @"/img/categories/" + fileName;
+                    viewModel.Category.IconUrl = ProcessUploadedIcon(viewModel.IconImage, categoryFromDb.IconUrl);
+                }
+                else
+                {
+                    // Nếu không có ảnh mới, giữ lại đường dẫn ảnh cũ
+                    viewModel.Category.IconUrl = categoryFromDb.IconUrl;
                 }
 
-                _db.Categories.Update(categoryFromDb);
+                // Nếu người dùng xóa trắng ô DisplayOrder, giữ lại giá trị cũ
+                if (!viewModel.Category.DisplayOrder.HasValue)
+                {
+                    viewModel.Category.DisplayOrder = categoryFromDb.DisplayOrder;
+                }
+
+                _db.Categories.Update(viewModel.Category);
                 _db.SaveChanges();
                 TempData["success"] = "Cập nhật danh mục thành công!";
                 return RedirectToAction("Index");
             }
 
-            viewModel.ParentCategoryList = _db.Categories.Where(c => c.Id != viewModel.Category.Id).Select(c => new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
+            // Nếu không hợp lệ, gọi hàm helper để tải lại danh sách và hiển thị lại form
+            PopulateParentCategoryList(viewModel, viewModel.Category.Id);
             return View(viewModel);
         }
 
-        // HIỂN THỊ TRANG XÁC NHẬN XÓA
-        // GET: /Admin/Category/Delete/{id}
+        // Các hàm Delete giữ nguyên
         public IActionResult Delete(int? id)
         {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
+            if (id == null || id == 0) return NotFound();
             var categoryFromDb = _db.Categories.Find(id);
-            if (categoryFromDb == null)
-            {
-                return NotFound();
-            }
+            if (categoryFromDb == null) return NotFound();
             return View(categoryFromDb);
         }
 
-        // XỬ LÝ KHI XÁC NHẬN XÓA
-        // POST: /Admin/Category/DeletePOST
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult DeletePOST(int? id)
         {
             var objToDelete = _db.Categories.Find(id);
-            if (objToDelete == null)
-            {
-                return NotFound();
-            }
+            if (objToDelete == null) return NotFound();
 
-            // Quy tắc an toàn: Không cho xóa nếu danh mục này vẫn còn con.
-            bool hasChildren = _db.Categories.Any(c => c.ParentId == id);
-            if (hasChildren)
+            if (_db.Categories.Any(c => c.ParentId == id))
             {
                 TempData["error"] = "Không thể xóa danh mục này vì nó vẫn còn danh mục con!";
                 return RedirectToAction("Index");
             }
+
+            // Xóa ảnh của danh mục trước khi xóa danh mục
+            ProcessUploadedIcon(null, objToDelete.IconUrl);
 
             _db.Categories.Remove(objToDelete);
             _db.SaveChanges();
             TempData["success"] = "Xóa danh mục thành công!";
             return RedirectToAction("Index");
         }
+
+        #region PRIVATE HELPER METHODS
+
+        /// <summary>
+        /// Xử lý file ảnh được tải lên.
+        /// </summary>
+        /// <param name="iconImage">File ảnh từ form.</param>
+        /// <param name="oldImageUrl">Đường dẫn ảnh cũ (nếu có) để xóa.</param>
+        /// <returns>Đường dẫn URL của ảnh mới, hoặc giữ lại đường dẫn cũ, hoặc null.</returns>
+        private string? ProcessUploadedIcon(IFormFile? iconImage, string? oldImageUrl = null)
+        {
+            // 1. Xóa ảnh cũ nếu nó tồn tại
+            if (!string.IsNullOrEmpty(oldImageUrl))
+            {
+                // Chỉ xóa ảnh cũ khi có ảnh mới tải lên, hoặc khi xóa hẳn một danh mục
+                if (iconImage != null || TempData.ContainsKey("DeleteAction"))
+                {
+                    var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, oldImageUrl.TrimStart('\\', '/'));
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+                }
+            }
+
+            // Nếu không có ảnh mới tải lên, trả về đường dẫn ảnh cũ (hoặc null)
+            if (iconImage == null)
+            {
+                // Nếu đang xóa, trả về null. Nếu không, giữ lại ảnh cũ
+                return TempData.ContainsKey("DeleteAction") ? null : oldImageUrl;
+            }
+
+            // 2. Lưu ảnh mới
+            string wwwRootPath = _webHostEnvironment.WebRootPath;
+            string fileName = Guid.NewGuid().ToString() + Path.GetExtension(iconImage.FileName);
+            string categoryPath = Path.Combine(wwwRootPath, "img", "categories");
+
+            if (!Directory.Exists(categoryPath))
+            {
+                Directory.CreateDirectory(categoryPath);
+            }
+
+            string filePath = Path.Combine(categoryPath, fileName);
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                iconImage.CopyTo(fileStream);
+            }
+
+            // 3. Trả về đường dẫn URL để lưu vào database
+            return "/img/categories/" + fileName;
+        }
+
+        /// <summary>
+        /// Tính toán thứ tự hiển thị tiếp theo DỰA TRÊN CẤP ĐỘ (cha/con).
+        /// </summary>
+        /// <param name="parentId">ID của danh mục cha. Null nếu là danh mục gốc.</param>
+        /// <returns>Số thứ tự hiển thị.</returns>
+        private int GetNextDisplayOrder(int? parentId)
+        {
+            // Lọc ra các danh mục cùng cấp
+            var siblingCategories = _db.Categories.Where(c => c.ParentId == parentId);
+
+            // Nếu không có danh mục nào cùng cấp, đây là mục đầu tiên
+            if (!siblingCategories.Any())
+            {
+                return 1;
+            }
+
+            // Nếu có, tìm thứ tự lớn nhất trong các mục cùng cấp và cộng thêm 1
+            // (?? 0) để xử lý trường hợp tất cả DisplayOrder đều là null
+            return (siblingCategories.Max(c => (int?)c.DisplayOrder) ?? 0) + 1;
+        }
+
+
+        /// <summary>
+        /// Chuẩn bị danh sách danh mục cha cho dropdown.
+        /// </summary>
+        /// <param name="viewModel">ViewModel cần được gán danh sách.</param>
+        /// <param name="categoryIdToExclude">ID của danh mục hiện tại (dùng cho form Edit) để loại nó ra khỏi danh sách.</param>
+        private void PopulateParentCategoryList(CategoryFormVM viewModel, int? categoryIdToExclude = null)
+        {
+            var query = _db.Categories.AsQueryable();
+
+            if (categoryIdToExclude != null)
+            {
+                // Loại bỏ chính danh mục đang sửa và các con của nó khỏi danh sách
+                query = query.Where(c => c.Id != categoryIdToExclude.Value && c.ParentId != categoryIdToExclude.Value);
+            }
+
+            viewModel.ParentCategoryList = query
+                .OrderBy(c => c.Name)
+                .Select(c => new SelectListItem
+                {
+                    Text = c.Name,
+                    Value = c.Id.ToString()
+                })
+                .ToList();
+        }
+
+        #endregion
     }
 }

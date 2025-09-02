@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Ecommerce_WebApp</title>
+    <title>@ViewData["Title"] - MacStore</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/root.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -171,6 +171,11 @@
 
     <div class="mb-1"><div class="vc-zigzag-inner" style="width: 100%;min-height: 14px;background: 0 repeat-x url('data:image/svg+xml;utf-8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C%21DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11.dtd%22%3E%3Csvg%20width%3D%2214px%22%20height%3D%2212px%22%20viewBox%3D%220%200%2018%2015%22%20version%3D%221.1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%3E%3Cpolygon%20id%3D%22Combined-Shape%22%20fill%3D%22%23ebebeb%22%20points%3D%228.98762301%200%200%209.12771969%200%2014.519983%209%205.40479869%2018%2014.519983%2018%209.12771969%22%3E%3C%2Fpolygon%3E%3C%2Fsvg%3E');"></div></div>
 
+    <!-- ===== SCROLL TO TOP BUTTON ===== -->
+    <div id="scrollTopBtn" class="scroll-to-top-btn" title="Go to top">
+        <i class="fa-solid fa-arrow-up"></i>
+    </div>
+
 
     <!-- Footer Start -->
     <footer class="bg-black text-light pt-5 pb-3 mt-2 h-100">
@@ -249,10 +254,10 @@
                     <table class="tg col-12" style="border-collapse: collapse; border-spacing: 0;">
                         <thead >
                             <tr>
-                                <td style="font-family: Arial, sans-serif; font-size: 14px; overflow: hidden; padding: 10px 5px; text-align: left; vertical-align: top; word-break: normal; border: 1px solid black;"><a href="" rel="nofollow"><img loading="lazy" decoding="async" src="https://macstores.vn/wp-content/uploads/2022/09/facebook_1.png" width="32" height="32">Facebook</a></td>
-                                <td style="font-family: Arial, sans-serif; font-size: 14px; overflow: hidden; padding: 10px 5px; text-align: left; vertical-align: top; word-break: normal; border: 1px solid black;"><a href="" rel="nofollow"><img loading="lazy" decoding="async" src="https://macstores.vn/wp-content/uploads/2022/09/zalo-1.png" width="32" height="32">Zalo</a></td>
-                                <td style="font-family: Arial, sans-serif; font-size: 14px; overflow: hidden; padding: 10px 5px; text-align: left; vertical-align: top; word-break: normal; border: 1px solid black;"><a href="" rel="nofollow"><img loading="lazy" decoding="async" src="https://macstores.vn/wp-content/uploads/2022/09/pinterest.png" width="32" height="32">Pinterest</a></td>
-                                <td style="font-family: Arial, sans-serif; font-size: 14px; overflow: hidden; padding: 10px 5px; text-align: left; vertical-align: top; word-break: normal; border: 1px solid black;"><a href="" rel="nofollow"><img loading="lazy" decoding="async" src="https://macstores.vn/wp-content/uploads/2022/09/linkedin_1.png" width="32" height="32">Linkedin</a></td>
+                                <td style="font-family: Arial, sans-serif; font-size: 14px; overflow: hidden; padding: 10px 5px; text-align: left; vertical-align: top; word-break: normal; border: 1px solid black;"><a href="https://www.facebook.com/nguyen.tai.321613/" rel="nofollow"><img loading="lazy" decoding="async" src="https://macstores.vn/wp-content/uploads/2022/09/facebook_1.png" width="32" height="32">Facebook</a></td>
+                                <td style="font-family: Arial, sans-serif; font-size: 14px; overflow: hidden; padding: 10px 5px; text-align: left; vertical-align: top; word-break: normal; border: 1px solid black;"><a href="https://zalo.me/0879723014" rel="nofollow"><img loading="lazy" decoding="async" src="https://macstores.vn/wp-content/uploads/2022/09/zalo-1.png" width="32" height="32">Zalo</a></td>
+                                <td style="font-family: Arial, sans-serif; font-size: 14px; overflow: hidden; padding: 10px 5px; text-align: left; vertical-align: top; word-break: normal; border: 1px solid black;"><a href="https://www.pinterest.com/10ta5/" rel="nofollow"><img loading="lazy" decoding="async" src="https://macstores.vn/wp-content/uploads/2022/09/pinterest.png" width="32" height="32">Pinterest</a></td>
+                                <td style="font-family: Arial, sans-serif; font-size: 14px; overflow: hidden; padding: 10px 5px; text-align: left; vertical-align: top; word-break: normal; border: 1px solid black;"><a href="https://www.linkedin.com/in/nguy%E1%BB%85n-anh-t%C3%A0i-t%C3%A0i-688bb4330/" rel="nofollow"><img loading="lazy" decoding="async" src="https://macstores.vn/wp-content/uploads/2022/09/linkedin_1.png" width="32" height="32">Linkedin</a></td>
                             </tr>
                         </thead>
                     </table>
@@ -272,13 +277,14 @@
         </div>
     </footer>
 
-    <!-- ===== SCRIPT ===== -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/layout_user.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/ion-rangeslider@2.3.1/js/ion.rangeSlider.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

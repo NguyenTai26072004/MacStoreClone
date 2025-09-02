@@ -15,7 +15,7 @@ namespace Ecommerce_WebApp.Models
         [Key]
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage ="Vui lòng nhập tên biến thể")]
         [MaxLength(100)]
         public string Name { get; set; } // Ví dụ: "Màu sắc", "Dung lượng RAM"
 

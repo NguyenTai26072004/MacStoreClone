@@ -14,10 +14,11 @@ namespace Ecommerce_WebApp.Models
         [ForeignKey("ProductId")]
         public virtual Product Product { get; set; }
 
+        [Required(ErrorMessage = "Vui lòng nhập giá phiên bản")]
         [MaxLength(100)]
         public string Sku { get; set; } // Mã SKU duy nhất cho phiên bản này
 
-        [Required]
+        [Required(ErrorMessage ="Vui lòng nhập giá phiên bản")]
         public decimal Price { get; set; } // Giá của phiên bản này
 
         public int StockQuantity { get; set; } // Số lượng tồn kho

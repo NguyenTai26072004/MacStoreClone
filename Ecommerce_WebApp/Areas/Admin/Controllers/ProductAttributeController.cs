@@ -2,8 +2,9 @@
 using Ecommerce_WebApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore; 
 using System.Linq;
-
+using System.Threading.Tasks; // Thêm using cho Task (async)
 
 namespace Ecommerce_WebApp.Areas.Admin.Controllers
 {
@@ -18,78 +19,127 @@ namespace Ecommerce_WebApp.Areas.Admin.Controllers
             _db = db;
         }
 
-        // GET: Hiển thị danh sách thuộc tính
-        public IActionResult Index()
+        #region READ ACTIONS
+
+        // GET: /Admin/ProductAttribute
+        public async Task<IActionResult> Index()
         {
-            var attributes = _db.Attributes.ToList();
+            // Sắp xếp theo tên để dễ theo dõi
+            var attributes = await _db.Attributes.OrderBy(a => a.Name).ToListAsync();
             return View(attributes);
         }
 
-        // GET: Hiển thị form tạo mới
+        #endregion
+
+        #region CREATE ACTIONS
+
+        // GET: /Admin/ProductAttribute/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Xử lý tạo mới
+        // POST: /Admin/ProductAttribute/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(ProductAttribute attribute)
+        public async Task<IActionResult> Create(ProductAttribute attribute)
         {
+            // Logic validation: Kiểm tra xem tên thuộc tính đã tồn tại chưa
+            bool isDuplicate = await _db.Attributes.AnyAsync(a => a.Name.ToLower() == attribute.Name.ToLower());
+            if (isDuplicate)
+            {
+                // Thêm lỗi vào ModelState để hiển thị cho người dùng
+                ModelState.AddModelError("Name", "Tên thuộc tính này đã tồn tại.");
+            }
+
             if (ModelState.IsValid)
             {
                 _db.Attributes.Add(attribute);
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 TempData["success"] = "Tạo thuộc tính thành công!";
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             return View(attribute);
         }
 
-        // GET: Hiển thị form sửa
-        public IActionResult Edit(int? id)
+        #endregion
+
+        #region EDIT ACTIONS
+
+        // GET: /Admin/ProductAttribute/Edit/{id}
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || id == 0) return NotFound();
-            var attribute = _db.Attributes.Find(id);
+
+            var attribute = await _db.Attributes.FindAsync(id);
             if (attribute == null) return NotFound();
+
             return View(attribute);
         }
 
-        // POST: Xử lý sửa
+        // POST: /Admin/ProductAttribute/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(ProductAttribute attribute)
+        public async Task<IActionResult> Edit(ProductAttribute attribute)
         {
+            // Logic validation: Kiểm tra trùng lặp (trừ chính nó)
+            bool isDuplicate = await _db.Attributes.AnyAsync(a =>
+                a.Name.ToLower() == attribute.Name.ToLower() &&
+                a.Id != attribute.Id); // Quan trọng: Loại trừ chính nó ra khỏi kiểm tra
+
+            if (isDuplicate)
+            {
+                ModelState.AddModelError("Name", "Tên thuộc tính này đã tồn tại.");
+            }
+
             if (ModelState.IsValid)
             {
                 _db.Attributes.Update(attribute);
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 TempData["success"] = "Cập nhật thuộc tính thành công!";
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             return View(attribute);
         }
 
-        // GET: Hiển thị trang xác nhận xóa
-        public IActionResult Delete(int? id)
+        #endregion
+
+        #region DELETE ACTIONS
+
+        // GET: /Admin/ProductAttribute/Delete/{id}
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || id == 0) return NotFound();
-            var attribute = _db.Attributes.Find(id);
+
+            var attribute = await _db.Attributes.FindAsync(id);
             if (attribute == null) return NotFound();
+
             return View(attribute);
         }
 
-        // POST: Xử lý xóa
+        // POST: /Admin/ProductAttribute/Delete/{id}
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeletePOST(int? id)
+        public async Task<IActionResult> DeletePOST(int? id)
         {
-            var attribute = _db.Attributes.Find(id);
+            var attribute = await _db.Attributes.FindAsync(id);
             if (attribute == null) return NotFound();
+
+            // Logic validation: Kiểm tra xem thuộc tính này có giá trị con nào không
+            bool hasChildren = await _db.AttributeValues.AnyAsync(av => av.AttributeId == id);
+            if (hasChildren)
+            {
+                TempData["error"] = "Không thể xóa thuộc tính này vì nó vẫn còn các giá trị con!";
+                // Trả về trang Index thay vì trang xác nhận xóa
+                return RedirectToAction(nameof(Index));
+            }
+
             _db.Attributes.Remove(attribute);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             TempData["success"] = "Xóa thuộc tính thành công!";
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
+
+        #endregion
     }
 }

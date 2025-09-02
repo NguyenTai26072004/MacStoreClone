@@ -25,4 +25,24 @@ document.addEventListener('click', function (e) {
     }
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    var scrollTopBtn = document.getElementById("scrollTopBtn");
 
+    if (scrollTopBtn) {
+        window.addEventListener("scroll", function () {
+            if (document.documentElement.scrollTop > 300 || document.body.scrollTop > 300) {
+                scrollTopBtn.classList.add("show");
+            } else {
+                scrollTopBtn.classList.remove("show");
+            }
+        });
+
+        scrollTopBtn.addEventListener("click", function (e) {
+            e.preventDefault(); // Quan trọng: chặn hành vi mặc định
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
+    }
+});

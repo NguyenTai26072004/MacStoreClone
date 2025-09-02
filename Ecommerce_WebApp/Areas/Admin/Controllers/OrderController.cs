@@ -1,11 +1,10 @@
 ﻿using Ecommerce_WebApp.Data;
-using Ecommerce_WebApp.Utility; 
+using Ecommerce_WebApp.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-
 namespace Ecommerce_WebApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
@@ -13,10 +12,14 @@ namespace Ecommerce_WebApp.Areas.Admin.Controllers
     public class OrderController : Controller
     {
         private readonly AppDbContext _db;
+        private readonly IEmailSender _emailSender;
 
-        public OrderController(AppDbContext db)
+
+
+        public OrderController(AppDbContext db, IEmailSender emailSender)
         {
             _db = db;
+            _emailSender = emailSender;
         }
 
         // GET: Hiển thị danh sách tất cả đơn hàng
@@ -46,7 +49,7 @@ namespace Ecommerce_WebApp.Areas.Admin.Controllers
                     .ThenInclude(od => od.ProductVariant)
                         .ThenInclude(pv => pv.VariantValues)
                             .ThenInclude(vv => vv.AttributeValue)
-                                .ThenInclude(av => av.Attribute) 
+                                .ThenInclude(av => av.Attribute)
                 .FirstOrDefaultAsync(oh => oh.Id == orderId);
 
             if (orderHeader == null)
@@ -60,7 +63,7 @@ namespace Ecommerce_WebApp.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ProcessOrder(int Id) // Id sẽ được binding từ <input asp-for="Id" hidden />
+        public async Task<IActionResult> ProcessOrder(int Id) 
         {
             var orderHeader = await _db.OrderHeaders.FindAsync(Id);
             if (orderHeader == null) return NotFound();
@@ -80,13 +83,33 @@ namespace Ecommerce_WebApp.Areas.Admin.Controllers
             var orderHeader = await _db.OrderHeaders.FindAsync(Id);
             if (orderHeader == null) return NotFound();
 
+            // Cập nhật thông tin đơn hàng
             orderHeader.OrderStatus = SD.OrderStatusShipped;
-            orderHeader.TrackingNumber = trackingNumber; // Lưu mã vận đơn
-            orderHeader.Carrier = carrier; // Lưu nhà vận chuyển
+            orderHeader.TrackingNumber = trackingNumber;
+            orderHeader.Carrier = carrier;
 
             await _db.SaveChangesAsync();
 
-            // (Tùy chọn) Gửi email thông báo cho khách hàng rằng đơn hàng đã được giao
+            // === GỌI HÀM GỬI EMAIL THÔNG BÁO GIAO HÀNG ===
+            try
+            {
+                string subject = $"Đơn hàng #{orderHeader.Id} của bạn đã được giao";
+                var replacements = new Dictionary<string, string>
+                {
+                    { "{{CustomerName}}", orderHeader.FullName },
+                    { "{{OrderId}}", orderHeader.Id.ToString() },
+                    { "{{Carrier}}", orderHeader.Carrier },
+                    { "{{TrackingNumber}}", orderHeader.TrackingNumber }
+                };
+
+                await _emailSender.SendEmailFromTemplateAsync(orderHeader.Email, subject, "OrderShipped.html", replacements);
+            }
+            catch (Exception)
+            {
+                // Ghi log lỗi nếu cần, nhưng không làm crash chương trình
+                // Việc kinh doanh quan trọng hơn việc gửi email
+            }
+
 
             TempData["success"] = "Đơn hàng đã được giao cho đơn vị vận chuyển.";
             return RedirectToAction("Details", new { orderId = Id });
@@ -101,10 +124,28 @@ namespace Ecommerce_WebApp.Areas.Admin.Controllers
             if (orderHeader == null) return NotFound();
 
             orderHeader.OrderStatus = SD.OrderStatusCompleted;
-            // Vì là đơn COD, nên khi hoàn tất ta cũng cập nhật trạng thái thanh toán
             orderHeader.PaymentStatus = SD.PaymentStatusPaid;
 
             await _db.SaveChangesAsync();
+
+            // === GỌI HÀM GỬI EMAIL THÔNG BÁO HOÀN THÀNH ===
+            try
+            {
+                string subject = $"Đơn hàng #{orderHeader.Id} của bạn đã hoàn thành";
+                var replacements = new Dictionary<string, string>
+                {
+                    { "{{CustomerName}}", orderHeader.FullName },
+                    { "{{OrderId}}", orderHeader.Id.ToString() }
+                };
+
+                // Gọi service và chỉ định đúng tên template mới
+                await _emailSender.SendEmailFromTemplateAsync(orderHeader.Email, subject, "OrderCompleted.html", replacements);
+            }
+            catch (Exception)
+            {
+                // Ghi log lỗi nhưng không làm ảnh hưởng đến luồng chính
+            }
+            // ===========================================
 
             TempData["success"] = "Đơn hàng đã được hoàn tất.";
             return RedirectToAction("Details", new { orderId = Id });
@@ -121,7 +162,7 @@ namespace Ecommerce_WebApp.Areas.Admin.Controllers
 
             if (orderHeader == null) return NotFound();
 
-            // Logic hoàn trả lại số lượng tồn kho
+            // Logic hoàn trả lại số lượng tồn kho (giữ nguyên)
             foreach (var detail in orderHeader.OrderDetails)
             {
                 var variant = await _db.ProductVariants.FindAsync(detail.ProductVariantId);
@@ -135,7 +176,25 @@ namespace Ecommerce_WebApp.Areas.Admin.Controllers
 
             await _db.SaveChangesAsync();
 
-            TempData["info"] = "Đơn hàng đã được hủy."; 
+            // === GỌI HÀM GỬI EMAIL THÔNG BÁO HỦY ĐƠN ===
+            try
+            {
+                string subject = $"Thông báo về đơn hàng #{orderHeader.Id}";
+                var replacements = new Dictionary<string, string>
+            {
+                { "{{CustomerName}}", orderHeader.FullName },
+                { "{{OrderId}}", orderHeader.Id.ToString() }
+            };
+
+                await _emailSender.SendEmailFromTemplateAsync(orderHeader.Email, subject, "OrderCancelled.html", replacements);
+            }
+            catch (Exception)
+            {
+                // Ghi log
+            }
+            // ===========================================
+
+            TempData["info"] = "Đơn hàng đã được hủy thành công.";
             return RedirectToAction("Details", new { orderId = Id });
         }
 
