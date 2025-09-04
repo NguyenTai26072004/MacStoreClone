@@ -93,3 +93,4 @@ compilerconfig.json.map
 *.mdf
 *.ldf
 *.log
+/Ecommerce_WebApp/appsettings.json
