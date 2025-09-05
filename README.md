@@ -3,7 +3,7 @@
 Chào mừng bạn đến với MacStore Clone! Đây là một dự án website thương mại điện tử hoàn chỉnh, mô phỏng theo mô hình của một cửa hàng bán lẻ các sản phẩm Apple. Dự án được xây dựng từ đầu bằng **ASP.NET Core 8 MVC**, thể hiện các luồng nghiệp vụ phức tạp từ quản lý sản phẩm có biến thể, giỏ hàng động, đến quy trình thanh toán tích hợp.
 
 ## 🚀 Live Demo
-*   **Trang chủ:** `http://taibeeep123-001-site1.jtempurl.com/` 
+*   **Trang chủ:** `http://taitomshop.com/` 
 *   **Tài khoản Admin:** `admin@macstore.com`
 *   **Mật khẩu:** `Admin@123`
 
@@ -93,3 +93,4 @@ Dự án được xây dựng với đầy đủ các chức năng của một t
     -   Nhấn `F5` hoặc nút ▶️ màu xanh để chạy dự án. Ứng dụng sẽ khởi động, `DbSeeder` sẽ tự động tạo Roles và tài khoản Admin mặc định.
 
 Cảm ơn bạn đã xem dự án!
+
