@@ -20,6 +20,8 @@
     <!-- Toastr CSS -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="/img/favicon.png">
+
 
     <script src="https://cdn.tiny.cloud/1/cmfvao7c7irj7fz6kkza4xctnsuhv8z5othoy2br63b2thza/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
     @await RenderSectionAsync("Styles", required: false)
@@ -212,23 +214,22 @@
     </script>
     <script>
         tinymce.init({
-          selector: 'textarea',
-          plugins: [
-            // Core editing features
-            'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
-            // Your account includes a free trial of TinyMCE premium features
-            // Try the most popular premium features until Aug 28, 2025:
-            'checklist', 'mediaembed', 'casechange', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'advtemplate', 'ai', 'uploadcare', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown','importword', 'exportword', 'exportpdf'
-          ],
-          toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography uploadcare | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
-          tinycomments_mode: 'embedded',
-          tinycomments_author: 'Author name',
-          mergetags_list: [
-            { value: 'First.Name', title: 'First Name' },
-            { value: 'Email', title: 'Email' },
-          ],
-          ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
-          uploadcare_public_key: 'e415a069984c2ff85477',
+            // Vẫn giữ selector cũ của bạn
+            selector: 'textarea.rich-editor',
+
+            // === DANH SÁCH PLUGIN MIỄN PHÍ CỐT LÕI ===
+            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+
+            // === THANH CÔNG CỤ TÙY CHỈNH, DỄ SỬ DỤNG ===
+            toolbar: 'undo redo | blocks | bold italic underline | ' +
+                     'alignleft aligncenter alignright alignjustify | ' +
+                     'bullist numlist outdent indent | ' +
+                     'link image media | removeformat | help',
+
+            // Cấu hình đơn giản
+            height: 300, // Đặt chiều cao mặc định
+            menubar: false, // Ẩn thanh menu (File, Edit...) cho gọn
+            statusbar: false, // Ẩn thanh trạng thái dưới cùng
         });
     </script>
 </body>
