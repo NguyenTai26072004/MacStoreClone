@@ -20,8 +20,6 @@
     <!-- Toastr CSS -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <link rel="icon" type="image/png" href="/img/favicon.png">
-
 
     <script src="https://cdn.tiny.cloud/1/cmfvao7c7irj7fz6kkza4xctnsuhv8z5othoy2br63b2thza/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
     @await RenderSectionAsync("Styles", required: false)
@@ -61,6 +59,12 @@
             <!-- Nav Item - Pages Collapse Menu -->
             <!-- Nav Item - Sản phẩm -->
             <li class="nav-item">
+                <a class="nav-link" asp-area="Admin" asp-controller="User" asp-action="Index">
+                    <i class="fas fa-fw fa-users"></i>
+                    <span>Người dùng</span>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" asp-area="Admin" asp-controller="Product" asp-action="Index">
                     <i class="fas fa-fw fa-box-open"></i>
                     <span>Sản phẩm</span>
@@ -74,13 +78,13 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" asp-area="Admin" asp-controller="ProductAttribute" asp-action="Index">
-                    <i class="fas fa-fw fa-tags"></i> 
+                    <i class="fas fa-fw fa-tags"></i>
                     <span>Thuộc tính</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" asp-area="Admin" asp-controller="AttributeValue" asp-action="Index">
-                    <i class="fas fa-fw fa-sliders-h"></i> 
+                    <i class="fas fa-fw fa-sliders-h"></i>
                     <span>Giá trị Thuộc tính</span>
                 </a>
             </li>
@@ -115,25 +119,42 @@
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Nav Item - User Information -->
-                        <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                                <img class="img-profile rounded-circle" src="https://startbootstrap.github.io/startbootstrap-sb-admin-2/img/undraw_profile.svg" />
-                            </a>
-                            <!-- Dropdown - User Information -->
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Profile
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item dropdown no-arrow">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    @* Hiển thị tên người dùng đang đăng nhập *@
+                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">@User.Identity.Name</span>
+                                    <img class="img-profile rounded-circle" src="https://startbootstrap.github.io/startbootstrap-sb-admin-2/img/undraw_profile.svg" />
                                 </a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
-                                </a>
-                            </div>
-                        </li>
+                                <!-- Dropdown - User Information -->
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                     aria-labelledby="userDropdown">
+                                    @* Liên kết đến trang quản lý hồ sơ (Profile) *@
+                                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">
+                                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Hồ sơ
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+
+                                    @* Form để thực hiện chức năng Đăng xuất một cách an toàn *@
+                                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Dashboard", new { area = "Admin" })">
+                                        <button type="submit" class="dropdown-item">
+                                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                            Đăng xuất
+                                        </button>
+                                    </form>
+
+                                </div>
+                            </li>
+                        }
+                        else
+                        {
+                            // Hiển thị nút Đăng nhập nếu người dùng chưa xác thực
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Đăng nhập</a>
+                            </li>
+                        }
                     </ul>
                 </nav>
                 <!-- End of Topbar -->
@@ -168,7 +189,7 @@
 
     <script src="~/admin/vendor/jquery/jquery.min.js"></script>
     <script src="~/admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
- 
+
 
     <script src="~/admin/vendor/jquery-easing/jquery.easing.min.js"></script>
 
@@ -214,22 +235,16 @@
     </script>
     <script>
         tinymce.init({
-            // Vẫn giữ selector cũ của bạn
-            selector: 'textarea.rich-editor',
+          selector: 'textarea',
 
-            // === DANH SÁCH PLUGIN MIỄN PHÍ CỐT LÕI ===
-            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
 
-            // === THANH CÔNG CỤ TÙY CHỈNH, DỄ SỬ DỤNG ===
-            toolbar: 'undo redo | blocks | bold italic underline | ' +
-                     'alignleft aligncenter alignright alignjustify | ' +
-                     'bullist numlist outdent indent | ' +
-                     'link image media | removeformat | help',
+          plugins: 'anchor autolink charmap codesample emoticons link lists media searchreplace table visualblocks wordcount image',
 
-            // Cấu hình đơn giản
-            height: 300, // Đặt chiều cao mặc định
-            menubar: false, // Ẩn thanh menu (File, Edit...) cho gọn
-            statusbar: false, // Ẩn thanh trạng thái dưới cùng
+
+          toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+
+
+          menubar: 'file edit view insert format tools table help'
         });
     </script>
 </body>

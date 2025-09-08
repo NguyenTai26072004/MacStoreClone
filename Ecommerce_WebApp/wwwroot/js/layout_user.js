@@ -25,4 +25,56 @@ document.addEventListener('click', function (e) {
     }
 });
 
+// File: wwwroot/js/layout_user.js
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const goToTopBtn = document.getElementById("goToTopBtn");
+
+    if (goToTopBtn) {
+        // ==========================================================
+        // PHẦN 1: LOGIC ẨN/HIỆN NÚT (Phần này vẫn giữ nguyên)
+        // ==========================================================
+        window.addEventListener("scroll", function () {
+            if (window.scrollY > 300) { // Bạn có thể đổi ngưỡng 300px
+                goToTopBtn.classList.add("show");
+            } else {
+                goToTopBtn.classList.remove("show");
+            }
+        });
+
+        // ==========================================================
+        // PHẦN 2: LOGIC CUỘN MƯỢT KHI CLICK (MÃ MỚI HOÀN TOÀN)
+        // ==========================================================
+        goToTopBtn.addEventListener("click", function () {
+
+            const duration = 700; // Thời gian cuộn (miligiây), bạn có thể thay đổi
+            const start = window.scrollY;
+            const distance = -start;
+            let startTime = null;
+
+            function animation(currentTime) {
+                if (startTime === null) startTime = currentTime;
+                const timeElapsed = currentTime - startTime;
+
+                // Công thức easing (làm cho hiệu ứng mượt hơn ở đầu và cuối)
+                const run = ease(timeElapsed, start, distance, duration);
+                window.scrollTo(0, run);
+
+                if (timeElapsed < duration) requestAnimationFrame(animation);
+            }
+
+            // Hàm tính toán easing
+            function ease(t, b, c, d) {
+                t /= d / 2;
+                if (t < 1) return c / 2 * t * t + b;
+                t--;
+                return -c / 2 * (t * (t - 2) - 1) + b;
+            }
+
+            requestAnimationFrame(animation);
+        });
+    }
+});
+
 

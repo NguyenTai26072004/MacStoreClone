@@ -47,12 +47,12 @@
 <!--SẢN PHẨM MỚI-->
 <div class="container border border-start-0 border-end-0 border-2">
     <div class="d-flex justify-content-between py-2">
-        <div class="ms-2 py-1"><a class="text-decoration-none" href="#"><strong class="fs-6" style="color: #0088cc">SẢN PHẨM MỚI</strong></a></div>
-        <div class="me-2 py-1"><a class="text-decoration-none fs-6" style="color: #0088cc" href="#">Xem tất cả <i class="fa-solid fa-chevron-right"></i></a></div>
+        <div class="ms-2 py-1"><a class="text-decoration-none" href="~/Category/Index/1"><strong class="fs-6" style="color: #0088cc">SẢN PHẨM MỚI</strong></a></div>
+        <div class="me-2 py-1"><a class="text-decoration-none fs-6" style="color: #0088cc" href="~/Category/Index/1">Xem tất cả <i class="fa-solid fa-chevron-right"></i></a></div>
     </div>
 </div>
 <div class="container mt-3 mb-5 p-0">
-    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4 product_cover">
         @foreach (var product in Model.NewProducts)
         {
             <partial name="_ProductCard" model="product" />
@@ -60,92 +60,59 @@
     </div>
 </div>
 
-<!--MACBOOK-->
-<div class="container border border-start-0 border-end-0 border-2">
-    <div class="d-flex justify-content-between py-2">
-        <div class="ms-2 py-1"><a class="text-decoration-none" href="#"><strong class="fs-6" style="color: #0088cc">MACBOOK</strong></a></div>
-        <div class="me-2 py-1"><a class="text-decoration-none fs-6" style="color: #0088cc" href="#">Xem tất cả <i class="fa-solid fa-chevron-right"></i></a></div>
+<!-- === TỰ ĐỘNG HIỂN THỊ CÁC DANH MỤC NỔI BẬT === -->
+@foreach (var category in Model.FeaturedCategories)
+{
+    // === LOGIC LỰA CHỌN SẢN PHẨM MỚI (AN TOÀN HƠN) ===
+    IEnumerable<Product> productsInCategory = null;
+    if (category.Name == "MacBook")
+    {
+        productsInCategory = Model.MacBookProducts;
+    }
+    else if (category.Name == "iMac")
+    {
+        productsInCategory = Model.IMacProducts;
+    }
+    else if (category.Name == "Mac Studio")
+    {
+        productsInCategory = Model.MacStudioProducts;
+    }
+    else if (category.Name == "Mac Mini")
+    {
+        productsInCategory = Model.MacMiniProducts;
+    }
+    else if (category.Name == "Phụ Kiện")
+    {
+        productsInCategory = Model.PhuKienProducts;
+    }
+    // =================================================
 
-    </div>
-</div>
-<div class="container mt-3 mb-5 p-0">
-    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
-        @foreach (var product in Model.MacBookProducts)
-        {
-            <partial name="_ProductCard" model="product" />
-        }
-    </div>
-</div>
-
-<!--IMAC-->
-<div class="container border border-start-0 border-end-0 border-2">
-    <div class="d-flex justify-content-between py-2">
-        <div class="ms-2 py-1"><a class="text-decoration-none" href="#"><strong class="fs-6" style="color: #0088cc">IMAC</strong></a></div>
-        <div class="me-2 py-1"><a class="text-decoration-none fs-6" style="color: #0088cc" href="#">Xem tất cả <i class="fa-solid fa-chevron-right"></i></a></div>
-
-    </div>
-</div>
-<div class="container mt-3 mb-5 p-0">
-    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
-        @foreach (var product in Model.IMacProducts)
-        {
-            <partial name="_ProductCard" model="product" />
-        }
-    </div>
-</div>
-
-<!--MAC STUDIO-->
-<div class="container border border-start-0 border-end-0 border-2">
-    <div class="d-flex justify-content-between py-2">
-        <div class="ms-2 py-1"><a class="text-decoration-none" href="#"><strong class="fs-6" style="color: #0088cc">MAC STUDIO</strong></a></div>
-        <div class="me-2 py-1"><a class="text-decoration-none fs-6" style="color: #0088cc" href="#">Xem tất cả <i class="fa-solid fa-chevron-right"></i></a></div>
-
-    </div>
-</div>
-<div class="container mt-3 mb-5 p-0">
-    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
-        @foreach (var product in Model.MacStudioProducts)
-        {
-            <partial name="_ProductCard" model="product" />
-        }
-    </div>
-</div>
-
-
-<!--MAC MINI-->
-<div class="container border border-start-0 border-end-0 border-2">
-    <div class="d-flex justify-content-between py-2">
-        <div class="ms-2 py-1"><a class="text-decoration-none" href="#"><strong class="fs-6" style="color: #0088cc">MAC MINI</strong></a></div>
-        <div class="me-2 py-1"><a class="text-decoration-none fs-6" style="color: #0088cc" href="#">Xem tất cả <i class="fa-solid fa-chevron-right"></i></a></div>
-
-    </div>
-</div>
-<div class="container mt-3 mb-5 p-0">
-    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
-        @foreach (var product in Model.MacMiniProducts)
-        {
-            <partial name="_ProductCard" model="product" />
-        }
-    </div>
-</div>
-
-
-<!--Phụ kiện-->
-<div class="container border border-start-0 border-end-0 border-2">
-    <div class="d-flex justify-content-between py-2">
-        <div class="ms-2 py-1"><a class="text-decoration-none" href="#"><strong class="fs-6" style="color: #0088cc">PHỤ KIỆN</strong></a></div>
-        <div class="me-2 py-1"><a class="text-decoration-none fs-6" style="color: #0088cc" href="#">Xem tất cả <i class="fa-solid fa-chevron-right"></i></a></div>
-
-    </div>
-</div>
-<div class="container mt-3 mb-5 p-0">
-    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
-        @foreach (var product in Model.PhuKien)
-        {
-            <partial name="_ProductCard" model="product" />
-        }
-    </div>
-</div>
+    if (productsInCategory != null && productsInCategory.Any())
+    {
+        <div class="container border border-start-0 border-end-0 border-2">
+            <div class="d-flex justify-content-between py-2">
+                <div class="ms-2 py-1">
+                    <a class="text-decoration-none" asp-controller="Category" asp-action="Index" asp-route-id="@category.Id">
+                        <strong class="fs-6" style="color: #0088cc">@category.Name.ToUpper()</strong>
+                    </a>
+                </div>
+                <div class="me-2 py-1">
+                    <a class="text-decoration-none fs-6" style="color: #0088cc" asp-controller="Category" asp-action="Index" asp-route-id="@category.Id">
+                        Xem tất cả <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="container mt-3 mb-5 p-0">
+            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4 product_cover">
+                @foreach (var product in productsInCategory)
+                {
+                    <partial name="_ProductCard" model="product" />
+                }
+            </div>
+        </div>
+    }
+}
 
 <div class="mb-3"><div class="vc-zigzag-inner" style="width: 100%;min-height: 14px;background: 0 repeat-x url('data:image/svg+xml;utf-8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C%21DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11.dtd%22%3E%3Csvg%20width%3D%2214px%22%20height%3D%2212px%22%20viewBox%3D%220%200%2018%2015%22%20version%3D%221.1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%3E%3Cpolygon%20id%3D%22Combined-Shape%22%20fill%3D%22%23ebebeb%22%20points%3D%228.98762301%200%200%209.12771969%200%2014.519983%209%205.40479869%2018%2014.519983%2018%209.12771969%22%3E%3C%2Fpolygon%3E%3C%2Fsvg%3E');"></div></div>
 
@@ -157,7 +124,7 @@
         <!-- Card khách hàng -->
         <div class="col">
             <div class="card h-100 border-0 shadow-sm p-3">
-                <img src="~/img/khachhang1.jpg" class="card-img-top rounded-circle mx-auto d-block" style="width: 100px; height: 100px; object-fit: cover;" alt="Minh Tuấn" />
+                <img src="~/img/khachhangmau.jpg" class="card-img-top rounded-circle mx-auto d-block" style="width: 100px; height: 100px; object-fit: cover;" alt="Minh Tuấn" />
                 <div class="card-body text-center">
                     <h5 class="card-title mb-1">Minh Tuấn</h5>
                     <p class="text-muted mb-2">Nhân viên IT</p>
@@ -168,7 +135,7 @@
 
         <div class="col">
             <div class="card h-100 border-0 shadow-sm p-3">
-                <img src="~/img/khachhang2.jpg" class="card-img-top rounded-circle mx-auto d-block" style="width: 100px; height: 100px; object-fit: cover;" alt="Thanh Hà" />
+                <img src="~/img/khachhangmau2.jpg" class="card-img-top rounded-circle mx-auto d-block" style="width: 100px; height: 100px; object-fit: cover;" alt="Thanh Hà" />
                 <div class="card-body text-center">
                     <h5 class="card-title mb-1">THANH HÀ</h5>
                     <p class="text-muted mb-2">Bán hàng Online</p>
@@ -179,7 +146,7 @@
 
         <div class="col">
             <div class="card h-100 border-0 shadow-sm p-3">
-                <img src="~/img/khachhang3.jpg" class="card-img-top rounded-circle mx-auto d-block" style="width: 100px; height: 100px; object-fit: cover;" alt="Hải Trần" />
+                <img src="~/img/khachhangmau3.png" class="card-img-top rounded-circle mx-auto d-block" style="width: 100px; height: 100px; object-fit: cover;" alt="Hải Trần" />
                 <div class="card-body text-center">
                     <h5 class="card-title mb-1">HẢI TRẦN</h5>
                     <p class="text-muted mb-2">Thiết kế</p>
@@ -190,7 +157,7 @@
 
         <div class="col">
             <div class="card h-100 border-0 shadow-sm p-3">
-                <img src="~/img/khachhang4.jpg" class="card-img-top rounded-circle mx-auto d-block" style="width: 100px; height: 100px; object-fit: cover;" alt="Thu Thuỷ" />
+                <img src="~/img/khachhangmau4.png" class="card-img-top rounded-circle mx-auto d-block" style="width: 100px; height: 100px; object-fit: cover;" alt="Thu Thuỷ" />
                 <div class="card-body text-center">
                     <h5 class="card-title mb-1">THU THỦY</h5>
                     <p class="text-muted mb-2">Sinh Viên Ngoại Ngữ</p>

@@ -38,6 +38,7 @@ namespace Ecommerce_WebApp.Controllers
             var relatedProducts = _db.Products
                 .Include(p => p.Images)
                 .Include(p => p.Variants)
+                .Include(p => p.Specifications.OrderBy(s => s.DisplayOrder))
                 .Where(p => p.CategoryId == product.CategoryId && p.Id != id)
                 .Take(4)
                 .ToList();

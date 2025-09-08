@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
     <link rel="icon" type="image/png" href="/img/favicon.png">
 </head>
-<body>
+<body id="page-top">
     <!-- ===== HEADER ===== -->
     <header class="bg-black text-white px-3 py-2 position-relative" id="mainHeader">
         <div class="container-fluid">
@@ -250,10 +250,10 @@
                     <table class="tg col-12" style="border-collapse: collapse; border-spacing: 0;">
                         <thead >
                             <tr>
-                                <td style="font-family: Arial, sans-serif; font-size: 14px; overflow: hidden; padding: 10px 5px; text-align: left; vertical-align: top; word-break: normal; border: 1px solid black;"><a href="" rel="nofollow"><img loading="lazy" decoding="async" src="https://macstores.vn/wp-content/uploads/2022/09/facebook_1.png" width="32" height="32">Facebook</a></td>
-                                <td style="font-family: Arial, sans-serif; font-size: 14px; overflow: hidden; padding: 10px 5px; text-align: left; vertical-align: top; word-break: normal; border: 1px solid black;"><a href="" rel="nofollow"><img loading="lazy" decoding="async" src="https://macstores.vn/wp-content/uploads/2022/09/zalo-1.png" width="32" height="32">Zalo</a></td>
-                                <td style="font-family: Arial, sans-serif; font-size: 14px; overflow: hidden; padding: 10px 5px; text-align: left; vertical-align: top; word-break: normal; border: 1px solid black;"><a href="" rel="nofollow"><img loading="lazy" decoding="async" src="https://macstores.vn/wp-content/uploads/2022/09/pinterest.png" width="32" height="32">Pinterest</a></td>
-                                <td style="font-family: Arial, sans-serif; font-size: 14px; overflow: hidden; padding: 10px 5px; text-align: left; vertical-align: top; word-break: normal; border: 1px solid black;"><a href="" rel="nofollow"><img loading="lazy" decoding="async" src="https://macstores.vn/wp-content/uploads/2022/09/linkedin_1.png" width="32" height="32">Linkedin</a></td>
+                                <td style="font-family: Arial, sans-serif; font-size: 14px; overflow: hidden; padding: 10px 5px; text-align: left; vertical-align: top; word-break: normal; border: 1px solid black;"><a href="https://www.facebook.com/nguyen.tai.321613/" rel="nofollow"><img loading="lazy" decoding="async" src="https://macstores.vn/wp-content/uploads/2022/09/facebook_1.png" width="32" height="32">Facebook</a></td>
+                                <td style="font-family: Arial, sans-serif; font-size: 14px; overflow: hidden; padding: 10px 5px; text-align: left; vertical-align: top; word-break: normal; border: 1px solid black;"><a href="https://zalo.me/0879723014" rel="nofollow"><img loading="lazy" decoding="async" src="https://macstores.vn/wp-content/uploads/2022/09/zalo-1.png" width="32" height="32">Zalo</a></td>
+                                <td style="font-family: Arial, sans-serif; font-size: 14px; overflow: hidden; padding: 10px 5px; text-align: left; vertical-align: top; word-break: normal; border: 1px solid black;"><a href="https://www.pinterest.com/10ta5/" rel="nofollow"><img loading="lazy" decoding="async" src="https://macstores.vn/wp-content/uploads/2022/09/pinterest.png" width="32" height="32">Pinterest</a></td>
+                                <td style="font-family: Arial, sans-serif; font-size: 14px; overflow: hidden; padding: 10px 5px; text-align: left; vertical-align: top; word-break: normal; border: 1px solid black;"><a href="https://www.linkedin.com/in/nguy%E1%BB%85n-anh-t%C3%A0i-t%C3%A0i-688bb4330/" rel="nofollow"><img loading="lazy" decoding="async" src="https://macstores.vn/wp-content/uploads/2022/09/linkedin_1.png" width="32" height="32">Linkedin</a></td>
                             </tr>
                         </thead>
                     </table>
@@ -273,11 +273,15 @@
         </div>
     </footer>
 
+    <button type="button" id="goToTopBtn" title="Lên đầu trang">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
     <!-- ===== SCRIPT ===== -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/layout_user.js"></script>
+    <script src="~/js/layout_user.js" asp-append-version="true"></script>
     <script src="https://cdn.jsdelivr.net/npm/ion-rangeslider@2.3.1/js/ion.rangeSlider.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)

@@ -10,8 +10,9 @@ namespace Ecommerce_WebApp.ViewModels
         public IEnumerable<Product> IMacProducts { get; set; }
         public IEnumerable<Product> MacStudioProducts { get; set; }
         public IEnumerable<Product> MacMiniProducts { get; set; }
-        public IEnumerable<Product> PhuKien { get; set; }
+        public IEnumerable<Product> PhuKienProducts { get; set; }
 
-
+      
+        public IEnumerable<Category> FeaturedCategories { get; set; } // Thêm kiểu dữ liệu và { get; set; }
     }
 }

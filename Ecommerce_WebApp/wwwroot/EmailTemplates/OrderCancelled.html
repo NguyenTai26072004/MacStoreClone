@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Thông báo Hủy Đơn hàng</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; background-color: #f4f4f4; margin: 0; padding: 0;">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4;">
+        <tr>
+            <td align="center" style="padding: 20px 0;">
+                <table width="600" border="0" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                    <!-- Header -->
+                    <tr>
+                        <td align="center" style="padding: 20px; border-bottom: 1px solid #eeeeee;">
+                            <img src="https://taitomshop.me/img/logo.png" alt="Logo" style="max-height: 50px;" /> <!-- Đổi thành URL đầy đủ logo của bạn -->
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 40px 30px;">
+                            <h2 style="color: #dc3545;">Đơn hàng của bạn đã bị hủy</h2>
+                            <p>Xin chào {{CustomerName}},</p>
+                            <p>Chúng tôi rất tiếc phải thông báo rằng đơn hàng <strong>#{{OrderId}}</strong> của bạn đã được hủy.</p>
+
+                            <p style="margin-top: 20px;">Lý do hủy đơn hàng sẽ được nhân viên của chúng tôi liên hệ và thông báo trực tiếp với bạn qua điện thoại trong thời gian sớm nhất.</p>
+
+                            <p>Nếu bạn có bất kỳ câu hỏi nào, vui lòng liên hệ với bộ phận hỗ trợ khách hàng của chúng tôi qua số điện thoại <strong>0879723014(A.Tài)</strong> hoặc email <strong>anhtai26072004@gmail.com</strong>.</p>
+
+                            <p>Chúng tôi xin lỗi vì sự bất tiện này và rất mong có cơ hội phục vụ bạn trong tương lai.</p>
+
+                            <p>Trân trọng,<br />Đội ngũ MacStore</p>
+                        </td>
+                    </tr>
+                    <!-- Footer -->
+                    <tr>
+                        <td align="center" style="padding: 20px; border-top: 1px solid #eeeeee; background-color: #f8f9fa; font-size: 12px; color: #6c757d;">
+                            <p>&copy; @DateTime.Now.Year macstoreclone.com. All rights reserved.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

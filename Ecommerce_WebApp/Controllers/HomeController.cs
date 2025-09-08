@@ -17,39 +17,48 @@ namespace Ecommerce_WebApp.Controllers
 
         public IActionResult Index()
         {
-            // Truy vấn cơ sở dữ liệu để lấy danh sách sản phẩm
+            // Bước 1: Vẫn lấy tất cả dữ liệu cần thiết
             var allProducts = _db.Products
-                .Include(p => p.Category)         
-                .Include(p => p.Images)           
-                .Include(p => p.Specifications)  
-                .Include(p => p.Variants)         
-                .Where(p => p.IsPublished)        
+                .Include(p => p.Category).ThenInclude(c => c.Parent)
+                .Include(p => p.Images.Where(i => i.IsPrimary))
+                .Include(p => p.Specifications.OrderBy(s => s.DisplayOrder).Take(4))
+                .Include(p => p.Variants)
                 .ToList();
 
-            // Tạo ViewModel và đổ dữ liệu đã lấy vào
+            var featuredCategoryNames = new List<string> { "MacBook", "iMac", "Mac Studio", "Mac Mini", "Phụ kiện" };
+            var featuredCategories = _db.Categories
+                                        .Where(c => featuredCategoryNames.Contains(c.Name))
+                                        .OrderBy(c => c.DisplayOrder)
+                                        .ToList();
+
+            // Bước 3: Tạo ViewModel với logic lọc đã được sửa lỗi
             var homeVM = new HomeVM
             {
-                // Lấy 4 sản phẩm mới nhất
-                NewProducts = allProducts.OrderByDescending(p => p.Id).Take(4),
+                NewProducts = allProducts.OrderByDescending(p => p.Id).Take(8),
 
-                // Lấy 4 sản phẩm thuộc danh mục "MacBook"
-                MacBookProducts = allProducts.Where(p => p.Category.Name == "MacBook M1").Take(4),
+                // SỬ DỤNG LOGIC LỌC LINH HOẠT HƠN
+                MacBookProducts = allProducts
+                    .Where(p => p.Category?.Name == "MacBook" || p.Category?.Parent?.Name == "MacBook")
+                    .Take(4).ToList(),
 
-                // Lấy 4 sản phẩm thuộc danh mục "iMac"
-                IMacProducts = allProducts.Where(p => p.Category.Name == "iMac").Take(4),
+                IMacProducts = allProducts
+                    .Where(p => p.Category?.Name == "iMac" || p.Category?.Parent?.Name == "iMac")
+                    .Take(4).ToList(),
 
-                // Lấy 4 sản phẩm thuộc danh mục "Mac Studio"
-                MacStudioProducts = allProducts.Where(p => p.Category.Name == "Mac Studio").Take(4),
+                MacStudioProducts = allProducts
+                    .Where(p => p.Category?.Name == "Mac Studio" || p.Category?.Parent?.Name == "Mac Studio")
+                    .Take(4).ToList(),
 
-                // Lấy 4 sản phẩm thuộc danh mục "Mac Mini"
-                MacMiniProducts = allProducts.Where(p => p.Category.Name == "Mac Mini").Take(4),
+                MacMiniProducts = allProducts
+                    .Where(p => p.Category?.Name == "Mac Mini" || p.Category?.Parent?.Name == "Mac Mini")
+                    .Take(4).ToList(),
 
-                // Lấy 4 sản phẩm thuộc danh mục "Phụ kiện"
-                PhuKien = allProducts.Where(p => p.Category.Name == "Phụ kiện").Take(4),
+                PhuKienProducts = allProducts
+                    .Where(p => p.Category?.Name == "Phụ Kiện" || p.Category?.Parent?.Name == "Phụ Kiện")
+                    .Take(4).ToList(),
 
-
+                FeaturedCategories = featuredCategories
             };
-
 
             return View(homeVM);
         }

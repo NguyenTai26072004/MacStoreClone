@@ -183,4 +183,52 @@ a {
 
 
 
+/* === NÚT GO TO TOP - PHIÊN BẢN NÂNG CẤP === */
 
+#goToTopBtn {
+    /* Vị trí */
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    z-index: 1000; /* Luôn nổi lên trên cùng */
+    /* Kích thước & Hình dáng */
+    width: 50px;
+    height: 50px;
+    border-radius: 50%; /* Bo tròn xoe */
+    /* Màu sắc & Kiểu chữ */
+    background-color: #007bff; /* Màu xanh dương chủ đạo (bạn có thể đổi) */
+    color: white;
+    font-size: 24px; /* Kích thước mũi tên */
+    font-weight: bold;
+    text-align: center;
+    line-height: 48px; /* Căn giữa mũi tên theo chiều dọc */
+    /* Các thứ khác */
+    border: none;
+    outline: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Bóng đổ mềm mại */
+    /* Hiệu ứng ẩn/hiện mượt mà */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(15px); /* Hiệu ứng trượt nhẹ từ dưới lên */
+    transition: all 0.3s ease-in-out;
+}
+
+    /* Khi nút được hiện ra (có class="show") */
+    #goToTopBtn.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    /* Khi di chuột vào nút */
+    #goToTopBtn:hover {
+        background-color: #0056b3; /* Đổi màu nền đậm hơn */
+        transform: scale(1.1); /* Phóng to nhẹ */
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2); /* Bóng đổ đậm hơn */
+    }
+
+    /* Hiệu ứng khi nhấn nút (tùy chọn) */
+    #goToTopBtn:active {
+        transform: scale(0.95);
+    }
