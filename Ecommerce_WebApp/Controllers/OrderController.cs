@@ -23,12 +23,16 @@ namespace Ecommerce_WebApp.Controllers
         private readonly AppDbContext _db;       
         private readonly Utility.IEmailSender _emailSender;
         private readonly IMomoService _momoService;
+        private readonly IConfiguration _config;
+        private readonly ILogger<OrderController> _logger;
 
-        public OrderController(AppDbContext db, Utility.IEmailSender emailSender, IMomoService momoService)
+        public OrderController(AppDbContext db, Utility.IEmailSender emailSender, IMomoService momoService, IConfiguration config, ILogger<OrderController> logger)
         {
             _db = db;
             _emailSender = emailSender;
             _momoService = momoService;
+            _config = config;
+            _logger = logger;
         }
 
         // GET: Hiển thị trang Checkout
@@ -111,49 +115,102 @@ namespace Ecommerce_WebApp.Controllers
 
         public async Task<IActionResult> PaymentCallBack()
         {
-            var query = HttpContext.Request.Query;
-            var extraData = query["extraData"].ToString();
-
-
-
-            if (int.TryParse(extraData, out int dbOrderId))
+            try
             {
-                var orderHeader = await _db.OrderHeaders.FindAsync(dbOrderId);
-                if (orderHeader == null)
+                var query = HttpContext.Request.Query;
+
+                // 1. Lấy tất cả tham số từ MoMo callback
+                var partnerCode = query["partnerCode"].ToString();
+                var orderId = query["orderId"].ToString();
+                var requestId = query["requestId"].ToString();
+                var amount = query["amount"].ToString();
+                var orderInfo = query["orderInfo"].ToString();
+                var orderType = query["orderType"].ToString();
+                var transId = query["transId"].ToString();
+                var resultCode = query["resultCode"].ToString();
+                var message = query["message"].ToString();
+                var payType = query["payType"].ToString();
+                var responseTime = query["responseTime"].ToString();
+                var extraData = query["extraData"].ToString();
+                var signature = query["signature"].ToString();
+
+                _logger.LogInformation($"MoMo callback received: resultCode={resultCode}, extraData={extraData}");
+
+                // 2. Verify signature để đảm bảo request từ MoMo (QUAN TRỌNG!)
+                var secretKey = _config["MomoSettings:SecretKey"];
+                var accessKey = _config["MomoSettings:AccessKey"];
+                var rawHash = $"accessKey={accessKey}&amount={amount}&extraData={extraData}&message={message}&orderId={orderId}&orderInfo={orderInfo}&orderType={orderType}&partnerCode={partnerCode}&payType={payType}&requestId={requestId}&responseTime={responseTime}&resultCode={resultCode}&transId={transId}";
+
+                MoMoSecurity crypto = new MoMoSecurity();
+                var computedSignature = crypto.signSHA256(rawHash, secretKey);
+
+                if (computedSignature != signature)
                 {
-                    TempData["error"] = "Lỗi: Không tìm thấy đơn hàng trong hệ thống.";
+                    _logger.LogWarning("Invalid MoMo signature detected. Possible fraud attempt.");
+                    TempData["error"] = "Chữ ký không hợp lệ. Vui lòng liên hệ hỗ trợ.";
                     return RedirectToAction("Index", "Cart");
                 }
 
-                var resultCode = query["resultCode"].ToString();
-                if (resultCode == "0") // Giao dịch THÀNH CÔNG
+                // 3. Xử lý đơn hàng với transaction để tránh race condition
+                if (int.TryParse(extraData, out int dbOrderId))
                 {
-                    if (orderHeader.PaymentStatus != SD.PaymentStatusPaid)
+                    using var transaction = await _db.Database.BeginTransactionAsync();
+                    try
                     {
-                        // 1. Cập nhật trạng thái
-                        orderHeader.PaymentStatus = SD.PaymentStatusPaid;
-                        orderHeader.OrderStatus = SD.OrderStatusProcessing;
-                        _db.OrderHeaders.Update(orderHeader);
+                        var orderHeader = await _db.OrderHeaders.FindAsync(dbOrderId);
+                        if (orderHeader == null)
+                        {
+                            _logger.LogError($"Order #{dbOrderId} not found in database");
+                            TempData["error"] = "Không tìm thấy đơn hàng.";
+                            return RedirectToAction("Index", "Cart");
+                        }
 
-                        // 2. Trừ kho, gửi mail, và XÓA GIỎ HÀNG
-                        await FinalizeOrder(orderHeader); 
+                        if (resultCode == "0") // Giao dịch THÀNH CÔNG
+                        {
+                            if (orderHeader.PaymentStatus != SD.PaymentStatusPaid)
+                            {
+                                // Cập nhật trạng thái
+                                orderHeader.PaymentStatus = SD.PaymentStatusPaid;
+                                orderHeader.OrderStatus = SD.OrderStatusProcessing;
+                                _db.OrderHeaders.Update(orderHeader);
+                                await _db.SaveChangesAsync();
+
+                                // Trừ kho, gửi mail, xóa giỏ hàng
+                                await FinalizeOrder(orderHeader);
+                                await transaction.CommitAsync();
+
+                                _logger.LogInformation($"Order #{dbOrderId} payment confirmed successfully");
+                            }
+                            return RedirectToAction("ThankYou", new { orderId = orderHeader.Id });
+                        }
+                        else // Giao dịch THẤT BẠI
+                        {
+                            _logger.LogWarning($"Order #{dbOrderId} payment failed: {message}");
+                            _db.OrderHeaders.Remove(orderHeader);
+                            await _db.SaveChangesAsync();
+                            await transaction.CommitAsync();
+
+                            TempData["error"] = $"Thanh toán thất bại: {message}";
+                            return RedirectToAction("Index", "Cart");
+                        }
                     }
-                    return RedirectToAction("ThankYou", new { orderId = orderHeader.Id });
+                    catch (Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+                        _logger.LogError(ex, "Error processing MoMo callback");
+                        throw;
+                    }
                 }
-                else // Giao dịch THẤT BẠI
-                {
 
-                    _db.OrderHeaders.Remove(orderHeader);
-                    await _db.SaveChangesAsync();
-  
-
-                    TempData["error"] = $"Thanh toán MoMo thất bại. Vui lòng thử lại.";
-                    return RedirectToAction("Index", "Cart"); 
-                }
+                TempData["error"] = "Dữ liệu callback không hợp lệ.";
+                return RedirectToAction("Index", "Cart");
             }
-
-            TempData["error"] = "Dữ liệu trả về từ MoMo không hợp lệ.";
-            return RedirectToAction("Index", "Cart");
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error in PaymentCallBack");
+                TempData["error"] = "Có lỗi xảy ra. Vui lòng liên hệ hỗ trợ.";
+                return RedirectToAction("Index", "Cart");
+            }
         }
 
 
@@ -361,6 +418,85 @@ namespace Ecommerce_WebApp.Controllers
             }
         }
 
+
+        /// <summary>
+        /// Xử lý IPN (Instant Payment Notification) từ MoMo server-to-server
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> PaymentIPN()
+        {
+            try
+            {
+                // IPN nhận POST data thay vì query string
+                var form = HttpContext.Request.Form;
+
+                var partnerCode = form["partnerCode"].ToString();
+                var orderId = form["orderId"].ToString();
+                var requestId = form["requestId"].ToString();
+                var amount = form["amount"].ToString();
+                var orderInfo = form["orderInfo"].ToString();
+                var orderType = form["orderType"].ToString();
+                var transId = form["transId"].ToString();
+                var resultCode = form["resultCode"].ToString();
+                var message = form["message"].ToString();
+                var payType = form["payType"].ToString();
+                var responseTime = form["responseTime"].ToString();
+                var extraData = form["extraData"].ToString();
+                var signature = form["signature"].ToString();
+
+                _logger.LogInformation($"MoMo IPN received: resultCode={resultCode}, extraData={extraData}");
+
+                // Verify signature
+                var secretKey = _config["MomoSettings:SecretKey"];
+                var accessKey = _config["MomoSettings:AccessKey"];
+                var rawHash = $"accessKey={accessKey}&amount={amount}&extraData={extraData}&message={message}&orderId={orderId}&orderInfo={orderInfo}&orderType={orderType}&partnerCode={partnerCode}&payType={payType}&requestId={requestId}&responseTime={responseTime}&resultCode={resultCode}&transId={transId}";
+
+                MoMoSecurity crypto = new MoMoSecurity();
+                var computedSignature = crypto.signSHA256(rawHash, secretKey);
+
+                if (computedSignature != signature)
+                {
+                    _logger.LogWarning("Invalid MoMo IPN signature");
+                    return StatusCode(403, new { message = "Invalid signature" });
+                }
+
+                // Xử lý đơn hàng (tương tự PaymentCallBack)
+                if (int.TryParse(extraData, out int dbOrderId))
+                {
+                    var orderHeader = await _db.OrderHeaders.FindAsync(dbOrderId);
+                    if (orderHeader != null && resultCode == "0" && orderHeader.PaymentStatus != SD.PaymentStatusPaid)
+                    {
+                        using var transaction = await _db.Database.BeginTransactionAsync();
+                        try
+                        {
+                            orderHeader.PaymentStatus = SD.PaymentStatusPaid;
+                            orderHeader.OrderStatus = SD.OrderStatusProcessing;
+                            _db.OrderHeaders.Update(orderHeader);
+                            await _db.SaveChangesAsync();
+
+                            await FinalizeOrder(orderHeader);
+                            await transaction.CommitAsync();
+
+                            _logger.LogInformation($"Order #{dbOrderId} confirmed via IPN");
+                        }
+                        catch (Exception ex)
+                        {
+                            await transaction.RollbackAsync();
+                            _logger.LogError(ex, "Error processing IPN");
+                            return StatusCode(500, new { message = "Internal server error" });
+                        }
+                    }
+                }
+
+                // MoMo yêu cầu response 200 OK
+                return Ok(new { message = "IPN processed successfully" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error processing MoMo IPN");
+                return StatusCode(500, new { message = "Internal server error" });
+            }
+        }
 
         /// <summary>
         /// Xây dựng chuỗi HTML chứa danh sách sản phẩm cho email từ danh sách OrderDetail.
